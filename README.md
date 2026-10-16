@@ -7,18 +7,29 @@ Educational technical package. Supervisor approval of scope and formatting remai
 Vietnamese step-by-step setup and demo guide: `START_HERE_VI.md`. Optional Windows helpers: `setup_windows.cmd` and `run_windows.cmd` (not executed on Windows here).
 
 ## Install and run
-Python 3.12 recommended. From this directory:
+Python 3.12+ recommended. From this directory:
 ```bash
 python -m venv .venv
 # Windows PowerShell: .venv\Scripts\Activate.ps1
 # macOS/Linux: source .venv/bin/activate
 python -m pip install -r requirements.txt
 python main.py
-python -m pytest -q --junitxml=results/tests.xml
+python -m pytest
 python verify_pypower.py
-python -m streamlit run app.py
+python app.py   # Khởi chạy PowerFlow Studio v2.0 (giao diện Web hiện đại trên http://127.0.0.1:8050/)
 ```
-PYPOWER is used only by the comparison script, never by the main solver. `results/environment.txt` records the numerical generation environment. `results/test_environment.txt` records test dependencies. Package ranges support installation; environment records identify the actual run. Reproduction is numerical to stated tolerances, not byte-identical plots across platforms.
+Hoặc trên Windows chỉ cần nhấp đúp: `run_windows.cmd`.
+
+### Các tính năng vượt trội của PowerFlow Studio v2.0:
+1. **Sơ đồ lưới điện SVG tương tác thời gian thực**: Kéo thả di chuyển trạm biến áp, zoom pan mượt mà, mũi tên trào lưu động (dynamic flow markers) và tooltip viễn trắc chi tiết.
+2. **Kịch bản mẫu phong phú**: Hỗ trợ đầy đủ từ hệ thống cơ sở (3 nút, 5 nút) đến các tiêu chuẩn quốc tế IEEE (IEEE 14-bus, IEEE 30-bus, IEEE 57-bus, IEEE 118-bus).
+3. **Bàn điều độ đóng / cắt máy cắt (Breaker Switching)**: Mô phỏng thao tác sa thải sự cố (Trip line) và đóng lại đường dây (Restore line) tức thì.
+4. **Kiểm tra an toàn quy chuẩn Grid Code N-0**: Đánh giá dải điện áp $0.95 - 1.05\text{ pu}$, góc lệch pha truyền tải $\le 30^\circ$, sai số bảo toàn cân bằng công suất.
+5. **Quét tự động sự cố đơn lẻ N-1 (Automated N-1 Contingency)**: Đánh giá sụt áp sau sự cố, gia tăng tổn thất và phân loại cấp độ rủi ro (🟢 An toàn, 🟡 Cảnh báo, 🔴 Nghiêm trọng).
+6. **Khảo sát đường cong ổn định điện áp P-V (Voltage Collapse)**: Dựng đồ thị trực quan tải - điện áp, xác định điểm tới hạn (Nose Point) và dự phòng quá tải.
+7. **Đối chuẩn độc lập PyPower / MATPOWER**: Kiểm định độ chính xác số học vượt trội với sai số cực đại $< 10^{-6}\text{ pu}$.
+8. **Cơ sở lý thuyết bảo vệ (Defense Aid)**: Tích hợp đầy đủ công thức toán học Newton-Raphson, ma trận Jacobi và quy định EVN / IEEE Std 399.
+
 
 ## Input contract
 All CSV powers and impedances use one common base, 100 MVA for supplied cases. Voltage magnitudes are pu, CSV angles are degrees, internal angles are radians. Bus IDs may be noncontiguous integers. Bus columns: bus,type,pg_pu,qg_pu,pd_pu,qd_pu,vm_pu,va_deg. Line columns: from_bus,to_bus,r_pu,x_pu. Additional columns are rejected to avoid silently ignoring unsupported taps or charging.

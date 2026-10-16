@@ -24,6 +24,11 @@ from src.ybus import build_ybus
 from src.power_equations import power, mismatch, indices
 from src.jacobian import jacobian
 from src.branch_flows import output_tables
+from src.data_models import load_case
+from src.newton_raphson import solve as core_solve
+from src.practical_scenarios import check_grid_security, run_n1_contingency, run_load_stress_analysis
+from pypower.api import runpf, ppoption
+
 
 
 # ==============================================================================
@@ -454,46 +459,304 @@ def solve_power_flow(
 
 
 # ==============================================================================
-# 4. BENCHMARK PRESETS (3-BUS, 5-BUS, IEEE 14-BUS)
+# 4. BENCHMARK PRESETS (3-BUS, 5-BUS, IEEE 14, 30, 57, 118-BUS)
 # ==============================================================================
 
-PRESETS = {
+BENCHMARK_META = {
     '3bus': {
-        'id': '3bus',
-        'name': 'Lưới điện mẫu 3 nút (Task Benchmark)',
-        'description': 'Lưới 3 nút chuẩn đồ án: Nút 1 là Slack (1.05 pu), Nút 2 là PV (1.02 pu, 50 MW), Nút 3 là PQ (60 MW, 25 Mvar).',
-        'base_mva': 100.0,
-        'buses': [
-            {'bus': 1, 'type': 'Slack', 'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.0, 'qd_pu': 0.0, 'vm_pu': 1.05, 'va_deg': 0.0, 'q_min_pu': -1.0, 'q_max_pu': 1.0},
-            {'bus': 2, 'type': 'PV',    'pg_pu': 0.5, 'qg_pu': 0.0, 'pd_pu': 0.0, 'qd_pu': 0.0, 'vm_pu': 1.02, 'va_deg': 0.0, 'q_min_pu': -0.5, 'q_max_pu': 0.5},
-            {'bus': 3, 'type': 'PQ',    'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.6, 'qd_pu': 0.25, 'vm_pu': 1.0, 'va_deg': 0.0, 'q_min_pu': 0.0, 'q_max_pu': 0.0}
-        ],
-        'lines': [
-            {'from_bus': 1, 'to_bus': 2, 'r_pu': 0.02, 'x_pu': 0.06},
-            {'from_bus': 1, 'to_bus': 3, 'r_pu': 0.08, 'x_pu': 0.24},
-            {'from_bus': 2, 'to_bus': 3, 'r_pu': 0.06, 'x_pu': 0.18}
-        ]
+        'name': 'Lưới 3 nút đào tạo (Task Benchmark)',
+        'description': 'Lưới 3 nút chuẩn đồ án: Nút 1 Slack (1.05 pu), Nút 2 PV (1.02 pu, 50 MW), Nút 3 PQ (60 MW, 25 Mvar).'
     },
     '5bus': {
-        'id': '5bus',
-        'name': 'Lưới điện mẫu 5 nút (Synthetic Case)',
-        'description': 'Lưới 5 nút tổng hợp với 1 nút Slack, 1 nút PV có tải tại chỗ, và 3 nút PQ.',
-        'base_mva': 100.0,
-        'buses': [
-            {'bus': 1, 'type': 'Slack', 'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.0, 'qd_pu': 0.0, 'vm_pu': 1.05, 'va_deg': 0.0, 'q_min_pu': -1.5, 'q_max_pu': 1.5},
-            {'bus': 2, 'type': 'PV',    'pg_pu': 0.9, 'qg_pu': 0.0, 'pd_pu': 0.1, 'qd_pu': 0.04, 'vm_pu': 1.02, 'va_deg': 0.0, 'q_min_pu': -0.8, 'q_max_pu': 0.8},
-            {'bus': 3, 'type': 'PQ',    'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.45, 'qd_pu': 0.18, 'vm_pu': 1.0, 'va_deg': 0.0, 'q_min_pu': 0.0, 'q_max_pu': 0.0},
-            {'bus': 4, 'type': 'PQ',    'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.40, 'qd_pu': 0.15, 'vm_pu': 1.0, 'va_deg': 0.0, 'q_min_pu': 0.0, 'q_max_pu': 0.0},
-            {'bus': 5, 'type': 'PQ',    'pg_pu': 0.0, 'qg_pu': 0.0, 'pd_pu': 0.30, 'qd_pu': 0.10, 'vm_pu': 1.0, 'va_deg': 0.0, 'q_min_pu': 0.0, 'q_max_pu': 0.0}
-        ],
-        'lines': [
-            {'from_bus': 1, 'to_bus': 2, 'r_pu': 0.02, 'x_pu': 0.06},
-            {'from_bus': 1, 'to_bus': 3, 'r_pu': 0.08, 'x_pu': 0.24},
-            {'from_bus': 2, 'to_bus': 3, 'r_pu': 0.06, 'x_pu': 0.18},
-            {'from_bus': 2, 'to_bus': 4, 'r_pu': 0.04, 'x_pu': 0.12},
-            {'from_bus': 3, 'to_bus': 4, 'r_pu': 0.01, 'x_pu': 0.03},
-            {'from_bus': 3, 'to_bus': 5, 'r_pu': 0.04, 'x_pu': 0.12},
-            {'from_bus': 4, 'to_bus': 5, 'r_pu': 0.03, 'x_pu': 0.09}
-        ]
+        'name': 'Lưới 5 nút tổng hợp (Synthetic Case)',
+        'description': 'Lưới 5 nút vòng khép kín với 1 Slack, 1 PV có tải tại chỗ, 3 PQ và 7 đường dây liên kết.'
+    },
+    '14bus': {
+        'name': 'Chuẩn IEEE 14 nút (14-Bus Benchmark)',
+        'description': 'Hệ thống chuẩn IEEE 14 nút: 14 thanh cái, 20 đường dây, 5 máy phát điện (1 Slack, 4 PV).'
+    },
+    '30bus': {
+        'name': 'Chuẩn IEEE 30 nút (30-Bus Benchmark)',
+        'description': 'Hệ thống chuẩn IEEE 30 nút: 30 thanh cái, 41 đường dây, 6 máy phát điện (1 Slack, 5 PV).'
+    },
+    '57bus': {
+        'name': 'Chuẩn IEEE 57 nút (57-Bus Benchmark)',
+        'description': 'Hệ thống chuẩn IEEE 57 nút quy mô trung bình: 57 thanh cái, 80 đường dây, 7 máy phát điện.'
+    },
+    '118bus': {
+        'name': 'Chuẩn IEEE 118 nút (118-Bus Benchmark)',
+        'description': 'Hệ thống chuẩn IEEE 118 nút công nghiệp (AEP): 118 thanh cái, 186 đường dây, 54 máy phát điện.'
     }
 }
+
+def get_preset_case(preset_id: str) -> Dict[str, Any]:
+    """Dynamically loads any standard case from CSV files."""
+    if preset_id not in BENCHMARK_META:
+        raise ValueError(f"Không tìm thấy kịch bản mẫu '{preset_id}'")
+    
+    buses_df, lines_df = load_case(preset_id)
+    meta = BENCHMARK_META[preset_id]
+    
+    b_records = []
+    for _, r in buses_df.iterrows():
+        b_records.append({
+            'bus': int(r['bus']),
+            'type': str(r['type']),
+            'pg_pu': float(r['pg_pu']) if pd.notna(r.get('pg_pu')) else 0.0,
+            'qg_pu': float(r['qg_pu']) if pd.notna(r.get('qg_pu')) else 0.0,
+            'pd_pu': float(r['pd_pu']) if pd.notna(r.get('pd_pu')) else 0.0,
+            'qd_pu': float(r['qd_pu']) if pd.notna(r.get('qd_pu')) else 0.0,
+            'vm_pu': float(r['vm_pu']) if pd.notna(r.get('vm_pu')) else 1.0,
+            'va_deg': float(r['va_deg']) if pd.notna(r.get('va_deg')) else 0.0,
+            'q_min_pu': float(r['q_min_pu']) if pd.notna(r.get('q_min_pu')) else -1.0,
+            'q_max_pu': float(r['q_max_pu']) if pd.notna(r.get('q_max_pu')) else 1.0
+        })
+
+    l_records = []
+    for _, r in lines_df.iterrows():
+        l_records.append({
+            'from_bus': int(r['from_bus']),
+            'to_bus': int(r['to_bus']),
+            'r_pu': float(r['r_pu']),
+            'x_pu': float(r['x_pu'])
+        })
+
+    return {
+        'id': preset_id,
+        'name': meta['name'],
+        'description': meta['description'],
+        'base_mva': 100.0,
+        'buses': b_records,
+        'lines': l_records
+    }
+
+def get_all_presets_meta() -> List[Dict[str, Any]]:
+    """Returns metadata for all available presets."""
+    result = []
+    for pid, meta in BENCHMARK_META.items():
+        try:
+            b, l = load_case(pid)
+            result.append({
+                'id': pid,
+                'name': meta['name'],
+                'description': meta['description'],
+                'bus_count': len(b),
+                'line_count': len(l)
+            })
+        except Exception:
+            result.append({
+                'id': pid,
+                'name': meta['name'],
+                'description': meta['description'],
+                'bus_count': 0,
+                'line_count': 0
+            })
+    return result
+
+# Cache static dictionary for backward compatibility
+PRESETS = {pid: get_preset_case(pid) for pid in ['3bus', '5bus']}
+
+
+# ==============================================================================
+# 5. PRACTICAL ENGINEERING SCENARIOS & SECURITY AUDIT
+# ==============================================================================
+
+def _filter_core_frames(buses_df: pd.DataFrame, lines_df: pd.DataFrame):
+    """Filters DataFrames to exact schema required by src.validation.validate."""
+    b_cols = ['bus', 'type', 'pg_pu', 'qg_pu', 'pd_pu', 'qd_pu', 'vm_pu', 'va_deg']
+    l_cols = ['from_bus', 'to_bus', 'r_pu', 'x_pu']
+    b = buses_df[[c for c in b_cols if c in buses_df.columns]].copy()
+    for c in b_cols:
+        if c not in b.columns:
+            b[c] = 0.0 if c not in ['vm_pu', 'type'] else (1.0 if c == 'vm_pu' else 'PQ')
+    l = lines_df[[c for c in l_cols if c in lines_df.columns]].copy()
+    return b[b_cols], l[l_cols]
+
+def audit_grid_security(buses_df: pd.DataFrame, lines_df: pd.DataFrame, base_mva: float = 100.0) -> Dict[str, Any]:
+    """Evaluates grid compliance against statutory voltage limits (0.95 - 1.05 pu) and phase angles."""
+    b, l = _filter_core_frames(buses_df, lines_df)
+    sol = core_solve(b, l, max_iterations=30, tolerance=1e-6)
+    sec = check_grid_security(b, l, sol, base_mva=base_mva)
+    
+    if not sec.get('converged', False):
+        return {
+            'converged': False,
+            'status': 'Diverged / Voltage Collapse',
+            'is_fully_compliant': False,
+            'violations_count': 0
+        }
+        
+    low_buses = sec['critical_low_voltage_buses'].to_dict(orient='records') if not sec['critical_low_voltage_buses'].empty else []
+    high_buses = sec['critical_high_voltage_buses'].to_dict(orient='records') if not sec['critical_high_voltage_buses'].empty else []
+    angles = sec['angle_violations'].to_dict(orient='records') if not sec['angle_violations'].empty else []
+    
+    return {
+        'converged': True,
+        'v_min_observed': sec['v_min_observed'],
+        'v_max_observed': sec['v_max_observed'],
+        'critical_low_voltage_buses': low_buses,
+        'critical_high_voltage_buses': high_buses,
+        'max_angle_diff_deg': sec['max_angle_diff_deg'],
+        'angle_violations': angles,
+        'total_p_loss_MW': sec['total_p_loss_MW'],
+        'p_balance_err_MW': sec['p_balance_err_MW'],
+        'q_balance_err_Mvar': sec['q_balance_err_Mvar'],
+        'is_fully_compliant': bool(sec['is_fully_compliant']),
+        'violations_count': len(low_buses) + len(high_buses) + len(angles)
+    }
+
+def compute_n1_contingency(buses_df: pd.DataFrame, lines_df: pd.DataFrame, base_mva: float = 100.0) -> List[Dict[str, Any]]:
+    """Performs full automated N-1 line contingency scan."""
+    b, l = _filter_core_frames(buses_df, lines_df)
+    df_n1 = run_n1_contingency(b, l, base_mva=base_mva)
+    records = df_n1.to_dict(orient='records')
+    # Clean NaN values for JSON serialization
+    for r in records:
+        for k, v in r.items():
+            if pd.isna(v):
+                r[k] = None
+    return records
+
+def compute_load_stress_pv(buses_df: pd.DataFrame, lines_df: pd.DataFrame, base_mva: float = 100.0) -> List[Dict[str, Any]]:
+    """Computes voltage stability P-V curve operating points."""
+    b, l = _filter_core_frames(buses_df, lines_df)
+    df_pv = run_load_stress_analysis(b, l, base_mva=base_mva)
+    records = df_pv.to_dict(orient='records')
+    for r in records:
+        for k, v in r.items():
+            if pd.isna(v):
+                r[k] = None
+    return records
+
+
+# ==============================================================================
+# 6. INDEPENDENT PYPOWER CROSS-VALIDATION
+# ==============================================================================
+
+def verify_case_with_pypower(buses_df: pd.DataFrame, lines_df: pd.DataFrame, base_mva: float = 100.0) -> Dict[str, Any]:
+    """Compares the project solver against industry-standard PyPower (MATPOWER in Python)."""
+    b = buses_df.copy()
+    l = lines_df.copy()
+    n = len(b)
+    
+    # Run project solver first
+    sol_proj = solve_power_flow(b, l, base_mva=base_mva)
+    if not sol_proj['converged']:
+        return {
+            'verified': False,
+            'status': 'FAIL',
+            'message': 'Thuật toán dự án không hội tụ trên hệ thống này.',
+            'max_voltage_error_pu': None,
+            'max_angle_error_deg': None,
+            'loss_error_MW': None,
+            'comparison': []
+        }
+
+    # Setup PyPower bus matrix
+    bus = np.zeros((n, 13))
+    bus[:, 0] = b['bus'].astype(int)
+    type_map = {'Slack': 3, 'PV': 2, 'PQ': 1}
+    bus[:, 1] = b['type'].map(type_map).fillna(1).astype(int)
+    bus[:, 2] = base_mva * b['pd_pu'].fillna(0.0)
+    bus[:, 3] = base_mva * b['qd_pu'].fillna(0.0)
+    bus[:, 6] = 1.0  # area
+    bus[:, 7] = b['vm_pu'].fillna(1.0)
+    bus[:, 8] = b['va_deg'].fillna(0.0)
+    bus[:, 9] = 110.0  # baseKV
+    bus[:, 10] = 1.0  # zone
+    bus[:, 11] = 1.1  # Vmax
+    bus[:, 12] = 0.9  # Vmin
+
+    genrows = []
+    for r in b[b['type'] != 'PQ'].itertuples():
+        genrows.append([int(r.bus), base_mva * getattr(r, 'pg_pu', 0.0), base_mva * getattr(r, 'qg_pu', 0.0), 9999.0, -9999.0, getattr(r, 'vm_pu', 1.0), base_mva, 1, 9999.0, -9999.0] + [0.0] * 11)
+    if not genrows:
+        genrows.append([1, 0.0, 0.0, 9999.0, -9999.0, 1.0, base_mva, 1, 9999.0, -9999.0] + [0.0] * 11)
+
+    br = np.zeros((len(l), 13))
+    br[:, 0] = l['from_bus'].astype(int)
+    br[:, 1] = l['to_bus'].astype(int)
+    br[:, 2] = l['r_pu'].astype(float)
+    br[:, 3] = l['x_pu'].astype(float)
+    br[:, 10] = 1.0  # status
+    br[:, 11] = -360.0
+    br[:, 12] = 360.0
+
+    ppc = {
+        'version': '2',
+        'baseMVA': float(base_mva),
+        'bus': bus,
+        'gen': np.array(genrows, dtype=float),
+        'branch': br
+    }
+
+    try:
+        res, success = runpf(ppc, ppoption(VERBOSE=0, OUT_ALL=0, PF_TOL=1e-10, ENFORCE_Q_LIMS=0))
+        if not success:
+            return {
+                'verified': False,
+                'status': 'PYPOWER_DIVERGED',
+                'message': 'PyPower không hội tụ.',
+                'max_voltage_error_pu': None,
+                'max_angle_error_deg': None,
+                'loss_error_MW': None,
+                'comparison': []
+            }
+        
+        pp_bus_res = res['bus']
+        pp_bus_map = {int(pp_bus_res[i, 0]): (float(pp_bus_res[i, 7]), float(pp_bus_res[i, 8])) for i in range(len(pp_bus_res))}
+        
+        comparison = []
+        max_v_err = 0.0
+        max_a_err = 0.0
+
+        for b_item in sol_proj['buses']:
+            bid = int(b_item['bus'])
+            v_proj = float(b_item['vm_pu'])
+            a_proj = float(b_item['va_deg'])
+            v_pp, a_pp = pp_bus_map.get(bid, (v_proj, a_proj))
+            
+            v_err = abs(v_proj - v_pp)
+            a_err = abs(a_proj - a_pp)
+            max_v_err = max(max_v_err, v_err)
+            max_a_err = max(max_a_err, a_err)
+
+            comparison.append({
+                'bus': bid,
+                'type': b_item['type'],
+                'v_project_pu': round(v_proj, 5),
+                'v_pypower_pu': round(v_pp, 5),
+                'v_diff_pu': f"{v_err:.2e}",
+                'va_project_deg': round(a_proj, 3),
+                'va_pypower_deg': round(a_pp, 3),
+                'va_diff_deg': f"{a_err:.2e}",
+                'status': 'PASS' if v_err < 1e-6 else 'WARN'
+            })
+
+        pp_loss = float((res['branch'][:, 13] + res['branch'][:, 15]).sum())
+        proj_loss = sol_proj['summary']['total_loss_MW']
+        loss_err = abs(proj_loss - pp_loss)
+        is_passed = bool(max_v_err < 1e-6 and max_a_err < 1e-4 and loss_err < 1e-4)
+
+        return {
+            'verified': bool(is_passed),
+            'status': 'PASS' if is_passed else 'WARNING',
+            'max_voltage_error_pu': float(max_v_err),
+            'max_angle_error_deg': float(max_a_err),
+            'loss_error_MW': float(loss_err),
+            'project_loss_MW': round(proj_loss, 4),
+            'pypower_loss_MW': round(pp_loss, 4),
+            'message': f"Đạt chuẩn kiểm định quốc tế PyPower (Sai lệch điện áp cực đại: {max_v_err:.2e} pu < 1e-6 pu)",
+            'comparison': comparison
+        }
+    except Exception as exc:
+        return {
+            'verified': False,
+            'status': 'ERROR',
+            'message': f"Lỗi so sánh PyPower: {str(exc)}",
+            'max_voltage_error_pu': None,
+            'max_angle_error_deg': None,
+            'loss_error_MW': None,
+            'comparison': []
+        }
+

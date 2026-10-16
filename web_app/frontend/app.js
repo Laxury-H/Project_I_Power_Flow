@@ -9,6 +9,8 @@ const state = {
   buses: [],
   lines: [],
   baseMva: 100.0,
+  demandScale: 100.0,
+  trippedLines: [],
   displayUnit: 'pu', // 'pu' or 'mw'
   presetId: '3bus',
   validation: { valid: true, errors: [], warnings: [] },
@@ -23,6 +25,7 @@ const state = {
 const dom = {
   presetSelect: document.getElementById('presetSelect'),
   baseMvaInput: document.getElementById('baseMvaInput'),
+  demandScaleInput: document.getElementById('demandScaleInput'),
   unitToggle: document.getElementById('unitToggle'),
   btnSolve: document.getElementById('btnSolve'),
   btnReset: document.getElementById('btnReset'),
@@ -90,6 +93,35 @@ const dom = {
   branchResultsBody: document.getElementById('branchResultsBody'),
   btnExportResultsCsv: document.getElementById('btnExportResultsCsv'),
 
+  // Tab 5: Contingency & Security Audit
+  btnAuditSecurity: document.getElementById('btnAuditSecurity'),
+  auditVoltStatus: document.getElementById('auditVoltStatus'),
+  auditVmin: document.getElementById('auditVmin'),
+  auditAngleMax: document.getElementById('auditAngleMax'),
+  auditPbalance: document.getElementById('auditPbalance'),
+  auditViolationsSection: document.getElementById('auditViolationsSection'),
+  auditViolationsTableBody: document.getElementById('auditViolationsTableBody'),
+
+  tripLineSelect: document.getElementById('tripLineSelect'),
+  btnTripLine: document.getElementById('btnTripLine'),
+  restoreLineSelect: document.getElementById('restoreLineSelect'),
+  btnRestoreLine: document.getElementById('btnRestoreLine'),
+
+  btnRunN1: document.getElementById('btnRunN1'),
+  n1TableBody: document.getElementById('n1TableBody'),
+
+  btnRunPv: document.getElementById('btnRunPv'),
+  pvTableBody: document.getElementById('pvTableBody'),
+  pvChartWrapper: document.getElementById('pvChartWrapper'),
+
+  // Tab 6: PyPower Verification
+  btnRunPyPower: document.getElementById('btnRunPyPower'),
+  pyPowerStatusBadge: document.getElementById('pyPowerStatusBadge'),
+  pyPowerMaxVerr: document.getElementById('pyPowerMaxVerr'),
+  pyPowerMaxAerr: document.getElementById('pyPowerMaxAerr'),
+  pyPowerLossErr: document.getElementById('pyPowerLossErr'),
+  pyPowerTableBody: document.getElementById('pyPowerTableBody'),
+
   interactiveTooltip: document.getElementById('interactiveTooltip'),
   toastContainer: document.getElementById('toastContainer')
 };
@@ -101,6 +133,7 @@ const dom = {
 document.addEventListener('DOMContentLoaded', async () => {
   setupNavigationTabs();
   setupGlobalControls();
+  setupScenarioControls();
   setupDiagramInteractions();
   setupCsvHandling();
   
@@ -117,13 +150,16 @@ function setupNavigationTabs() {
       
       tab.classList.add('active');
       const tabId = tab.getAttribute('data-tab');
-      document.getElementById(tabId).classList.add('active');
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.add('active');
       state.activeTab = tabId;
 
       if (tabId === 'tab-ybus') {
         fetchAndRenderYbus();
       } else if (tabId === 'tab-diagram') {
         renderDiagram();
+      } else if (tabId === 'tab-contingency') {
+        updateBreakerSelects();
       }
     });
   });
@@ -145,6 +181,16 @@ function setupGlobalControls() {
       triggerValidation();
     }
   });
+
+  if (dom.demandScaleInput) {
+    dom.demandScaleInput.addEventListener('change', (e) => {
+      const val = parseFloat(e.target.value);
+      if (!isNaN(val) && val > 0) {
+        state.demandScale = val;
+        showToast(`Đã điều chỉnh quy mô phụ tải lên ${val}%`, 'info');
+      }
+    });
+  }
 
   dom.unitToggle.addEventListener('change', (e) => {
     state.displayUnit = e.target.checked ? 'mw' : 'pu';
@@ -221,6 +267,9 @@ async function loadPreset(presetId) {
     state.presetId = presetId;
     state.buses = JSON.parse(JSON.stringify(data.buses));
     state.lines = JSON.parse(JSON.stringify(data.lines));
+    state.trippedLines = [];
+    state.demandScale = 100.0;
+    if (dom.demandScaleInput) dom.demandScaleInput.value = 100;
     state.baseMva = data.base_mva || 100.0;
     dom.baseMvaInput.value = state.baseMva;
     dom.presetSelect.value = presetId;
@@ -231,6 +280,7 @@ async function loadPreset(presetId) {
     renderDiagram();
     triggerValidation();
     resetResultsView();
+    updateBreakerSelects();
 
     showToast(`Đã nạp ${data.name} thành công!`, 'success');
   } catch (err) {
@@ -1109,6 +1159,7 @@ async function runPowerFlowSolve() {
         buses: state.buses,
         lines: state.lines,
         base_mva: state.baseMva,
+        demand_scale: state.demandScale,
         tolerance: 1e-6,
         max_iterations: 30
       })
@@ -1439,3 +1490,428 @@ function showToast(message, type = 'info') {
     setTimeout(() => toast.remove(), 300);
   }, 3500);
 }
+
+
+// =============================================================================
+// 10. ADVANCED SCENARIO ANALYSIS, N-1 CONTINGENCY & PYPOWER BENCHMARKING
+// =============================================================================
+
+function setupScenarioControls() {
+  if (dom.btnAuditSecurity) {
+    dom.btnAuditSecurity.addEventListener('click', runSecurityAudit);
+  }
+  if (dom.btnTripLine) {
+    dom.btnTripLine.addEventListener('click', tripSelectedLine);
+  }
+  if (dom.btnRestoreLine) {
+    dom.btnRestoreLine.addEventListener('click', restoreSelectedLine);
+  }
+  if (dom.btnRunN1) {
+    dom.btnRunN1.addEventListener('click', runN1Contingency);
+  }
+  if (dom.btnRunPv) {
+    dom.btnRunPv.addEventListener('click', runPvLoadStress);
+  }
+  if (dom.btnRunPyPower) {
+    dom.btnRunPyPower.addEventListener('click', runPyPowerVerification);
+  }
+}
+
+function updateBreakerSelects() {
+  if (!dom.tripLineSelect || !dom.restoreLineSelect) return;
+
+  // Active in-service lines
+  dom.tripLineSelect.innerHTML = '';
+  if (state.lines.length === 0) {
+    dom.tripLineSelect.innerHTML = '<option value="">(Không có đường dây nào)</option>';
+    if (dom.btnTripLine) dom.btnTripLine.disabled = true;
+  } else {
+    state.lines.forEach((l, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `Đường dây ${l.from_bus} ➔ ${l.to_bus} (R=${l.r_pu}, X=${l.x_pu})`;
+      dom.tripLineSelect.appendChild(opt);
+    });
+    if (dom.btnTripLine) dom.btnTripLine.disabled = state.lines.length <= 1;
+  }
+
+  // Tripped lines
+  dom.restoreLineSelect.innerHTML = '';
+  if (state.trippedLines.length === 0) {
+    dom.restoreLineSelect.innerHTML = '<option value="">(Không có đường dây nào đang cắt)</option>';
+    if (dom.btnRestoreLine) dom.btnRestoreLine.disabled = true;
+  } else {
+    state.trippedLines.forEach((l, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `Đường dây ${l.from_bus} ➔ ${l.to_bus} (ĐÃ CẮT SỰ CỐ)`;
+      dom.restoreLineSelect.appendChild(opt);
+    });
+    if (dom.btnRestoreLine) dom.btnRestoreLine.disabled = false;
+  }
+}
+
+function tripSelectedLine() {
+  const selIdx = parseInt(dom.tripLineSelect.value);
+  if (isNaN(selIdx) || selIdx < 0 || selIdx >= state.lines.length) {
+    showToast('Vui lòng chọn đường dây cần cắt!', 'error');
+    return;
+  }
+  const [tripped] = state.lines.splice(selIdx, 1);
+  state.trippedLines.push(tripped);
+
+  markCustomPreset();
+  renderTables();
+  renderDiagram();
+  triggerValidation();
+  updateBreakerSelects();
+  showToast(`🔴 ĐÃ CẮT ĐƯỜNG DÂY ${tripped.from_bus} ➔ ${tripped.to_bus}!`, 'error');
+}
+
+function restoreSelectedLine() {
+  const selIdx = parseInt(dom.restoreLineSelect.value);
+  if (isNaN(selIdx) || selIdx < 0 || selIdx >= state.trippedLines.length) {
+    showToast('Vui lòng chọn đường dây cần đóng lại!', 'error');
+    return;
+  }
+  const [restored] = state.trippedLines.splice(selIdx, 1);
+  state.lines.push(restored);
+
+  markCustomPreset();
+  renderTables();
+  renderDiagram();
+  triggerValidation();
+  updateBreakerSelects();
+  showToast(`🟢 ĐÃ ĐÓNG LẠI ĐƯỜNG DÂY ${restored.from_bus} ➔ ${restored.to_bus}!`, 'success');
+}
+
+async function runSecurityAudit() {
+  if (!dom.btnAuditSecurity) return;
+  dom.btnAuditSecurity.disabled = true;
+  dom.btnAuditSecurity.textContent = '⏳ Đang kiểm định...';
+
+  try {
+    const res = await fetch('/api/security-audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buses: state.buses,
+        lines: state.lines,
+        base_mva: state.baseMva,
+        demand_scale: state.demandScale
+      })
+    });
+    if (!res.ok) throw new Error('Kiểm định an toàn thất bại');
+    const data = await res.json();
+
+    const isCompliant = data.is_fully_compliant;
+    if (isCompliant) {
+      dom.auditVoltStatus.className = 'kpi-value text-success';
+      dom.auditVoltStatus.textContent = 'ĐẠT CHUẨN (N-0)';
+    } else {
+      dom.auditVoltStatus.className = 'kpi-value text-danger';
+      dom.auditVoltStatus.textContent = `VI PHẠM (${data.violations_count} vi phạm)`;
+    }
+
+    dom.auditVmin.textContent = data.v_min_observed !== undefined ? `${data.v_min_observed.toFixed(4)} pu` : '—';
+    dom.auditAngleMax.textContent = data.max_angle_diff_deg !== undefined ? `${data.max_angle_diff_deg.toFixed(2)}°` : '—';
+    const pBal = data.p_balance_err_MW;
+    dom.auditPbalance.textContent = (pBal !== undefined && pBal < 1e-10) ? '< 10⁻¹² MW' : (pBal !== undefined ? `${pBal.toExponential(3)} MW` : '—');
+
+    // Combine violations
+    const violations = [];
+    if (data.critical_low_voltage_buses) {
+      data.critical_low_voltage_buses.forEach(b => violations.push({
+        bus: b.bus, type: b.type, vm_pu: b.vm_pu, desc: `Điện áp thấp < ${b.limit_pu || 0.95} pu`
+      }));
+    }
+    if (data.critical_high_voltage_buses) {
+      data.critical_high_voltage_buses.forEach(b => violations.push({
+        bus: b.bus, type: b.type, vm_pu: b.vm_pu, desc: `Điện áp cao > ${b.limit_pu || 1.05} pu`
+      }));
+    }
+    if (data.angle_violations) {
+      data.angle_violations.forEach(a => violations.push({
+        bus: `${a.from_bus} ➔ ${a.to_bus}`, type: 'Đường dây', vm_pu: a.angle_diff_deg, desc: `Lệch pha ${a.angle_diff_deg.toFixed(1)}° > 30°`
+      }));
+    }
+
+    if (violations.length > 0 && dom.auditViolationsSection) {
+      dom.auditViolationsSection.style.display = 'block';
+      dom.auditViolationsTableBody.innerHTML = violations.map(v => `
+        <tr>
+          <td><strong>Bus ${v.bus}</strong></td>
+          <td><span class="bus-badge badge-${v.type ? v.type.toLowerCase() : 'pv'}">${v.type}</span></td>
+          <td class="font-mono font-bold text-danger">${typeof v.vm_pu === 'number' ? v.vm_pu.toFixed(4) : v.vm_pu}</td>
+          <td><span class="bus-badge badge-status-err">${v.desc}</span></td>
+        </tr>
+      `).join('');
+    } else if (dom.auditViolationsSection) {
+      dom.auditViolationsSection.style.display = 'none';
+    }
+
+    showToast(isCompliant ? 'Đạt toàn bộ tiêu chuẩn vận hành an toàn Grid Code N-0!' : `Phát hiện ${data.violations_count} vi phạm điện áp/góc pha!`, isCompliant ? 'success' : 'warning');
+  } catch (err) {
+    showToast(`Lỗi kiểm tra quy chuẩn: ${err.message}`, 'error');
+  } finally {
+    dom.btnAuditSecurity.disabled = false;
+    dom.btnAuditSecurity.textContent = '🛡️ Quét tuân thủ N-0';
+  }
+}
+
+async function runN1Contingency() {
+  if (!dom.btnRunN1) return;
+  dom.btnRunN1.disabled = true;
+  dom.btnRunN1.textContent = '⏳ Đang quét N-1...';
+
+  try {
+    const res = await fetch('/api/contingency-n1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buses: state.buses,
+        lines: state.lines,
+        base_mva: state.baseMva,
+        demand_scale: state.demandScale
+      })
+    });
+    if (!res.ok) throw new Error('Quét sự cố N-1 thất bại');
+    const data = await res.json();
+    const records = Array.isArray(data) ? data : (data.contingencies || []);
+
+    if (records.length === 0) {
+      dom.n1TableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">Không có đường dây nào để quét!</td></tr>';
+      return;
+    }
+
+    dom.n1TableBody.innerHTML = records.map((c, idx) => {
+      let severityClass = 'badge-status-ok';
+      if (c.risk_level && c.risk_level.includes('Cảnh báo')) severityClass = 'badge-status-warn';
+      else if (c.risk_level && (c.risk_level.includes('Nghiêm trọng') || c.risk_level.includes('Không hội tụ') || c.risk_level.includes('Phân đảo') || c.risk_level.includes('Cực kỳ'))) severityClass = 'badge-status-err';
+
+      const vMinDisplay = c.v_min_pu !== null && c.v_min_pu !== undefined ? `${c.v_min_pu.toFixed(4)} pu` : '—';
+      const lossDisplay = c.p_loss_MW !== null && c.p_loss_MW !== undefined ? `${c.p_loss_MW.toFixed(3)} MW` : '—';
+      const incDisplay = c.loss_delta_MW !== null && c.loss_delta_MW !== undefined ? `${c.loss_delta_MW >= 0 ? '+' : ''}${c.loss_delta_MW.toFixed(3)} MW` : '—';
+
+      return `
+        <tr>
+          <td><strong>#${idx + 1}</strong></td>
+          <td><span class="font-bold">Đường dây ${c.outage}</span></td>
+          <td>${c.converged ? '<span class="bus-badge badge-status-ok">Hội tụ</span>' : '<span class="bus-badge badge-status-err">Mất hội tụ</span>'}</td>
+          <td>${c.iterations ? c.iterations + ' vòng' : '—'}</td>
+          <td class="font-mono font-bold">${vMinDisplay}</td>
+          <td>${c.worst_bus || '—'}</td>
+          <td class="font-mono">${lossDisplay}</td>
+          <td class="font-mono">${incDisplay}</td>
+          <td><span class="bus-badge ${severityClass}">${c.risk_level || c.status}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    const warnCount = records.filter(r => r.risk_level && r.risk_level.includes('Cảnh báo')).length;
+    const critCount = records.filter(r => r.risk_level && (r.risk_level.includes('Nghiêm trọng') || r.risk_level.includes('Không hội tụ') || r.risk_level.includes('Phân đảo'))).length;
+    showToast(`Quét xong N-1: ${records.length} trường hợp sự cố (Cảnh báo: ${warnCount}, Nguy cấp: ${critCount})`, 'info');
+  } catch (err) {
+    showToast(`Lỗi quét N-1: ${err.message}`, 'error');
+  } finally {
+    dom.btnRunN1.disabled = false;
+    dom.btnRunN1.textContent = '🚀 Quét toàn bộ sự cố N-1';
+  }
+}
+
+async function runPvLoadStress() {
+  if (!dom.btnRunPv) return;
+  dom.btnRunPv.disabled = true;
+  dom.btnRunPv.textContent = '⏳ Đang quét tải...';
+
+  try {
+    const res = await fetch('/api/load-stress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buses: state.buses,
+        lines: state.lines,
+        base_mva: state.baseMva
+      })
+    });
+    if (!res.ok) throw new Error('Khảo sát P-V thất bại');
+    const data = await res.json();
+    const points = Array.isArray(data) ? data : (data.points || []);
+
+    if (points.length === 0) {
+      dom.pvTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Không có dữ liệu P-V!</td></tr>';
+      return;
+    }
+
+    dom.pvTableBody.innerHTML = points.map(p => {
+      const isOk = p.converged;
+      const statusBadge = isOk ? '<span class="bus-badge badge-status-ok">Hội tụ</span>' : '<span class="bus-badge badge-status-err">Sụp đổ</span>';
+      return `
+        <tr>
+          <td><strong>${p.scale_pct}%</strong></td>
+          <td class="font-mono">${p.demand_MW !== null && p.demand_MW !== undefined ? p.demand_MW.toFixed(2) : '—'}</td>
+          <td>${statusBadge}</td>
+          <td class="font-mono font-bold ${(p.v_min_pu !== null && p.v_min_pu < 0.95) ? 'text-danger' : 'text-primary'}">${p.v_min_pu !== null && p.v_min_pu !== undefined ? p.v_min_pu.toFixed(4) : '—'}</td>
+          <td>${p.worst_bus || '—'}</td>
+          <td class="font-mono">${p.p_loss_MW !== null && p.p_loss_MW !== undefined ? p.p_loss_MW.toFixed(3) : '—'}</td>
+        </tr>
+      `;
+    }).join('');
+
+    renderPvCurve(points);
+    const convergedPts = points.filter(p => p.converged);
+    const maxScale = convergedPts.length > 0 ? Math.max(...convergedPts.map(p => p.scale_pct)) : 100;
+    const margin = maxScale - 100;
+    showToast(`Khảo sát P-V thành công! Dự phòng quá tải điện áp: +${margin}%`, 'info');
+  } catch (err) {
+    showToast(`Lỗi khảo sát P-V: ${err.message}`, 'error');
+  } finally {
+    dom.btnRunPv.disabled = false;
+    dom.btnRunPv.textContent = '📈 Khảo sát đường cong P-V';
+  }
+}
+
+function renderPvCurve(points) {
+  if (!dom.pvChartWrapper) return;
+  const validPts = points.filter(p => p.converged && p.demand_MW !== null && p.v_min_pu !== null);
+  if (validPts.length < 2) {
+    dom.pvChartWrapper.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Không đủ điểm hội tụ để dựng đường cong P-V</div></div>';
+    return;
+  }
+
+  const w = 540;
+  const h = 280;
+  const padL = 55;
+  const padR = 30;
+  const padT = 30;
+  const padB = 40;
+  const chartW = w - padL - padR;
+  const chartH = h - padT - padB;
+
+  const pMin = Math.min(...validPts.map(p => p.demand_MW)) * 0.9;
+  const pMax = Math.max(...validPts.map(p => p.demand_MW)) * 1.08;
+  const vMin = Math.min(0.70, Math.min(...validPts.map(p => p.v_min_pu)) * 0.95);
+  const vMax = Math.max(1.10, Math.max(...validPts.map(p => p.v_min_pu)) * 1.02);
+
+  const getX = (val) => padL + ((val - pMin) / (pMax - pMin)) * chartW;
+  const getY = (val) => padT + chartH * (1 - (val - vMin) / (vMax - vMin));
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" class="pv-svg" style="width:100%; height:100%; overflow:visible;">`;
+
+  // Grid Lines
+  for (let v = Math.ceil(vMin * 10) / 10; v <= vMax; v += 0.1) {
+    const y = getY(v);
+    svg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="#1E293B" stroke-width="1" />`;
+    svg += `<text x="${padL - 8}" y="${y + 4}" fill="#64748B" font-size="10" text-anchor="end" font-family="JetBrains Mono">${v.toFixed(2)}</text>`;
+  }
+
+  // Statutory Limit Line (0.95 pu)
+  const y95 = getY(0.95);
+  svg += `<line x1="${padL}" y1="${y95}" x2="${w - padR}" y2="${y95}" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4,4" />`;
+  svg += `<text x="${w - padR - 5}" y="${y95 - 6}" fill="#F59E0B" font-size="9" text-anchor="end" font-family="Inter">Ngưỡng 0.95 pu</text>`;
+
+  // Axes
+  svg += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h - padB}" stroke="#475569" stroke-width="1.5" />`;
+  svg += `<line x1="${padL}" y1="${h - padB}" x2="${w - padR}" y2="${h - padB}" stroke="#475569" stroke-width="1.5" />`;
+
+  // X-ticks
+  const pStep = (pMax - pMin) / 4;
+  for (let i = 0; i <= 4; i++) {
+    const pVal = pMin + i * pStep;
+    const x = getX(pVal);
+    svg += `<line x1="${x}" y1="${h - padB}" x2="${x}" y2="${h - padB + 5}" stroke="#475569" stroke-width="1" />`;
+    svg += `<text x="${x}" y="${h - padB + 18}" fill="#64748B" font-size="10" text-anchor="middle" font-family="JetBrains Mono">${pVal.toFixed(1)}</text>`;
+  }
+
+  // Axis Labels
+  svg += `<text x="${padL + chartW / 2}" y="${h - 6}" fill="#94A3B8" font-size="11" text-anchor="middle" font-family="Inter" font-weight="600">Tổng công suất tải P_load (MW)</text>`;
+  svg += `<text x="16" y="${padT + chartH / 2}" fill="#94A3B8" font-size="11" text-anchor="middle" font-family="Inter" font-weight="600" transform="rotate(-90 16 ${padT + chartH / 2})">Điện áp thấp nhất V_min (pu)</text>`;
+
+  // P-V Trajectory Path
+  let dPath = '';
+  validPts.forEach((pt, i) => {
+    const x = getX(pt.demand_MW);
+    const y = getY(pt.v_min_pu);
+    dPath += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+  });
+  svg += `<path d="${dPath}" fill="none" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+
+  // Data Points
+  validPts.forEach(pt => {
+    const x = getX(pt.demand_MW);
+    const y = getY(pt.v_min_pu);
+    svg += `<circle cx="${x}" cy="${y}" r="4" fill="#0284C7" stroke="#38BDF8" stroke-width="1.5">
+      <title>${pt.scale_pct}% Tải: ${pt.demand_MW.toFixed(1)} MW ➔ Vmin = ${pt.v_min_pu.toFixed(4)} pu (${pt.worst_bus})</title>
+    </circle>`;
+  });
+
+  // Nose point annotation
+  const criticalPt = validPts[validPts.length - 1];
+  if (criticalPt && criticalPt.demand_MW) {
+    const nx = getX(criticalPt.demand_MW);
+    const ny = getY(criticalPt.v_min_pu);
+    svg += `<circle cx="${nx}" cy="${ny}" r="7" fill="#EF4444" stroke="#FFFFFF" stroke-width="2" />`;
+    svg += `<text x="${nx}" y="${ny - 12}" fill="#EF4444" font-size="10" text-anchor="middle" font-weight="bold" font-family="Inter">Điểm tới hạn (Nose Point)</text>`;
+  }
+
+  svg += `</svg>`;
+  dom.pvChartWrapper.innerHTML = svg;
+}
+
+async function runPyPowerVerification() {
+  if (!dom.btnRunPyPower) return;
+  dom.btnRunPyPower.disabled = true;
+  dom.btnRunPyPower.textContent = '⚡ Đang đối chuẩn...';
+
+  try {
+    const res = await fetch('/api/verify-pypower', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buses: state.buses,
+        lines: state.lines,
+        base_mva: state.baseMva
+      })
+    });
+    if (!res.ok) throw new Error('Đối chuẩn thất bại');
+    const data = await res.json();
+
+    const isPass = data.status === 'PASS';
+    dom.pyPowerStatusBadge.className = isPass ? 'kpi-value text-success' : 'kpi-value text-danger';
+    dom.pyPowerStatusBadge.textContent = isPass ? 'HOÀN HẢO (PASS)' : (data.status || 'FAIL');
+
+    dom.pyPowerMaxVerr.textContent = data.max_voltage_error_pu !== null ? `${data.max_voltage_error_pu.toExponential(3)} pu` : '—';
+    dom.pyPowerMaxAerr.textContent = data.max_angle_error_deg !== null ? `${data.max_angle_error_deg.toExponential(3)} °` : '—';
+    dom.pyPowerLossErr.textContent = data.loss_error_MW !== null ? `${data.loss_error_MW.toExponential(3)} MW` : '—';
+
+    if (data.comparison && data.comparison.length > 0) {
+      dom.pyPowerTableBody.innerHTML = data.comparison.map(row => {
+        const passPill = row.status === 'PASS' 
+          ? '<span class="bus-badge badge-status-ok">PASS</span>'
+          : '<span class="bus-badge badge-status-warn">WARN</span>';
+
+        return `
+          <tr>
+            <td><strong>Bus ${row.bus}</strong></td>
+            <td><span class="bus-badge badge-${row.type ? row.type.toLowerCase() : 'pv'}">${row.type}</span></td>
+            <td class="font-mono">${row.v_project_pu.toFixed(5)}</td>
+            <td class="font-mono">${row.v_pypower_pu.toFixed(5)}</td>
+            <td class="font-mono font-bold text-success">${row.v_diff_pu}</td>
+            <td class="font-mono">${row.va_project_deg.toFixed(3)}°</td>
+            <td class="font-mono">${row.va_pypower_deg.toFixed(3)}°</td>
+            <td class="font-mono font-bold text-success">${row.va_diff_deg}</td>
+            <td>${passPill}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    showToast(data.message || `Đối chuẩn hoàn tất: ${data.status}`, isPass ? 'success' : 'warning');
+  } catch (err) {
+    showToast(`Lỗi đối chuẩn PyPower: ${err.message}`, 'error');
+  } finally {
+    dom.btnRunPyPower.disabled = false;
+    dom.btnRunPyPower.textContent = '⚡ Chạy đối chuẩn PyPower';
+  }
+}
+

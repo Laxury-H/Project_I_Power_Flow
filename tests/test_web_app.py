@@ -89,3 +89,59 @@ def test_validation_invalid_impedance_rejected():
     val = validate_grid_data(preset['buses'], lines)
     assert val['valid'] is False
     assert any("Điện kháng X" in err for err in val['errors'])
+
+
+def test_all_presets_meta():
+    from web_app.backend.solver_service import get_all_presets_meta, get_preset_case
+    meta_list = get_all_presets_meta()
+    assert len(meta_list) == 6
+    ids = [m['id'] for m in meta_list]
+    assert '14bus' in ids and '30bus' in ids and '118bus' in ids
+
+    case14 = get_preset_case('14bus')
+    assert len(case14['buses']) == 14
+    assert len(case14['lines']) == 20
+
+
+def test_audit_grid_security():
+    from web_app.backend.solver_service import audit_grid_security, get_preset_case
+    c = get_preset_case('3bus')
+    df_b = pd.DataFrame(c['buses'])
+    df_l = pd.DataFrame(c['lines'])
+    sec = audit_grid_security(df_b, df_l, base_mva=100.0)
+    assert sec['converged'] is True
+    assert sec['v_min_observed'] > 0.95
+    assert sec['is_fully_compliant'] is True
+
+
+def test_contingency_n1():
+    from web_app.backend.solver_service import compute_n1_contingency, get_preset_case
+    c = get_preset_case('5bus')
+    df_b = pd.DataFrame(c['buses'])
+    df_l = pd.DataFrame(c['lines'])
+    n1 = compute_n1_contingency(df_b, df_l, base_mva=100.0)
+    assert len(n1) == 7
+    assert any(item['converged'] is True for item in n1)
+
+
+def test_load_stress_pv():
+    from web_app.backend.solver_service import compute_load_stress_pv, get_preset_case
+    c = get_preset_case('3bus')
+    df_b = pd.DataFrame(c['buses'])
+    df_l = pd.DataFrame(c['lines'])
+    pv = compute_load_stress_pv(df_b, df_l, base_mva=100.0)
+    assert len(pv) >= 5
+    assert pv[0]['converged'] is True
+
+
+def test_verify_case_with_pypower():
+    from web_app.backend.solver_service import verify_case_with_pypower, get_preset_case
+    c = get_preset_case('3bus')
+    df_b = pd.DataFrame(c['buses'])
+    df_l = pd.DataFrame(c['lines'])
+    comp = verify_case_with_pypower(df_b, df_l, base_mva=100.0)
+    assert comp['verified'] is True
+    assert comp['status'] == 'PASS'
+    assert comp['max_voltage_error_pu'] < 1e-6
+    assert len(comp['comparison']) == 3
+

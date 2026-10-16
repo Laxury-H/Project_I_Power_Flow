@@ -26,8 +26,12 @@
       <div class="control-group">
         <label for="presetSelect">Kịch bản mẫu:</label>
         <select id="presetSelect" class="form-select">
-          <option value="3bus">⚡ Lưới 3 nút (Task Benchmark)</option>
-          <option value="5bus">⚡ Lưới 5 nút (Synthetic Case)</option>
+          <option value="3bus">⚡ Lưới 3 nút đào tạo (Task Benchmark)</option>
+          <option value="5bus">⚡ Lưới 5 nút tổng hợp (Synthetic Case)</option>
+          <option value="14bus">⚡ Chuẩn IEEE 14 nút (14-Bus Benchmark)</option>
+          <option value="30bus">⚡ Chuẩn IEEE 30 nút (30-Bus Benchmark)</option>
+          <option value="57bus">⚡ Chuẩn IEEE 57 nút (57-Bus Benchmark)</option>
+          <option value="118bus">⚡ Chuẩn IEEE 118 nút (118-Bus Benchmark)</option>
           <option value="custom">📁 Lưới tùy chỉnh (Custom)</option>
         </select>
       </div>
@@ -37,6 +41,14 @@
         <div class="input-with-unit">
           <input type="number" id="baseMvaInput" value="100" min="1" step="10" class="form-input sm">
           <span class="unit-label">MVA</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label for="demandScaleInput">Quy mô tải:</label>
+        <div class="input-with-unit">
+          <input type="number" id="demandScaleInput" value="100" min="30" max="200" step="10" class="form-input sm" style="width: 70px;">
+          <span class="unit-label">%</span>
         </div>
       </div>
 
@@ -91,7 +103,13 @@
       <span class="tab-icon">▦</span> Ma trận dẫn nạp Y-bus
     </button>
     <button class="nav-tab" data-tab="tab-results">
-      <span class="tab-icon">📊</span> Nhật ký hội tụ & Bảng kết quả
+      <span class="tab-icon">📊</span> Nhật ký hội tụ & Kết quả
+    </button>
+    <button class="nav-tab" data-tab="tab-contingency">
+      <span class="tab-icon">🛡️</span> An toàn & Sự cố N-1
+    </button>
+    <button class="nav-tab" data-tab="tab-verification">
+      <span class="tab-icon">🏆</span> Đối chuẩn PyPower & Quy chuẩn
     </button>
   </nav>
 
@@ -480,6 +498,275 @@
             </thead>
             <tbody id="branchResultsBody"></tbody>
           </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 5: N-1 CONTINGENCY & GRID SECURITY AUDIT                      -->
+    <!-- ================================================================= -->
+    <section id="tab-contingency" class="tab-pane">
+      
+      <!-- Section 1: N-0 Grid Code Compliance -->
+      <div class="card mb-20">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-primary">Quy chuẩn N-0</span>
+            <h2 class="card-title">Đánh giá an toàn chế độ xác lập (Grid Code Security Audit)</h2>
+          </div>
+          <div class="card-actions">
+            <button id="btnAuditSecurity" class="btn btn-xs btn-primary">🛡️ Quét tuân thủ N-0</button>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Chuẩn điện áp (0.95 - 1.05 pu)</div>
+            <div id="auditVoltStatus" class="kpi-value text-success">ĐẠT CHUẨN</div>
+            <div class="kpi-sub">EVN Grid Code / IEEE 399</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Điện áp thấp nhất V<sub>min</sub></div>
+            <div id="auditVmin" class="kpi-value">— pu</div>
+            <div class="kpi-sub">Ngưỡng cảnh báo: &lt; 0.95 pu</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Góc lệch pha lớn nhất Δθ<sub>max</sub></div>
+            <div id="auditAngleMax" class="kpi-value">— °</div>
+            <div class="kpi-sub">Giới hạn ổn định tĩnh: ≤ 30°</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Sai số bảo toàn công suất P</div>
+            <div id="auditPbalance" class="kpi-value">— MW</div>
+            <div class="kpi-sub">|ΣP<sub>phát</sub> − ΣP<sub>tải</sub> − ΔP|</div>
+          </div>
+        </div>
+        <div id="auditViolationsSection" style="display: none; margin-top: 15px;">
+          <h3 class="card-subtitle text-danger">⚠️ Danh sách thanh cái vi phạm giới hạn điện áp</h3>
+          <div class="table-container max-h-300">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nút</th>
+                  <th>Loại nút</th>
+                  <th>Điện áp (pu)</th>
+                  <th>Trạng thái vi phạm</th>
+                </tr>
+              </thead>
+              <tbody id="auditViolationsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Circuit Breaker Switching Simulation -->
+      <div class="card mb-20">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-warning">Bàn điều độ</span>
+            <h2 class="card-title">Mô phỏng thao tác đóng / cắt máy cắt đường dây (Breaker Switching)</h2>
+          </div>
+        </div>
+        <div class="switching-grid">
+          <div class="switching-col">
+            <label class="form-label font-bold text-danger">🔴 Chọn đường dây đang mang điện để CẮT (Trip Line):</label>
+            <div class="form-inline-group">
+              <select id="tripLineSelect" class="form-select flex-1"></select>
+              <button id="btnTripLine" class="btn btn-danger">CẮT ĐƯỜNG DÂY</button>
+            </div>
+            <div class="card-footer-tip">Mô phỏng sự cố ngắt mạch tức thời để kiểm tra phản ứng của lưới điện.</div>
+          </div>
+          <div class="switching-col">
+            <label class="form-label font-bold text-success">🟢 Chọn đường dây đang ngắt để ĐÓNG LẠI (Restore Line):</label>
+            <div class="form-inline-group">
+              <select id="restoreLineSelect" class="form-select flex-1">
+                <option value="">(Không có đường dây nào đang cắt)</option>
+              </select>
+              <button id="btnRestoreLine" class="btn btn-success" disabled>ĐÓNG LẠI</button>
+            </div>
+            <div class="card-footer-tip">Khôi phục liên kết truyền tải và tái cân bằng trào lưu công suất.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Automated N-1 Contingency Scan -->
+      <div class="card mb-20">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-accent">An toàn N-1</span>
+            <h2 class="card-title">Quét tự động toàn bộ sự cố N-1 đường dây (Automated N-1 Screening)</h2>
+          </div>
+          <div class="card-actions">
+            <button id="btnRunN1" class="btn btn-xs btn-primary">🚀 Quét toàn bộ sự cố N-1</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Đường dây sự cố</th>
+                <th>Trạng thái giải</th>
+                <th>Vòng lặp</th>
+                <th>V<sub>min</sub> sau sự cố</th>
+                <th>Trạm sụt áp nhất</th>
+                <th>Tổn thất P (MW)</th>
+                <th>Gia tăng tổn thất</th>
+                <th>Mức độ rủi ro N-1</th>
+              </tr>
+            </thead>
+            <tbody id="n1TableBody">
+              <tr><td colspan="9" class="text-center text-muted">Nhấn "🚀 Quét toàn bộ sự cố N-1" để phân tích an toàn mạng lưới.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 4: Load Stress Analysis & P-V Curve -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-info">Ổn định tĩnh</span>
+            <h2 class="card-title">Khảo sát ổn định điện áp & đường cong P-V (Voltage Collapse Margin)</h2>
+          </div>
+          <div class="card-actions">
+            <button id="btnRunPv" class="btn btn-xs btn-primary">📈 Khảo sát đường cong P-V</button>
+          </div>
+        </div>
+        <div class="split-layout">
+          <div class="table-container flex-1">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Quy mô tải (%)</th>
+                  <th>Tổng phụ tải (MW)</th>
+                  <th>Hội tụ</th>
+                  <th>V<sub>min</sub> (pu)</th>
+                  <th>Nút tới hạn</th>
+                  <th>Tổn thất ΔP (MW)</th>
+                </tr>
+              </thead>
+              <tbody id="pvTableBody">
+                <tr><td colspan="6" class="text-center text-muted">Nhấn "📈 Khảo sát đường cong P-V" để chạy quét điểm tới hạn.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pv-chart-card">
+            <div id="pvChartWrapper" class="pv-chart-wrapper">
+              <div class="empty-state">
+                <div class="empty-icon">📈</div>
+                <div class="empty-text">Đường cong P-V sẽ hiển thị tại đây sau khi chạy khảo sát</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 6: PYPOWER BENCHMARK VERIFICATION & TECHNICAL FORMULATIONS    -->
+    <!-- ================================================================= -->
+    <section id="tab-verification" class="tab-pane">
+      
+      <!-- Section 1: PyPower Cross-Validation -->
+      <div class="card mb-20">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-success">Kiểm định chuẩn</span>
+            <h2 class="card-title">Đối chuẩn độc lập với phần mềm quốc tế PyPower / MATPOWER</h2>
+          </div>
+          <div class="card-actions">
+            <button id="btnRunPyPower" class="btn btn-xs btn-primary">⚡ Chạy đối chuẩn PyPower</button>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Trạng thái đối chuẩn</div>
+            <div id="pyPowerStatusBadge" class="kpi-value text-success">CHỜ KIỂM ĐỊNH</div>
+            <div class="kpi-sub">IEEE Benchmark Comparison</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Sai lệch điện áp cực đại |ΔV|</div>
+            <div id="pyPowerMaxVerr" class="kpi-value">— pu</div>
+            <div class="kpi-sub">Tiêu chuẩn: &lt; 10<sup>-6</sup> pu</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Sai lệch góc pha cực đại |Δδ|</div>
+            <div id="pyPowerMaxAerr" class="kpi-value">— °</div>
+            <div class="kpi-sub">Tiêu chuẩn: &lt; 10<sup>-4</sup> deg</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Sai lệch tổn thất |ΔP<sub>loss</sub>|</div>
+            <div id="pyPowerLossErr" class="kpi-value">— MW</div>
+            <div class="kpi-sub">Tiêu chuẩn: &lt; 10<sup>-4</sup> MW</div>
+          </div>
+        </div>
+        <div class="table-container mt-15">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nút</th>
+                <th>Loại</th>
+                <th>|V| Dự án (pu)</th>
+                <th>|V| PyPower (pu)</th>
+                <th>Sai lệch |ΔV| (pu)</th>
+                <th>Góc δ Dự án (°)</th>
+                <th>Góc δ PyPower (°)</th>
+                <th>Sai lệch |Δδ| (°)</th>
+                <th>Đánh giá</th>
+              </tr>
+            </thead>
+            <tbody id="pyPowerTableBody">
+              <tr><td colspan="9" class="text-center text-muted">Nhấn "⚡ Chạy đối chuẩn PyPower" để so sánh số liệu độc lập.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 2: Defense Formulations & Grid Codes Guide -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-primary">Lý thuyết bảo vệ</span>
+            <h2 class="card-title">Cơ sở lý thuyết trào lưu công suất & quy chuẩn vận hành (Defense Aid)</h2>
+          </div>
+        </div>
+        <div class="theory-grid">
+          <div class="theory-col">
+            <h3 class="theory-title">1. Quy chuẩn điện áp vận hành (EVN / IEEE Std 399)</h3>
+            <ul class="theory-list">
+              <li><strong>Chế độ bình thường (N-0)</strong>: Điện áp thanh cái phải nằm trong dải <code>0.95 pu ≤ V ≤ 1.05 pu</code> (sai lệch ±5%).</li>
+              <li><strong>Chế độ sau sự cố đơn lẻ (N-1)</strong>: Điện áp phục hồi cho phép trong dải <code>0.90 pu ≤ V ≤ 1.10 pu</code> (sai lệch ±10%).</li>
+              <li><strong>Góc lệch pha truyền tải</strong>: Độ lệch pha giữa 2 đầu đường dây <code>Δθ ≤ 30°</code> để đảm bảo dự phòng ổn định công suất tĩnh.</li>
+            </ul>
+
+            <h3 class="theory-title mt-15">2. Phân loại 3 loại nút trong lưới điện</h3>
+            <ul class="theory-list">
+              <li><strong>Slack Bus (Cân bằng)</strong>: Biết trước <code>|V|, δ = 0°</code>. Thuật toán tìm <code>P_g, Q_g</code> gánh toàn bộ tổn thất công suất.</li>
+              <li><strong>PV Bus (Máy phát)</strong>: Biết trước <code>P_g, |V_set|</code>. Thuật toán tìm <code>δ, Q_g</code>.</li>
+              <li><strong>PQ Bus (Phụ tải)</strong>: Biết trước <code>P_d, Q_d</code> (tức <code>P_net = -P_d, Q_net = -Q_d</code>). Thuật toán tìm <code>|V|, δ</code>.</li>
+              <li><strong>Chuyển đổi PV ➔ PQ</strong>: Khi <code>Q_g</code> chạm ngưỡng giới hạn <code>[Q_min, Q_max]</code>, nút PV chuyển thành PQ với <code>Q</code> ghim cố định và <code>|V|</code> biến thiên tự do.</li>
+            </ul>
+          </div>
+          <div class="theory-col">
+            <h3 class="theory-title">3. Hệ phương trình trào lưu công suất xác lập</h3>
+            <div class="formula-box">
+              ΔP<sub>i</sub> = P<sub>i</sub><sup>spec</sup> − V<sub>i</sub> Σ<sub>k=1</sub><sup>N</sup> V<sub>k</sub> (G<sub>ik</sub> cos θ<sub>ik</sub> + B<sub>ik</sub> sin θ<sub>ik</sub>) = 0<br><br>
+              ΔQ<sub>i</sub> = Q<sub>i</sub><sup>spec</sup> − V<sub>i</sub> Σ<sub>k=1</sub><sup>N</sup> V<sub>k</sub> (G<sub>ik</sub> sin θ<sub>ik</sub> − B<sub>ik</sub> cos θ<sub>ik</sub>) = 0
+            </div>
+
+            <h3 class="theory-title mt-15">4. Tuyến tính hóa qua ma trận Jacobian</h3>
+            <div class="formula-box">
+              [ ΔP ] &nbsp; = &nbsp; [ H &nbsp;&nbsp; N ] &nbsp; [ Δθ ]<br>
+              [ ΔQ ] &nbsp; &nbsp; &nbsp; &nbsp; [ M &nbsp;&nbsp; L ] &nbsp; [ ΔV / V ]
+            </div>
+            <ul class="theory-list mt-10">
+              <li>H = ∂P / ∂θ, N = ∂P / ∂(ln V) = V (∂P / ∂V)</li>
+              <li>M = ∂Q / ∂θ, L = ∂Q / ∂(ln V) = V (∂Q / ∂V)</li>
+              <li>Điều kiện dừng hội tụ bậc hai (Quadratic Convergence): <code>||ΔP, ΔQ||_∞ &lt; 10⁻⁶ pu</code>.</li>
+            </ul>
+          </div>
         </div>
       </div>
 

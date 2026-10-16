@@ -18,6 +18,12 @@ from .solver_service import (
     validate_grid_data,
     compute_ybus_matrix,
     solve_power_flow,
+    get_preset_case,
+    get_all_presets_meta,
+    audit_grid_security,
+    compute_n1_contingency,
+    compute_load_stress_pv,
+    verify_case_with_pypower,
     PRESETS
 )
 
@@ -25,7 +31,7 @@ from .solver_service import (
 app = FastAPI(
     title="Modern Power Flow Studio API",
     description="REST API for Newton-Raphson AC Power Flow and Interactive Grid Telemetry",
-    version="2.0.0"
+    version="2.1.0"
 )
 
 # Enable CORS for local cross-origin development if needed
@@ -65,8 +71,38 @@ class GridPayload(BaseModel):
     buses: List[Dict[str, Any]]
     lines: List[Dict[str, Any]]
     base_mva: float = 100.0
+    demand_scale: float = 100.0
     tolerance: float = 1e-6
     max_iterations: int = 30
+
+
+# Helper to convert payload to clean DataFrames
+def payload_to_dataframes(payload: GridPayload):
+    buses_df = pd.DataFrame(payload.buses)
+    lines_df = pd.DataFrame(payload.lines)
+
+    try:
+        buses_df['bus'] = buses_df['bus'].astype(int)
+        buses_df['type'] = buses_df['type'].astype(str)
+        for col in ['pg_pu', 'qg_pu', 'pd_pu', 'qd_pu', 'vm_pu', 'va_deg']:
+            if col in buses_df.columns:
+                buses_df[col] = buses_df[col].astype(float)
+            else:
+                buses_df[col] = 0.0
+
+        if payload.demand_scale != 100.0:
+            scale = payload.demand_scale / 100.0
+            buses_df['pd_pu'] *= scale
+            buses_df['qd_pu'] *= scale
+
+        lines_df['from_bus'] = lines_df['from_bus'].astype(int)
+        lines_df['to_bus'] = lines_df['to_bus'].astype(int)
+        lines_df['r_pu'] = lines_df['r_pu'].astype(float)
+        lines_df['x_pu'] = lines_df['x_pu'].astype(float)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Lỗi chuyển đổi kiểu dữ liệu: {str(e)}")
+
+    return buses_df, lines_df
 
 
 # API Endpoints
@@ -77,25 +113,17 @@ async def health_check():
 
 @app.get("/api/presets")
 async def list_presets():
-    """Return available benchmark scenarios (3-bus, 5-bus)."""
-    return [
-        {
-            "id": p["id"],
-            "name": p["name"],
-            "description": p["description"],
-            "bus_count": len(p["buses"]),
-            "line_count": len(p["lines"])
-        }
-        for p in PRESETS.values()
-    ]
+    """Return available benchmark scenarios including IEEE standards."""
+    return get_all_presets_meta()
 
 
 @app.get("/api/presets/{preset_id}")
 async def get_preset(preset_id: str):
-    """Retrieve full bus and line records for a benchmark scenario."""
-    if preset_id not in PRESETS:
-        raise HTTPException(status_code=404, detail=f"Không tìm thấy kịch bản mẫu '{preset_id}'")
-    return PRESETS[preset_id]
+    """Retrieve full bus and line records for any benchmark scenario."""
+    try:
+        return get_preset_case(preset_id)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Không tìm thấy kịch bản mẫu '{preset_id}': {str(e)}")
 
 
 @app.post("/api/validate")
@@ -112,16 +140,7 @@ async def api_build_ybus(payload: GridPayload):
     if not val["valid"]:
         raise HTTPException(status_code=400, detail="; ".join(val["errors"]))
 
-    buses_df = pd.DataFrame(payload.buses)
-    lines_df = pd.DataFrame(payload.lines)
-    
-    # Ensure proper column types
-    buses_df['bus'] = buses_df['bus'].astype(int)
-    lines_df['from_bus'] = lines_df['from_bus'].astype(int)
-    lines_df['to_bus'] = lines_df['to_bus'].astype(int)
-    for col in ['r_pu', 'x_pu']:
-        lines_df[col] = lines_df[col].astype(float)
-
+    buses_df, lines_df = payload_to_dataframes(payload)
     ybus_result = compute_ybus_matrix(buses_df, lines_df)
     return ybus_result
 
@@ -129,23 +148,7 @@ async def api_build_ybus(payload: GridPayload):
 @app.post("/api/solve")
 async def api_solve(payload: GridPayload):
     """Execute Newton-Raphson AC power flow with detailed telemetry."""
-    buses_df = pd.DataFrame(payload.buses)
-    lines_df = pd.DataFrame(payload.lines)
-
-    # Cast fields
-    try:
-        buses_df['bus'] = buses_df['bus'].astype(int)
-        buses_df['type'] = buses_df['type'].astype(str)
-        for col in ['pg_pu', 'qg_pu', 'pd_pu', 'qd_pu', 'vm_pu', 'va_deg']:
-            if col in buses_df.columns:
-                buses_df[col] = buses_df[col].astype(float)
-
-        lines_df['from_bus'] = lines_df['from_bus'].astype(int)
-        lines_df['to_bus'] = lines_df['to_bus'].astype(int)
-        lines_df['r_pu'] = lines_df['r_pu'].astype(float)
-        lines_df['x_pu'] = lines_df['x_pu'].astype(float)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Lỗi chuyển đổi kiểu dữ liệu: {str(e)}")
+    buses_df, lines_df = payload_to_dataframes(payload)
 
     result = solve_power_flow(
         buses_df=buses_df,
@@ -155,6 +158,35 @@ async def api_solve(payload: GridPayload):
         max_iterations=payload.max_iterations
     )
     return result
+
+
+@app.post("/api/security-audit")
+async def api_security_audit(payload: GridPayload):
+    """Assess grid security and grid code statutory voltage compliance."""
+    buses_df, lines_df = payload_to_dataframes(payload)
+    return audit_grid_security(buses_df, lines_df, base_mva=payload.base_mva)
+
+
+@app.post("/api/contingency-n1")
+async def api_contingency_n1(payload: GridPayload):
+    """Execute automated N-1 transmission line outage contingency screening."""
+    buses_df, lines_df = payload_to_dataframes(payload)
+    return compute_n1_contingency(buses_df, lines_df, base_mva=payload.base_mva)
+
+
+@app.post("/api/load-stress")
+async def api_load_stress(payload: GridPayload):
+    """Compute voltage stability P-V curve operating points across load scaling regimes."""
+    buses_df, lines_df = payload_to_dataframes(payload)
+    return compute_load_stress_pv(buses_df, lines_df, base_mva=payload.base_mva)
+
+
+@app.post("/api/verify-pypower")
+async def api_verify_pypower(payload: GridPayload):
+    """Cross-validate solution with industry-standard PyPower (IEEE benchmark reference)."""
+    buses_df, lines_df = payload_to_dataframes(payload)
+    return verify_case_with_pypower(buses_df, lines_df, base_mva=payload.base_mva)
+
 
 
 # Mount Static Frontend
