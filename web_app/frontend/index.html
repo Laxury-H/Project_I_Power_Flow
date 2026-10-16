@@ -249,14 +249,35 @@
         <div class="card-header">
           <div class="card-title-group">
             <span class="card-badge bg-success">Toàn màn hình</span>
-            <h2 class="card-title">Mô hình sơ đồ lưới điện thời gian thực</h2>
+            <h2 class="card-title">Mô hình sơ đồ lưới điện trực quan (Full Grid Visualizer)</h2>
           </div>
-          <div class="card-info">
-            Kéo thả các thanh cái để bố trí trực quan theo sơ đồ thực tế trạm. Rê chuột vào nút hoặc đường dây để xem công suất trào lưu chi tiết.
+          <div class="diagram-toolbar">
+            <button id="btnAutoLayoutFull" class="btn btn-xs btn-outline" title="Tự động sắp xếp">↺ Bố cục tự động</button>
+            <button id="btnZoomInFull" class="btn btn-xs btn-icon-only" title="Phóng to">+</button>
+            <button id="btnZoomOutFull" class="btn btn-xs btn-icon-only" title="Thu nhỏ">−</button>
+            <button id="btnResetViewFull" class="btn btn-xs btn-outline" title="Căn giữa sơ đồ">Căn giữa</button>
+            <button id="btnExportSvg" class="btn btn-xs btn-primary" title="Tải sơ đồ vector dạng SVG">📸 Xuất ảnh SVG</button>
           </div>
         </div>
         <div class="diagram-canvas-container full-canvas" id="fullDiagramWrapper">
-          <!-- Mirrored or reused canvas -->
+          <svg id="fullGridSvg" class="grid-svg" viewBox="0 0 1000 650">
+            <defs>
+              <marker id="arrowFlowFull" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#06B6D4" />
+              </marker>
+            </defs>
+            <g id="fullGridLayers">
+              <g id="fullLayerLines"></g>
+              <g id="fullLayerFlowMarkers"></g>
+              <g id="fullLayerBuses"></g>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-legend">
+          <span class="legend-item"><span class="legend-dot dot-slack"></span> Slack (Nút cân bằng)</span>
+          <span class="legend-item"><span class="legend-dot dot-pv"></span> PV (Nút máy phát)</span>
+          <span class="legend-item"><span class="legend-dot dot-pq"></span> PQ (Nút tải)</span>
+          <span class="legend-item"><span class="legend-line"></span> Đường dây & Hướng trào lưu công suất P</span>
         </div>
       </div>
     </section>

@@ -774,10 +774,79 @@ html, body {
 
 .svg-bus-label {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   fill: var(--text-muted);
   text-anchor: middle;
   pointer-events: none;
+}
+
+/* Electrical Generator & Load Symbols */
+.svg-gen-circle {
+  stroke-width: 1.8;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.svg-gen-circle:hover {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.svg-gen-wave {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.svg-load-arrow {
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.svg-load-badge {
+  fill: rgba(15, 23, 42, 0.9);
+  stroke: rgba(6, 182, 212, 0.4);
+  stroke-width: 1;
+  rx: 4;
+  ry: 4;
+}
+
+.svg-load-text {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  fill: #38BDF8;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+/* Power Flow Pill on Branches */
+.svg-flow-pill {
+  fill: rgba(15, 23, 42, 0.95);
+  stroke: var(--color-primary);
+  stroke-width: 1.2;
+  rx: 6;
+  ry: 6;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+}
+
+.svg-flow-text {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: #F1F5F9;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.svg-badge-rect {
+  fill: rgba(15, 23, 42, 0.85);
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 1;
+  rx: 4;
+  ry: 4;
 }
 
 .diagram-legend {

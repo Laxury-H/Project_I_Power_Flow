@@ -47,6 +47,7 @@ const dom = {
   btnExportLineCsv: document.getElementById('btnExportLineCsv'),
   lineCsvFileInput: document.getElementById('lineCsvFileInput'),
 
+  // Split View Diagram
   gridSvg: document.getElementById('gridSvg'),
   layerLines: document.getElementById('layerLines'),
   layerFlowMarkers: document.getElementById('layerFlowMarkers'),
@@ -55,6 +56,17 @@ const dom = {
   btnZoomIn: document.getElementById('btnZoomIn'),
   btnZoomOut: document.getElementById('btnZoomOut'),
   btnResetView: document.getElementById('btnResetView'),
+
+  // Full Screen View Diagram
+  fullGridSvg: document.getElementById('fullGridSvg'),
+  fullLayerLines: document.getElementById('fullLayerLines'),
+  fullLayerFlowMarkers: document.getElementById('fullLayerFlowMarkers'),
+  fullLayerBuses: document.getElementById('fullLayerBuses'),
+  btnAutoLayoutFull: document.getElementById('btnAutoLayoutFull'),
+  btnZoomInFull: document.getElementById('btnZoomInFull'),
+  btnZoomOutFull: document.getElementById('btnZoomOutFull'),
+  btnResetViewFull: document.getElementById('btnResetViewFull'),
+  btnExportSvg: document.getElementById('btnExportSvg'),
 
   ybusTableHead: document.getElementById('ybusTableHead'),
   ybusTableBody: document.getElementById('ybusTableBody'),
@@ -439,75 +451,247 @@ async function performLiveValidation() {
 
 
 // =============================================================================
-// 5. INTERACTIVE SVG DIAGRAM ENGINE
+// 5. UPGRADED INTERACTIVE SVG DIAGRAM ENGINE (SCADA / CAD SINGLE-LINE DIAGRAM)
 // =============================================================================
 
-let isDragging = false;
-let draggedBusId = null;
-let dragOffset = { x: 0, y: 0 };
+const diagramViews = {
+  split: {
+    svg: null,
+    layers: { lines: null, flow: null, buses: null },
+    vb: { x: 0, y: 0, w: 800, h: 600 },
+    origVb: { x: 0, y: 0, w: 800, h: 600 },
+    isPanning: false,
+    panStart: { x: 0, y: 0 }
+  },
+  full: {
+    svg: null,
+    layers: { lines: null, flow: null, buses: null },
+    vb: { x: 0, y: 0, w: 1000, h: 650 },
+    origVb: { x: 0, y: 0, w: 1000, h: 650 },
+    isPanning: false,
+    panStart: { x: 0, y: 0 }
+  }
+};
+
+let activeDraggedBusId = null;
+let activeDragOffset = { x: 0, y: 0 };
 
 function setupDiagramInteractions() {
-  dom.btnAutoLayout.addEventListener('click', () => {
-    state.nodePositions = {};
-    calculateNodePositions();
-    renderDiagram();
-    showToast('Đã sắp xếp lại bố cục sơ đồ!', 'info');
-  });
+  diagramViews.split.svg = dom.gridSvg;
+  diagramViews.split.layers = {
+    lines: dom.layerLines,
+    flow: dom.layerFlowMarkers,
+    buses: dom.layerBuses
+  };
 
-  dom.btnResetView.addEventListener('click', () => {
-    dom.gridSvg.setAttribute('viewBox', '0 0 800 600');
-  });
+  diagramViews.full.svg = dom.fullGridSvg;
+  diagramViews.full.layers = {
+    lines: dom.fullLayerLines,
+    flow: dom.fullLayerFlowMarkers,
+    buses: dom.fullLayerBuses
+  };
 
-  // SVG Drag & Drop
-  dom.gridSvg.addEventListener('mousedown', (e) => {
-    const busGroup = e.target.closest('.svg-bus-group');
-    if (busGroup) {
-      isDragging = true;
-      draggedBusId = parseInt(busGroup.getAttribute('data-bus-id'));
-      const pt = getSvgCursorPoint(e);
-      dragOffset.x = pt.x - state.nodePositions[draggedBusId].x;
-      dragOffset.y = pt.y - state.nodePositions[draggedBusId].y;
-    }
-  });
+  // Wire controls for both toolbars
+  setupSvgViewControls('split', dom.btnZoomIn, dom.btnZoomOut, dom.btnResetView, dom.btnAutoLayout);
+  setupSvgViewControls('full', dom.btnZoomInFull, dom.btnZoomOutFull, dom.btnResetViewFull, dom.btnAutoLayoutFull);
 
-  window.addEventListener('mousemove', (e) => {
-    if (isDragging && draggedBusId !== null) {
-      const pt = getSvgCursorPoint(e);
-      state.nodePositions[draggedBusId].x = Math.max(30, Math.min(770, pt.x - dragOffset.x));
-      state.nodePositions[draggedBusId].y = Math.max(30, Math.min(570, pt.y - dragOffset.y));
-      renderDiagram();
-    }
-  });
+  // SVG Export
+  if (dom.btnExportSvg) {
+    dom.btnExportSvg.addEventListener('click', exportSvgDiagram);
+  }
 
+  // Attach mouse dragging and wheel listeners for both SVGs
+  attachSvgMouseEvents('split');
+  attachSvgMouseEvents('full');
+
+  // Window global mouse up
   window.addEventListener('mouseup', () => {
-    isDragging = false;
-    draggedBusId = null;
+    activeDraggedBusId = null;
+    diagramViews.split.isPanning = false;
+    diagramViews.full.isPanning = false;
   });
 }
 
-function getSvgCursorPoint(e) {
-  const pt = dom.gridSvg.createSVGPoint();
+function setupSvgViewControls(viewKey, btnIn, btnOut, btnReset, btnAuto) {
+  const v = diagramViews[viewKey];
+
+  if (btnIn) {
+    btnIn.addEventListener('click', () => {
+      zoomView(viewKey, 0.8);
+    });
+  }
+  if (btnOut) {
+    btnOut.addEventListener('click', () => {
+      zoomView(viewKey, 1.25);
+    });
+  }
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      resetView(viewKey);
+    });
+  }
+  if (btnAuto) {
+    btnAuto.addEventListener('click', () => {
+      state.nodePositions = {};
+      calculateNodePositions();
+      renderDiagram();
+      showToast('Đã tính toán và bố trí lại vị trí các trạm!', 'info');
+    });
+  }
+}
+
+function zoomView(viewKey, scaleFactor) {
+  const v = diagramViews[viewKey];
+  if (!v.svg) return;
+
+  const curW = v.vb.w;
+  const curH = v.vb.h;
+  const newW = Math.max(300, Math.min(2500, curW * scaleFactor));
+  const newH = Math.max(225, Math.min(1875, curH * scaleFactor));
+
+  v.vb.x += (curW - newW) / 2;
+  v.vb.y += (curH - newH) / 2;
+  v.vb.w = newW;
+  v.vb.h = newH;
+
+  applyViewBox(viewKey);
+}
+
+function resetView(viewKey) {
+  const v = diagramViews[viewKey];
+  if (!v.svg) return;
+  v.vb = { ...v.origVb };
+  applyViewBox(viewKey);
+}
+
+function applyViewBox(viewKey) {
+  const v = diagramViews[viewKey];
+  if (v.svg) {
+    v.svg.setAttribute('viewBox', `${v.vb.x} ${v.vb.y} ${v.vb.w} ${v.vb.h}`);
+  }
+}
+
+function attachSvgMouseEvents(viewKey) {
+  const v = diagramViews[viewKey];
+  if (!v.svg) return;
+
+  // Mouse wheel zoom
+  v.svg.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 1.15 : 0.85;
+    zoomView(viewKey, factor);
+  }, { passive: false });
+
+  // Mouse down: detect bus drag vs background pan
+  v.svg.addEventListener('mousedown', (e) => {
+    const busGroup = e.target.closest('.svg-bus-group');
+    if (busGroup) {
+      activeDraggedBusId = parseInt(busGroup.getAttribute('data-bus-id'));
+      const pt = getSvgCursorPoint(v.svg, e);
+      activeDragOffset.x = pt.x - state.nodePositions[activeDraggedBusId].x;
+      activeDragOffset.y = pt.y - state.nodePositions[activeDraggedBusId].y;
+    } else {
+      v.isPanning = true;
+      v.panStart = { x: e.clientX, y: e.clientY };
+    }
+  });
+
+  v.svg.addEventListener('mousemove', (e) => {
+    // 1. Drag Bus Node
+    if (activeDraggedBusId !== null) {
+      const pt = getSvgCursorPoint(v.svg, e);
+      state.nodePositions[activeDraggedBusId].x = Math.round(pt.x - activeDragOffset.x);
+      state.nodePositions[activeDraggedBusId].y = Math.round(pt.y - activeDragOffset.y);
+      renderDiagram();
+    }
+    // 2. Pan Background
+    else if (v.isPanning) {
+      const dx = (e.clientX - v.panStart.x) * (v.vb.w / v.svg.clientWidth);
+      const dy = (e.clientY - v.panStart.y) * (v.vb.h / v.svg.clientHeight);
+      v.vb.x -= dx;
+      v.vb.y -= dy;
+      v.panStart = { x: e.clientX, y: e.clientY };
+      applyViewBox(viewKey);
+    }
+  });
+}
+
+function getSvgCursorPoint(svgElem, e) {
+  const pt = svgElem.createSVGPoint();
   pt.x = e.clientX;
   pt.y = e.clientY;
-  return pt.matrixTransform(dom.gridSvg.getScreenCTM().inverse());
+  return pt.matrixTransform(svgElem.getScreenCTM().inverse());
+}
+
+function calculateNodePositions() {
+  const n = state.buses.length;
+  if (n === 0) return;
+
+  // Preset customized coordinates for iconic benchmarks
+  if (state.presetId === '3bus' && n === 3) {
+    state.nodePositions = {
+      1: { x: 240, y: 220 }, // Slack (top-left)
+      2: { x: 560, y: 220 }, // PV (top-right)
+      3: { x: 400, y: 450 }  // PQ (bottom-center)
+    };
+    return;
+  }
+
+  if (state.presetId === '5bus' && n === 5) {
+    state.nodePositions = {
+      1: { x: 180, y: 220 }, // Slack
+      2: { x: 620, y: 220 }, // PV
+      3: { x: 260, y: 440 }, // PQ 3
+      4: { x: 540, y: 440 }, // PQ 4
+      5: { x: 400, y: 530 }  // PQ 5
+    };
+    return;
+  }
+
+  // Symmetric circular auto-layout for arbitrary N
+  const cx = 400;
+  const cy = 300;
+  const radius = Math.min(240, 90 + n * 24);
+
+  state.buses.forEach((b, i) => {
+    if (!state.nodePositions[b.bus]) {
+      const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+      state.nodePositions[b.bus] = {
+        x: Math.round(cx + radius * Math.cos(angle)),
+        y: Math.round(cy + radius * Math.sin(angle))
+      };
+    }
+  });
 }
 
 function renderDiagram() {
-  dom.layerLines.innerHTML = '';
-  dom.layerFlowMarkers.innerHTML = '';
-  dom.layerBuses.innerHTML = '';
+  renderSvgInstance('split');
+  renderSvgInstance('full');
+}
 
-  const busMap = {};
-  state.buses.forEach(b => { busMap[b.bus] = b; });
+function renderSvgInstance(viewKey) {
+  const v = diagramViews[viewKey];
+  if (!v.svg || !v.layers.lines) return;
 
-  // Draw Lines
+  v.layers.lines.innerHTML = '';
+  v.layers.flow.innerHTML = '';
+  v.layers.buses.innerHTML = '';
+
+  const isSolved = state.solution && state.solution.converged && state.solution.branches;
+  const busSolMap = {};
+  if (state.solution && state.solution.buses) {
+    state.solution.buses.forEach(b => { busSolMap[b.bus] = b; });
+  }
+
+  // 1. RENDER TRANSMISSION LINES & FLOW BADGES
   state.lines.forEach((line, idx) => {
     const posA = state.nodePositions[line.from_bus];
     const posB = state.nodePositions[line.to_bus];
     if (!posA || !posB) return;
 
     const gLine = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    
+
+    // Base Transmission Line
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     path.setAttribute('x1', posA.x);
     path.setAttribute('y1', posA.y);
@@ -516,45 +700,80 @@ function renderDiagram() {
     path.setAttribute('class', 'svg-line');
     path.setAttribute('data-line-idx', idx);
 
-    // If solved, show flow direction & power
     let branchSol = null;
-    if (state.solution && state.solution.branches) {
+    if (isSolved) {
       branchSol = state.solution.branches.find(b => b.from_bus === line.from_bus && b.to_bus === line.to_bus);
     }
 
     if (branchSol) {
       path.classList.add('svg-line-flow');
-      // Flow arrow mid point
+      
+      // Determine actual flow direction
+      const pFrom = branchSol.p_from_MW;
+      const isReverse = pFrom < 0;
+      const actualFrom = isReverse ? line.to_bus : line.from_bus;
+      const actualTo = isReverse ? line.from_bus : line.to_bus;
+      const pMagnitude = Math.abs(isReverse ? branchSol.p_to_MW : pFrom);
+
+      // Midpoint for Flow Badge Pill
       const midX = (posA.x + posB.x) / 2;
       const midY = (posA.y + posB.y) / 2;
-      const textFlow = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      textFlow.setAttribute('x', midX);
-      textFlow.setAttribute('y', midY - 8);
-      textFlow.setAttribute('class', 'svg-bus-label');
-      textFlow.textContent = `${branchSol.p_from_MW.toFixed(1)} MW (ΔP: ${branchSol.p_loss_MW.toFixed(2)})`;
-      dom.layerFlowMarkers.appendChild(textFlow);
+
+      // Group for Flow Badge
+      const gBadge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      gBadge.setAttribute('transform', `translate(${midX}, ${midY})`);
+
+      const pillRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const pillWidth = 120;
+      const pillHeight = 22;
+      pillRect.setAttribute('x', -pillWidth / 2);
+      pillRect.setAttribute('y', -pillHeight / 2);
+      pillRect.setAttribute('width', pillWidth);
+      pillRect.setAttribute('height', pillHeight);
+      pillRect.setAttribute('class', 'svg-flow-pill');
+
+      const pillText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      pillText.setAttribute('class', 'svg-flow-text');
+      pillText.textContent = `${actualFrom} ➜ ${actualTo}: ${pMagnitude.toFixed(1)} MW`;
+
+      gBadge.appendChild(pillRect);
+      gBadge.appendChild(pillText);
+
+      // Tooltip on flow badge
+      gBadge.addEventListener('mouseenter', (e) => {
+        let content = `<div class="tooltip-title">Đường dây ${line.from_bus} ➜ ${line.to_bus}</div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">P đầu gửi:</span> <span>${branchSol.p_from_MW.toFixed(2)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Q đầu gửi:</span> <span>${branchSol.q_from_Mvar.toFixed(2)} Mvar</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">P đầu nhận:</span> <span>${branchSol.p_to_MW.toFixed(2)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Q đầu nhận:</span> <span>${branchSol.q_to_Mvar.toFixed(2)} Mvar</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Tổn thất ΔP:</span> <span class="text-danger font-bold">${branchSol.p_loss_MW.toFixed(4)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Tổn thất ΔQ:</span> <span>${branchSol.q_loss_Mvar.toFixed(4)} Mvar</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Dòng điện:</span> <span>${branchSol.current_pu.toFixed(4)} pu</span></div>`;
+        showTooltip(e, content);
+      });
+      gBadge.addEventListener('mouseleave', hideTooltip);
+
+      v.layers.flow.appendChild(gBadge);
     }
 
     // Line tooltip
     path.addEventListener('mouseenter', (e) => {
       let content = `<div class="tooltip-title">Đường dây ${line.from_bus} ➜ ${line.to_bus}</div>`;
-      content += `<div class="tooltip-row"><span class="tooltip-label">R / X:</span> <span>${line.r_pu} / ${line.x_pu} pu</span></div>`;
+      content += `<div class="tooltip-row"><span class="tooltip-label">Điện trở R:</span> <span>${line.r_pu} pu</span></div>`;
+      content += `<div class="tooltip-row"><span class="tooltip-label">Điện kháng X:</span> <span>${line.x_pu} pu</span></div>`;
       if (branchSol) {
-        content += `<div class="tooltip-row"><span class="tooltip-label">P đầu gửi:</span> <span>${branchSol.p_from_MW} MW</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Q đầu gửi:</span> <span>${branchSol.q_from_Mvar} Mvar</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Tổn thất ΔP:</span> <span class="text-danger font-bold">${branchSol.p_loss_MW} MW</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Tổn thất ΔQ:</span> <span>${branchSol.q_loss_Mvar} Mvar</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Dòng điện |I|:</span> <span>${branchSol.current_pu} pu</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Tổn thất ΔP:</span> <span class="text-danger font-bold">${branchSol.p_loss_MW.toFixed(4)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Dòng |I|:</span> <span>${branchSol.current_pu.toFixed(4)} pu</span></div>`;
       }
       showTooltip(e, content);
     });
     path.addEventListener('mouseleave', hideTooltip);
 
     gLine.appendChild(path);
-    dom.layerLines.appendChild(gLine);
+    v.layers.lines.appendChild(gLine);
   });
 
-  // Draw Buses
+  // 2. RENDER BUSES WITH ELECTRICAL GENERATOR & LOAD SYMBOLS
   state.buses.forEach(b => {
     const pos = state.nodePositions[b.bus];
     if (!pos) return;
@@ -564,57 +783,196 @@ function renderDiagram() {
     gBus.setAttribute('data-bus-id', b.bus);
     gBus.setAttribute('transform', `translate(${pos.x}, ${pos.y})`);
 
+    const busSol = busSolMap[b.bus];
+
+    // Determine electrical attachments
+    const hasGen = (b.type === 'Slack' || b.type === 'PV');
+    const pdVal = b.pd_pu * state.baseMva;
+    const qdVal = b.qd_pu * state.baseMva;
+    const hasLoad = (b.type === 'PQ' || pdVal > 0.1 || qdVal > 0.1);
+
+    // --- A. GENERATOR ATTACHMENT (FOR SLACK & PV) ---
+    if (hasGen) {
+      const gGen = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      
+      // Generator connecting stub line
+      const stub = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      stub.setAttribute('x1', 0);
+      stub.setAttribute('y1', -24);
+      stub.setAttribute('x2', 0);
+      stub.setAttribute('y2', -44);
+      stub.setAttribute('stroke', b.type === 'Slack' ? '#EC4899' : '#F59E0B');
+      stub.setAttribute('stroke-width', 2);
+
+      // Generator circle
+      const genCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      genCircle.setAttribute('cx', 0);
+      genCircle.setAttribute('cy', -58);
+      genCircle.setAttribute('r', 14);
+      genCircle.setAttribute('class', 'svg-gen-circle');
+      genCircle.setAttribute('stroke', b.type === 'Slack' ? '#EC4899' : '#F59E0B');
+      genCircle.setAttribute('fill', b.type === 'Slack' ? 'rgba(236, 72, 153, 0.25)' : 'rgba(245, 158, 11, 0.25)');
+
+      // Sine wave symbol (~) inside generator
+      const genWave = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      genWave.setAttribute('d', 'M -8 -58 Q -4 -63 0 -58 Q 4 -53 8 -58');
+      genWave.setAttribute('class', 'svg-gen-wave');
+      genWave.setAttribute('stroke', b.type === 'Slack' ? '#EC4899' : '#F59E0B');
+
+      // Generator power label
+      const genText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      genText.setAttribute('x', 0);
+      genText.setAttribute('y', -78);
+      genText.setAttribute('class', 'svg-bus-label');
+      genText.setAttribute('fill', b.type === 'Slack' ? '#F472B6' : '#FBBF24');
+      
+      if (busSol) {
+        genText.textContent = `P: ${busSol.pg_MW.toFixed(1)} MW`;
+      } else {
+        const pgVal = (b.pg_pu * state.baseMva).toFixed(1);
+        genText.textContent = b.type === 'Slack' ? 'G (Slack)' : `G (${pgVal} MW)`;
+      }
+
+      gGen.appendChild(stub);
+      gGen.appendChild(genCircle);
+      gGen.appendChild(genWave);
+      gGen.appendChild(genText);
+      gBus.appendChild(gGen);
+    }
+
+    // --- B. LOAD ATTACHMENT (FOR PQ OR BUSES WITH DEMAND > 0) ---
+    if (hasLoad) {
+      const gLoad = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+      // Stub line downward
+      const loadLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      loadLine.setAttribute('x1', 0);
+      loadLine.setAttribute('y1', 24);
+      loadLine.setAttribute('x2', 0);
+      loadLine.setAttribute('y2', 46);
+      loadLine.setAttribute('stroke', '#06B6D4');
+      loadLine.setAttribute('stroke-width', 2);
+
+      // Downward arrow
+      const arrowHead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      arrowHead.setAttribute('points', '-6,46 6,46 0,55');
+      arrowHead.setAttribute('fill', '#06B6D4');
+
+      // Load Value Badge
+      const badgeRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      badgeRect.setAttribute('x', -44);
+      badgeRect.setAttribute('y', 58);
+      badgeRect.setAttribute('width', 88);
+      badgeRect.setAttribute('height', 18);
+      badgeRect.setAttribute('class', 'svg-load-badge');
+
+      const loadText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      loadText.setAttribute('x', 0);
+      loadText.setAttribute('y', 67);
+      loadText.setAttribute('class', 'svg-load-text');
+      loadText.textContent = `${pdVal.toFixed(0)}MW, ${qdVal.toFixed(0)}Mvar`;
+
+      gLoad.appendChild(loadLine);
+      gLoad.appendChild(arrowHead);
+      gLoad.appendChild(badgeRect);
+      gLoad.appendChild(loadText);
+      gBus.appendChild(gLoad);
+    }
+
+    // --- C. MAIN SUBSTATION BUS CIRCLE ---
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('r', 22);
+    circle.setAttribute('r', 24);
     circle.setAttribute('class', 'svg-bus-circle');
-    
+
     let strokeCol = '#06B6D4';
     let fillCol = 'rgba(6, 182, 212, 0.25)';
     if (b.type === 'Slack') {
       strokeCol = '#EC4899';
-      fillCol = 'rgba(236, 72, 153, 0.3)';
+      fillCol = 'rgba(236, 72, 153, 0.35)';
     } else if (b.type === 'PV') {
       strokeCol = '#F59E0B';
-      fillCol = 'rgba(245, 158, 11, 0.3)';
+      fillCol = 'rgba(245, 158, 11, 0.35)';
     }
 
     circle.setAttribute('stroke', strokeCol);
     circle.setAttribute('fill', fillCol);
 
+    // Bus Number in Center
     const textId = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     textId.setAttribute('class', 'svg-bus-text');
     textId.textContent = b.bus;
 
-    const textLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    textLabel.setAttribute('y', 36);
-    textLabel.setAttribute('class', 'svg-bus-label');
+    // Adaptive positioning to avoid collision between Generator (top) and Load (bottom)
+    let typeY = -30;
+    let voltX = 0;
+    let voltY = 34;
 
-    // Display solved voltage if available
-    let busSol = null;
-    if (state.solution && state.solution.buses) {
-      busSol = state.solution.buses.find(item => item.bus === b.bus);
+    if (hasGen && hasLoad) {
+      typeY = -92;
+      voltX = 56;
+      voltY = 0;
+    } else if (hasGen) {
+      typeY = -92;
+      voltX = 0;
+      voltY = 34;
+    } else if (hasLoad) {
+      typeY = -48;
+      voltX = 0;
+      voltY = -28;
+    } else {
+      typeY = -30;
+      voltX = 0;
+      voltY = 34;
     }
+
+    // Bus Header Type Badge
+    const typeLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    typeLabel.setAttribute('x', 0);
+    typeLabel.setAttribute('y', typeY);
+    typeLabel.setAttribute('class', 'svg-bus-label');
+    typeLabel.setAttribute('fill', strokeCol);
+    typeLabel.textContent = `${b.type} ${b.bus}`;
+
+    // Solved Voltage & Angle Pill
+    const gVoltPill = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    gVoltPill.setAttribute('transform', `translate(${voltX}, ${voltY})`);
+
+    const voltRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    voltRect.setAttribute('x', -48);
+    voltRect.setAttribute('y', -9);
+    voltRect.setAttribute('width', 96);
+    voltRect.setAttribute('height', 18);
+    voltRect.setAttribute('class', 'svg-badge-rect');
+
+    const voltText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    voltText.setAttribute('class', 'svg-bus-label');
+    voltText.setAttribute('y', 0);
+    voltText.setAttribute('fill', '#E2E8F0');
     
     if (busSol) {
-      textLabel.textContent = `${busSol.vm_pu.toFixed(3)}∠${busSol.va_deg.toFixed(1)}°`;
+      voltText.textContent = `${busSol.vm_pu.toFixed(3)}∠${busSol.va_deg.toFixed(1)}°`;
     } else {
-      textLabel.textContent = `${b.type} (${b.vm_pu} pu)`;
+      voltText.textContent = `${b.vm_pu}∠${b.va_deg}°`;
     }
+
+    gVoltPill.appendChild(voltRect);
+    gVoltPill.appendChild(voltText);
 
     gBus.appendChild(circle);
     gBus.appendChild(textId);
-    gBus.appendChild(textLabel);
+    gBus.appendChild(typeLabel);
+    gBus.appendChild(gVoltPill);
 
-    // Hover Tooltip
+    // Hover Tooltip with comprehensive engineering telemetry
     gBus.addEventListener('mouseenter', (e) => {
       let content = `<div class="tooltip-title">Thanh cái Bus ${b.bus} [${b.type}]</div>`;
       if (busSol) {
         content += `<div class="tooltip-row"><span class="tooltip-label">Điện áp |V|:</span> <span class="font-bold text-primary">${busSol.vm_pu} pu</span></div>`;
         content += `<div class="tooltip-row"><span class="tooltip-label">Góc pha δ:</span> <span>${busSol.va_deg}° (${busSol.va_rad} rad)</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">P phát:</span> <span>${busSol.pg_MW} MW</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Q phát:</span> <span>${busSol.qg_Mvar} Mvar</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">P tải:</span> <span>${busSol.pd_MW} MW</span></div>`;
-        content += `<div class="tooltip-row"><span class="tooltip-label">Q tải:</span> <span>${busSol.qd_Mvar} Mvar</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">P phát:</span> <span>${busSol.pg_MW.toFixed(2)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Q phát:</span> <span>${busSol.qg_Mvar.toFixed(2)} Mvar</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">P tải:</span> <span>${busSol.pd_MW.toFixed(2)} MW</span></div>`;
+        content += `<div class="tooltip-row"><span class="tooltip-label">Q tải:</span> <span>${busSol.qd_Mvar.toFixed(2)} Mvar</span></div>`;
         content += `<div class="tooltip-row"><span class="tooltip-label">Trạng thái Q:</span> <span>${busSol.q_status}</span></div>`;
       } else {
         content += `<div class="tooltip-row"><span class="tooltip-label">Điện áp đặt:</span> <span>${b.vm_pu} pu</span></div>`;
@@ -626,8 +984,30 @@ function renderDiagram() {
     });
     gBus.addEventListener('mouseleave', hideTooltip);
 
-    dom.layerBuses.appendChild(gBus);
+    v.layers.buses.appendChild(gBus);
   });
+}
+
+function exportSvgDiagram() {
+  const svg = dom.fullGridSvg || dom.gridSvg;
+  if (!svg) return;
+
+  const serializer = new XMLSerializer();
+  let source = serializer.serializeToString(svg);
+
+  // Add XML declaration & namespaces if missing
+  if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `power_flow_diagram_${state.presetId}.svg`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Đã tải xuống sơ đồ lưới điện định dạng SVG!', 'success');
 }
 
 function showTooltip(e, htmlContent) {
