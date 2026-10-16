@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerFlow Studio — Ứng dụng Tính Trào Lưu Công Suất Hiện Đại</title>
+  <meta name="description" content="Phần mềm tính toán trào lưu công suất AC bằng thuật toán Newton-Raphson với sơ đồ lưới tương tác, kiểm tra dữ liệu thời gian thực và ma trận Y-bus.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Top Application Bar -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1 class="brand-title">PowerFlow Studio <span class="badge-version">v2.0</span></h1>
+        <p class="brand-subtitle">Bộ giải trào lưu công suất Newton–Raphson & Bàn điều độ tương tác</p>
+      </div>
+    </div>
+
+    <!-- Quick Presets & Global Parameters -->
+    <div class="header-controls">
+      <div class="control-group">
+        <label for="presetSelect">Kịch bản mẫu:</label>
+        <select id="presetSelect" class="form-select">
+          <option value="3bus">⚡ Lưới 3 nút (Task Benchmark)</option>
+          <option value="5bus">⚡ Lưới 5 nút (Synthetic Case)</option>
+          <option value="custom">📁 Lưới tùy chỉnh (Custom)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="baseMvaInput">Cơ sở S<sub>base</sub>:</label>
+        <div class="input-with-unit">
+          <input type="number" id="baseMvaInput" value="100" min="1" step="10" class="form-input sm">
+          <span class="unit-label">MVA</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label for="unitToggle">Đơn vị hiển thị:</label>
+        <div class="toggle-switch">
+          <input type="checkbox" id="unitToggle">
+          <label for="unitToggle" class="toggle-label" title="Chuyển đổi giữa hệ đơn vị tương đối (pu) và công suất thực tế (MW / Mvar)">
+            <span class="toggle-text-left">pu</span>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text-right">MW</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnSolve" class="btn btn-primary" title="Kích hoạt thuật toán giải trào lưu Newton-Raphson">
+          <span class="btn-icon">▶</span>
+          <span class="btn-text">Giải trào lưu</span>
+        </button>
+        <button id="btnReset" class="btn btn-secondary" title="Khôi phục trạng thái ban đầu của kịch bản">
+          <span class="btn-icon">↺</span>
+          <span class="btn-text">Đặt lại</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Real-time Live Validation Diagnostic Bar -->
+  <aside id="validationBar" class="validation-bar valid" aria-live="polite">
+    <div class="val-content">
+      <div class="val-icon-box">
+        <span id="valIcon">✓</span>
+      </div>
+      <div class="val-details">
+        <span id="valStatusText" class="val-title">Dữ liệu hoàn toàn hợp lệ</span>
+        <span id="valSummary" class="val-meta">1 nút Slack • 1 nút PV • 1 nút PQ • 3 đường dây liên thông</span>
+      </div>
+    </div>
+    <div id="valAlertList" class="val-alerts-container" style="display: none;"></div>
+  </aside>
+
+  <!-- Main Navigation Tabs -->
+  <nav class="app-nav" aria-label="Điều hướng chính">
+    <button class="nav-tab active" data-tab="tab-split">
+      <span class="tab-icon">◫</span> Bảng dữ liệu & Sơ đồ song song
+    </button>
+    <button class="nav-tab" data-tab="tab-diagram">
+      <span class="tab-icon">🌐</span> Sơ đồ lưới trực quan
+    </button>
+    <button class="nav-tab" data-tab="tab-ybus">
+      <span class="tab-icon">▦</span> Ma trận dẫn nạp Y-bus
+    </button>
+    <button class="nav-tab" data-tab="tab-results">
+      <span class="tab-icon">📊</span> Nhật ký hội tụ & Bảng kết quả
+    </button>
+  </nav>
+
+  <!-- Main Content Viewport -->
+  <main class="app-viewport">
+    
+    <!-- ================================================================= -->
+    <!-- TAB 1: SPLIT VIEW (TABLES & DIAGRAM SIDE-BY-SIDE)                 -->
+    <!-- ================================================================= -->
+    <section id="tab-split" class="tab-pane active">
+      <div class="split-layout">
+        
+        <!-- Left: Side-by-side Bus & Line Tables Container -->
+        <div class="split-tables-pane">
+          
+          <!-- Bus Table Card -->
+          <div class="card table-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-badge bg-primary">Nút</span>
+                <h2 class="card-title">Bảng nút (Buses)</h2>
+                <span id="busCountBadge" class="count-badge">3 nút</span>
+              </div>
+              <div class="card-actions">
+                <button id="btnAddBus" class="btn btn-xs btn-outline" title="Thêm nút mới">+ Thêm nút</button>
+                <button id="btnImportBusCsv" class="btn btn-xs btn-outline" title="Nạp dữ liệu từ file CSV">📥 Nạp CSV</button>
+                <button id="btnExportBusCsv" class="btn btn-xs btn-outline" title="Xuất dữ liệu nút ra file CSV">📤 Xuất CSV</button>
+                <input type="file" id="busCsvFileInput" accept=".csv" style="display: none;">
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table id="busesTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th title="Số thứ tự ID của thanh cái">Bus</th>
+                    <th title="Loại nút: Slack (Cân bằng), PV (Điều áp), PQ (Tải)">Loại</th>
+                    <th title="Công suất tác dụng phát (Pg)">P phát</th>
+                    <th title="Công suất phản kháng phát (Qg)">Q phát</th>
+                    <th title="Công suất tác dụng tiêu thụ của phụ tải (Pd)">P tải</th>
+                    <th title="Công suất phản kháng tiêu thụ của phụ tải (Qd)">Q tải</th>
+                    <th title="Biên độ điện áp đặt trước (pu)">|V| (pu)</th>
+                    <th title="Góc pha điện áp đặt trước (độ)">δ (°)</th>
+                    <th title="Giới hạn Qmin máy phát (tùy chọn)">Q<sub>min</sub></th>
+                    <th title="Giới hạn Qmax máy phát (tùy chọn)">Q<sub>max</sub></th>
+                    <th>Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="busesTableBody">
+                  <!-- Generated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer-tip">
+              💡 <em>Gợi ý:</em> Nhấp đúp vào ô để sửa giá trị. Kiểm tra dữ liệu sẽ được kích hoạt tự động theo thời gian thực.
+            </div>
+          </div>
+
+          <!-- Line Table Card -->
+          <div class="card table-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-badge bg-accent">Đường dây</span>
+                <h2 class="card-title">Bảng nhánh / Đường dây (Lines)</h2>
+                <span id="lineCountBadge" class="count-badge">3 đường dây</span>
+              </div>
+              <div class="card-actions">
+                <button id="btnAddLine" class="btn btn-xs btn-outline" title="Thêm đường dây mới">+ Thêm dây</button>
+                <button id="btnImportLineCsv" class="btn btn-xs btn-outline" title="Nạp dữ liệu từ file CSV">📥 Nạp CSV</button>
+                <button id="btnExportLineCsv" class="btn btn-xs btn-outline" title="Xuất dữ liệu đường dây ra file CSV">📤 Xuất CSV</button>
+                <input type="file" id="lineCsvFileInput" accept=".csv" style="display: none;">
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table id="linesTable" class="data-table">
+                <thead>
+                  <tr>
+                    <th title="Nút đầu (From Bus)">Từ nút</th>
+                    <th title="Nút cuối (To Bus)">Đến nút</th>
+                    <th title="Điện trở đường dây nối tiếp (pu)">R (pu)</th>
+                    <th title="Điện kháng đường dây nối tiếp (pu)">X (pu)</th>
+                    <th title="Tổng trở biểu kiến |Z|">|Z| (pu)</th>
+                    <th>Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="linesTableBody">
+                  <!-- Generated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer-tip">
+              💡 <em>Yêu cầu kỹ thuật:</em> Điện trở R ≥ 0 và điện kháng cảm ứng X > 0.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Interactive Canvas / SVG Diagram Pane -->
+        <div class="split-diagram-pane">
+          <div class="card diagram-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-badge bg-success">SCADA</span>
+                <h2 class="card-title">Sơ đồ một sợi tương tác (Single-Line Diagram)</h2>
+              </div>
+              <div class="diagram-toolbar">
+                <button id="btnAutoLayout" class="btn btn-xs btn-outline" title="Tự động sắp xếp các nút vào vị trí tròn/lưới">↺ Bố cục tự động</button>
+                <button id="btnZoomIn" class="btn btn-xs btn-icon-only" title="Phóng to">+</button>
+                <button id="btnZoomOut" class="btn btn-xs btn-icon-only" title="Thu nhỏ">−</button>
+                <button id="btnResetView" class="btn btn-xs btn-outline" title="Căn giữa sơ đồ">Căn giữa</button>
+              </div>
+            </div>
+
+            <div class="diagram-canvas-container" id="diagramWrapper">
+              <svg id="gridSvg" class="grid-svg" viewBox="0 0 800 600">
+                <defs>
+                  <!-- Arrowhead markers -->
+                  <marker id="arrowFlow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#06B6D4" />
+                  </marker>
+                  <marker id="arrowFlowReverse" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#EC4899" />
+                  </marker>
+                </defs>
+                <g id="gridLayers">
+                  <g id="layerLines"></g>
+                  <g id="layerFlowMarkers"></g>
+                  <g id="layerBuses"></g>
+                </g>
+              </svg>
+              <div id="diagramEmptyState" class="empty-state" style="display:none;">
+                <div class="empty-icon">🔌</div>
+                <div class="empty-text">Chưa có dữ liệu để vẽ sơ đồ</div>
+              </div>
+            </div>
+
+            <div class="diagram-legend">
+              <span class="legend-item"><span class="legend-dot dot-slack"></span> Slack (Cân bằng)</span>
+              <span class="legend-item"><span class="legend-dot dot-pv"></span> PV (Máy phát)</span>
+              <span class="legend-item"><span class="legend-dot dot-pq"></span> PQ (Phụ tải)</span>
+              <span class="legend-item"><span class="legend-line"></span> Đường dây & Chiều trào lưu P</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: FULL DIAGRAM VIEW                                          -->
+    <!-- ================================================================= -->
+    <section id="tab-diagram" class="tab-pane">
+      <div class="card full-height-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-success">Toàn màn hình</span>
+            <h2 class="card-title">Mô hình sơ đồ lưới điện thời gian thực</h2>
+          </div>
+          <div class="card-info">
+            Kéo thả các thanh cái để bố trí trực quan theo sơ đồ thực tế trạm. Rê chuột vào nút hoặc đường dây để xem công suất trào lưu chi tiết.
+          </div>
+        </div>
+        <div class="diagram-canvas-container full-canvas" id="fullDiagramWrapper">
+          <!-- Mirrored or reused canvas -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: Y-BUS MATRIX INSPECTOR                                     -->
+    <!-- ================================================================= -->
+    <section id="tab-ybus" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-primary">Ma trận</span>
+            <h2 class="card-title">Ma trận dẫn nạp nút Y<sub>bus</sub> (Admittance Matrix)</h2>
+          </div>
+          <div class="card-actions">
+            <div class="radio-pill-group">
+              <label class="radio-pill">
+                <input type="radio" name="ybusFormat" value="rect" checked>
+                <span>Dạng đại số (G + jB)</span>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="ybusFormat" value="polar">
+                <span>Dạng cực (|Y| ∠ θ°)</span>
+              </label>
+            </div>
+            <button id="btnRefreshYbus" class="btn btn-xs btn-outline">↺ Cập nhật Y-bus</button>
+          </div>
+        </div>
+
+        <div class="ybus-metrics-strip">
+          <div class="metric-card">
+            <span class="metric-label">Kích thước ma trận</span>
+            <span id="ybusDim" class="metric-value">3 × 3</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Phần tử khác không</span>
+            <span id="ybusNonZeros" class="metric-value">9</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Độ thưa (Sparsity)</span>
+            <span id="ybusSparsity" class="metric-value">0.0 %</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Tính đối xứng</span>
+            <span class="metric-value text-success">Đối xứng hoàn hảo</span>
+          </div>
+        </div>
+
+        <div class="ybus-table-wrapper">
+          <table id="ybusTable" class="matrix-table">
+            <thead id="ybusTableHead"></thead>
+            <tbody id="ybusTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card-footer-tip">
+          💡 <em>Đặc tính vật lý:</em> Ma trận Y<sub>bus</sub> có đường chéo chính Yii = ∑ yij và phần tử ngoài đường chéo Yij = -yij.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: RESULTS & CONVERGENCE TELEMETRY                            -->
+    <!-- ================================================================= -->
+    <section id="tab-results" class="tab-pane">
+      
+      <!-- Solver Status Alert Banner -->
+      <div id="solverStatusBanner" class="solver-status-banner info">
+        <div class="status-icon" id="solverStatusIcon">ℹ</div>
+        <div class="status-text">
+          <h3 id="solverStatusTitle" class="status-heading">Chưa thực hiện tính toán</h3>
+          <p id="solverStatusDesc">Nhấn nút <strong>"Giải trào lưu"</strong> ở góc trên bên phải để bắt đầu thuật toán Newton-Raphson.</p>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid" id="kpiGrid" style="display: none;">
+        <div class="kpi-card">
+          <span class="kpi-title">Tổng công suất phát</span>
+          <span id="kpiGenP" class="kpi-num text-primary">62.20 MW</span>
+          <span id="kpiGenQ" class="kpi-sub">-18.39 Mvar</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Tổng phụ tải tiêu thụ</span>
+          <span id="kpiLoadP" class="kpi-num text-warning">60.00 MW</span>
+          <span id="kpiLoadQ" class="kpi-sub">25.00 Mvar</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Tổng tổn thất kỹ thuật</span>
+          <span id="kpiLossP" class="kpi-num text-danger">2.2047 MW</span>
+          <span id="kpiLossPct" class="kpi-sub">(3.54% tổng phát)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Sai số cân bằng công suất</span>
+          <span id="kpiBalanceError" class="kpi-num text-success">&lt; 10⁻¹² MW</span>
+          <span class="kpi-sub">Bảo toàn năng lượng 100%</span>
+        </div>
+      </div>
+
+      <!-- Iteration Convergence Log & Chart -->
+      <div class="results-grid" id="convergenceSection" style="display: none;">
+        
+        <!-- Iteration Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-badge bg-primary">Lịch sử</span>
+              <h2 class="card-title">Nhật ký từng vòng lặp Newton–Raphson</h2>
+            </div>
+            <span id="iterBadge" class="count-badge">4 vòng lặp</span>
+          </div>
+
+          <div class="table-container max-h-300">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Vòng lặp #</th>
+                  <th>Sai số ΔP cực đại (pu)</th>
+                  <th>Sai số ΔQ cực đại (pu)</th>
+                  <th>Sai số cực đại ||ΔS||<sub>∞</sub></th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="iterLogTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Convergence Trajectory Canvas Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-badge bg-accent">Đồ thị</span>
+              <h2 class="card-title">Đường cong hội tụ sai số (Log₁₀ Mismatch)</h2>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="convergenceChart" width="500" height="240"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bus Results Table -->
+      <div class="card" id="busResultsCard" style="display: none;">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-success">Điện áp nút</span>
+            <h2 class="card-title">Kết quả điện áp & công suất tại các thanh cái</h2>
+          </div>
+          <button id="btnExportResultsCsv" class="btn btn-xs btn-outline">📤 Xuất toàn bộ kết quả ra CSV</button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Bus</th>
+                <th>Loại</th>
+                <th>Điện áp |V| (pu)</th>
+                <th>Góc pha δ (°)</th>
+                <th>P bơm (MW)</th>
+                <th>Q bơm (Mvar)</th>
+                <th>P phát (MW)</th>
+                <th>Q phát (Mvar)</th>
+                <th>P tải (MW)</th>
+                <th>Q tải (Mvar)</th>
+                <th>Giới hạn Q</th>
+              </tr>
+            </thead>
+            <tbody id="busResultsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Branch Flows & Losses Table -->
+      <div class="card" id="branchResultsCard" style="display: none;">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-badge bg-accent">Trào lưu nhánh</span>
+            <h2 class="card-title">Dòng công suất truyền tải & tổn thất trên từng đường dây</h2>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Từ nút</th>
+                <th>Đến nút</th>
+                <th>P đầu gửi (MW)</th>
+                <th>Q đầu gửi (Mvar)</th>
+                <th>P đầu nhận (MW)</th>
+                <th>Q đầu nhận (Mvar)</th>
+                <th>Tổn thất ΔP (MW)</th>
+                <th>Tổn thất ΔQ (Mvar)</th>
+                <th>Kiểm chứng I²R (MW)</th>
+                <th>Dòng điện |I| (pu)</th>
+              </tr>
+            </thead>
+            <tbody id="branchResultsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Interactive Floating Tooltip element -->
+  <div id="interactiveTooltip" class="interactive-tooltip" style="display: none;"></div>
+
+  <!-- Toast Notification System -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Client-side Logic Script -->
+  <script src="app.js"></script>
+</body>
+</html>
