@@ -1,0 +1,20 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Nominal $\pi $-equivalent circuit representation of a transmission line between bus $i$ and bus $k$.}}{8}{figure.2.1}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Systematic algorithmic flowchart of the polar Newton--Raphson AC power flow solver.}}{18}{figure.3.1}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Modular software architecture of the Python AC power flow solver platform.}}{20}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Interactive Streamlit web application running the 5-bus AC power flow simulation.}}{22}{figure.4.2}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Single-line diagram of the 3-bus educational transmission benchmark.}}{24}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Newton--Raphson logarithmic convergence curve for the 3-bus network.}}{25}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Single-line diagram of the 5-bus synthetic educational transmission system.}}{26}{figure.5.3}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Newton--Raphson logarithmic convergence curve for the 5-bus synthetic system.}}{26}{figure.5.4}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Active transmission loss scaling across 80\%, 100\%, and 120\% demand levels.}}{27}{figure.5.5}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

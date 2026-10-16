@@ -1,0 +1,35 @@
+Test name,Objective,Expected behavior,Actual result,Pass/Fail
+test_streamlit_example_runs,"Run examples, reruns, input changes and failure path",Correct losses; results retained or invalidated appropriately; no success download on failure,All assertions satisfied,Pass
+test_ybus_structure[3bus],Check topology assembly,Symmetry and zero row sums,All assertions satisfied,Pass
+test_ybus_structure[5bus],Check topology assembly,Symmetry and zero row sums,All assertions satisfied,Pass
+test_ybus_values,Check manual three-bus admittances,Match hand-derived Ybus,All assertions satisfied,Pass
+test_jacobian_finite_difference[3bus],Verify all analytical derivatives,Maximum absolute error < 1e-7,All assertions satisfied,Pass
+test_jacobian_finite_difference[5bus],Verify all analytical derivatives,Maximum absolute error < 1e-7,All assertions satisfied,Pass
+test_state_count[3bus-3],Verify reduced state dimension,3 or 7 states,All assertions satisfied,Pass
+test_state_count[5bus-7],Verify reduced state dimension,3 or 7 states,All assertions satisfied,Pass
+test_convergence_balance_and_losses[0.8-3bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_convergence_balance_and_losses[0.8-5bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_convergence_balance_and_losses[1.0-3bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_convergence_balance_and_losses[1.0-5bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_convergence_balance_and_losses[1.2-3bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_convergence_balance_and_losses[1.2-5bus],Solve and verify each scenario,Residual < 1e-10 pu; P/Q balance < 1e-9; I2R agreement,All assertions satisfied,Pass
+test_reference_values,Compare supplied approximate reference,Errors < 1e-6 in displayed units,All assertions satisfied,Pass
+test_invalid_input[duplicate],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[slack],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[type],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[nan],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[endpoint],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[zero_x],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[negative_r],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[island],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[voltage],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[extra_column],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_invalid_input[demand],Reject unsupported or malformed inputs,ValueError,All assertions satisfied,Pass
+test_iteration_limit,Check nonconverged state handling,Failure flag; output_tables refuses state,All assertions satisfied,Pass
+test_singular_jacobian_handling,Exercise singular error handler using injected zero J,Failure flag with Singular Jacobian,All assertions satisfied,Pass
+test_noncontiguous_ids,Test ID mapping,Converged,All assertions satisfied,Pass
+test_no_pq,Test zero PQ sub-blocks,Converged,All assertions satisfied,Pass
+test_invalid_controls[kwargs0],Reject invalid solver controls,ValueError,All assertions satisfied,Pass
+test_invalid_controls[kwargs1],Reject invalid solver controls,ValueError,All assertions satisfied,Pass
+test_invalid_controls[kwargs2],Reject invalid solver controls,ValueError,All assertions satisfied,Pass
+test_invalid_controls[kwargs3],Reject invalid solver controls,ValueError,All assertions satisfied,Pass

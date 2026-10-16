@@ -1,0 +1,8 @@
+{
+  "health": "ok",
+  "home_http_status": 200,
+  "server_startup": "passed",
+  "browser_interaction": "not executed; browser binary download unavailable",
+  "scope": "HTTP server startup only; UI logic checked separately by AppTest",
+  "test_environment_option": "global.developmentMode=false; dependencies loaded from a test directory"
+}

@@ -1,0 +1,21 @@
+﻿{
+  "student": {
+    "name": "Lã Huy Gia Huy",
+    "name_en": "La Huy Gia Huy",
+    "student_id": "202412885",
+    "class": "EE - E18",
+    "program": "Hệ thống điện và Năng lượng tái tạo - 02",
+    "program_en": "Power Systems and Renewable Energy - 02",
+    "email": "Huy.lhg2412885@sis.hust.edu.vn",
+    "institution": "Hanoi University of Science and Technology",
+    "school": "School of Electrical and Electronic Engineering"
+  },
+  "project": {
+    "course_id": "EE3810E",
+    "course_name": "Project I",
+    "supervisor": "TS. Nguyễn Hoàng Việt",
+    "supervisor_en": "Dr. Nguyen Hoang Viet",
+    "academic_year": "2026-2027",
+    "updated_at": "2026-10-14"
+  }
+}

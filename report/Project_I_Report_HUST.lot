@@ -1,0 +1,26 @@
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces Comprehensive comparative evaluation of power flow numerical methods.}}{4}{table.1.1}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Classification of power system buses and variable specifications.}}{7}{table.2.1}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Complete mathematical summary of analytical polar Jacobian elements.}}{17}{table.3.1}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Specification of bus dataset columns and data types.}}{21}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Specification of branch dataset columns and data types.}}{21}{table.4.2}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Detailed step-by-step iteration convergence log for the 3-bus benchmark.}}{25}{table.5.1}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Converged bus electrical results for the 3-bus system at 100\% loading.}}{25}{table.5.2}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Converged branch power flows and losses for the 3-bus system.}}{26}{table.5.3}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Converged bus electrical results for the 5-bus synthetic network.}}{27}{table.5.4}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Comparative performance metrics across 80\%, 100\%, and 120\% loading levels.}}{27}{table.5.5}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces Numerical cross-validation results against PyPower / MATPOWER.}}{28}{table.5.6}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {B.1}{\ignorespaces Complete bus input data for the 3-bus educational network.}}{38}{table.B.1}%
+\contentsline {table}{\numberline {B.2}{\ignorespaces Complete branch input data for the 3-bus educational network.}}{38}{table.B.2}%
+\contentsline {table}{\numberline {B.3}{\ignorespaces Complete bus input data for the 5-bus synthetic network.}}{38}{table.B.3}%
+\contentsline {table}{\numberline {B.4}{\ignorespaces Complete branch input data for the 5-bus synthetic network.}}{39}{table.B.4}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

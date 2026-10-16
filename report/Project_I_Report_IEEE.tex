@@ -1,0 +1,366 @@
+﻿\documentclass[conference,10pt]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{url}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+\title{Development of a Python-Based Program for Steady-State AC Power Flow Analysis Using the Newton--Raphson Method}
+
+\author{
+\IEEEauthorblockN{Student Name}
+\IEEEauthorblockA{\textit{School of Electrical and Electronic Engineering (SEEE)} \\
+\textit{Hanoi University of Science and Technology (HUST)}\\
+Hanoi, Vietnam \\
+Course: Project I (EE3810E) -- EE-E18 Power Systems and Renewable Energy}
+}
+
+\maketitle
+
+\begin{abstract}
+This report documents the rigorous mathematical formulation, implementation, and numerical validation of a Python-based steady-state AC power flow analyzer utilizing the polar Newton--Raphson method. The program forms the complex bus admittance matrix ($\mathbf{Y}_{\text{bus}}$) from branch $\pi$-model parameters and off-nominal transformer ratios, computes real and reactive power mismatches, constructs the exact analytical Jacobian matrix, and iteratively solves for unknown bus voltage angles ($\delta$) and magnitudes ($|V|$). Numerical experiments are executed on both a 3-bus benchmark and a synthetic 5-bus network under 80\%, 100\%, and 120\% loading scenarios with a convergence mismatch threshold of $10^{-10}$~pu. The results demonstrate strict quadratic convergence within 4 to 5 iterations. Verification via finite differences and cross-comparison against PyPower confirms absolute consistency within machine precision ($< 10^{-13}$~pu), proving high numerical fidelity and educational clarity.
+\end{abstract}
+
+\begin{IEEEkeywords}
+AC Power Flow, Newton--Raphson Method, Bus Admittance Matrix, Polar Formulation, Analytical Jacobian, Numerical Verification, Python.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\subsection{Background and Motivation}
+Power flow analysis is the cornerstone of power system planning, operation, and security assessment. The steady-state operating point determines transmission loading, bus voltages, and losses under prescribed generation and load profiles. While industrial software suites offer extensive capabilities, their black-box nature often obscures internal mathematical transformations. Developing a transparent, open-source computational engine in Python allows direct inspection of admittance matrix synthesis, analytical Jacobian structuring, and numerical convergence dynamics.
+
+\subsection{Objectives and Scope}
+The principal objectives of this work are:
+\begin{enumerate}
+    \item Formulate the full AC power flow problem in polar coordinates without decoupling assumptions.
+    \item Construct the bus admittance matrix ($\mathbf{Y}_{\text{bus}}$) accounting for transmission line $\pi$-models, charging susceptances, and transformer off-nominal taps.
+    \item Derive the exact analytical Jacobian matrix and execute polar Newton--Raphson updates.
+    \item Implement a dual-layer software architecture: a robust computational core and an interactive Streamlit graphical interface.
+    \item Validate results across multi-scenario load scalings (80\%, 100\%, 120\%) against benchmark references and standard PyPower calculations.
+\end{enumerate}
+
+\section{Mathematical Formulation}
+
+\subsection{Per-Unit System and Bus Classification}
+Calculations are performed in the per-unit (pu) system with system base power $S_{\text{base}} = 100\text{ MVA}$. The system buses are classified into three conventional categories:
+\begin{itemize}
+    \item \textbf{Slack Bus (Swing Bus)}: Reference bus where voltage magnitude $|V_i|$ and phase angle $\delta_i = 0$ are fixed. The active power $P_i$ and reactive power $Q_i$ are determined post-convergence.
+    \item \textbf{Generator Bus (PV Bus)}: Active power injection $P_i$ and voltage magnitude $|V_i|$ are specified. Phase angle $\delta_i$ and reactive power $Q_i$ are solved.
+    \item \textbf{Load Bus (PQ Bus)}: Active and reactive power injections ($P_i, Q_i$) are specified. Phase angle $\delta_i$ and voltage magnitude $|V_i|$ are state variables.
+\end{itemize}
+
+\subsection{Transmission Line and Transformer Modeling}
+A transmission line connecting buses $i$ and $k$ is represented by the equivalent $\pi$-circuit with series impedance $z_{ik} = r_{ik} + j x_{ik}$ and total line-charging susceptance $b_{c,ik}$. The series admittance is:
+\begin{equation}
+y_{ik} = g_{ik} + j b_{ik} = \frac{1}{r_{ik} + j x_{ik}} = \frac{r_{ik} - j x_{ik}}{r_{ik}^2 + x_{ik}^2}
+\end{equation}
+
+For a branch with off-nominal tap ratio $a_{ik}:1$ located at bus $i$, the branch current injections satisfy:
+\begin{equation}
+\begin{bmatrix}
+I_{ik} \\ I_{ki}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{y_{ik}}{a_{ik}^2} + j\frac{b_{c,ik}}{2} & -\frac{y_{ik}}{a_{ik}} \\
+-\frac{y_{ik}}{a_{ik}} & y_{ik} + j\frac{b_{c,ik}}{2}
+\end{bmatrix}
+\begin{bmatrix}
+V_i \\ V_k
+\end{bmatrix}
+\end{equation}
+
+The network nodal admittance matrix $\mathbf{Y}_{\text{bus}} \in \mathbb{C}^{N \times N}$ has elements $Y_{ik} = G_{ik} + j B_{ik}$ formed by:
+\begin{align}
+Y_{ii} &= y_{i0} + \sum_{k \in \Omega_i} \left( \frac{y_{ik}}{a_{ik}^2} + j \frac{b_{c,ik}}{2} \right) \\
+Y_{ik} &= -\frac{y_{ik}}{a_{ik}} \quad (i \neq k)
+\end{align}
+where $y_{i0}$ represents any static shunt connected directly at bus $i$, and $\Omega_i$ is the set of buses connected to bus $i$.
+
+\subsection{Power Injection Equations}
+In polar coordinates, bus voltages are expressed as $V_i = |V_i| e^{j \delta_i}$. The complex power injection at bus $i$ is:
+\begin{equation}
+S_i = P_i + j Q_i = V_i I_i^* = V_i \sum_{k=1}^N Y_{ik}^* V_k^*
+\end{equation}
+Expanding into real and imaginary components yields:
+\begin{align}
+P_i &= |V_i| \sum_{k=1}^N |V_k| \left( G_{ik} \cos\delta_{ik} + B_{ik} \sin\delta_{ik} \right) \label{eq:p_inj} \\
+Q_i &= |V_i| \sum_{k=1}^N |V_k| \left( G_{ik} \sin\delta_{ik} - B_{ik} \cos\delta_{ik} \right) \label{eq:q_inj}
+\end{align}
+where $\delta_{ik} = \delta_i - \delta_k$.
+
+\subsection{Newton--Raphson Iterative Formulation}
+The active and reactive power mismatches at iteration $m$ are defined as:
+\begin{align}
+\Delta P_i^{(m)} &= P_i^{\text{spec}} - P_i(\boldsymbol{\delta}^{(m)}, |\mathbf{V}|^{(m)}) \\
+\Delta Q_i^{(m)} &= Q_i^{\text{spec}} - Q_i(\boldsymbol{\delta}^{(m)}, |\mathbf{V}|^{(m)})
+\end{align}
+where $P_i^{\text{spec}} = P_{g,i} - P_{d,i}$ and $Q_i^{\text{spec}} = Q_{g,i} - Q_{d,i}$.
+
+The linearized system of algebraic equations is:
+\begin{equation}
+\begin{bmatrix}
+\Delta \mathbf{P} \\
+\Delta \mathbf{Q}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{J}_{11} & \mathbf{J}_{12} \\
+\mathbf{J}_{21} & \mathbf{J}_{22}
+\end{bmatrix}
+\begin{bmatrix}
+\Delta \boldsymbol{\delta} \\
+\Delta |\mathbf{V}|
+\end{bmatrix}
+=
+\mathbf{J} \Delta \mathbf{x}
+\end{equation}
+
+For an $N$-bus system containing $N_g$ PV buses and $N_L$ PQ buses:
+\begin{itemize}
+    \item $\Delta \boldsymbol{\delta} \in \mathbb{R}^{N-1}$ corresponds to all non-slack buses ($i = 2, \dots, N$).
+    \item $\Delta |\mathbf{V}| \in \mathbb{R}^{N_L}$ corresponds strictly to PQ buses.
+    \item The total dimension of $\mathbf{J}$ is $(N-1 + N_L) \times (N-1 + N_L)$.
+\end{itemize}
+
+\subsection{Analytical Jacobian Matrix Derivation}
+The exact analytical elements of the four Jacobian sub-matrices are derived as follows:
+
+\textbf{1. Sub-matrix $\mathbf{J}_{11} = \frac{\partial \mathbf{P}}{\partial \boldsymbol{\delta}}$:}
+\begin{align}
+\frac{\partial P_i}{\partial \delta_k} &= |V_i| |V_k| \left( G_{ik} \sin\delta_{ik} - B_{ik} \cos\delta_{ik} \right), \quad (i \neq k) \\
+\frac{\partial P_i}{\partial \delta_i} &= -Q_i - B_{ii} |V_i|^2
+\end{align}
+
+\textbf{2. Sub-matrix $\mathbf{J}_{12} = \frac{\partial \mathbf{P}}{\partial |\mathbf{V}|}$:}
+\begin{align}
+\frac{\partial P_i}{\partial |V_k|} &= |V_i| \left( G_{ik} \cos\delta_{ik} + B_{ik} \sin\delta_{ik} \right), \quad (i \neq k) \\
+\frac{\partial P_i}{\partial |V_i|} &= \frac{P_i}{|V_i|} + G_{ii} |V_i|
+\end{align}
+
+\textbf{3. Sub-matrix $\mathbf{J}_{21} = \frac{\partial \mathbf{Q}}{\partial \boldsymbol{\delta}}$:}
+\begin{align}
+\frac{\partial Q_i}{\partial \delta_k} &= -|V_i| |V_k| \left( G_{ik} \cos\delta_{ik} + B_{ik} \sin\delta_{ik} \right), \quad (i \neq k) \\
+\frac{\partial Q_i}{\partial \delta_i} &= P_i - G_{ii} |V_i|^2
+\end{align}
+
+\textbf{4. Sub-matrix $\mathbf{J}_{22} = \frac{\partial \mathbf{Q}}{\partial |\mathbf{V}|}$:}
+\begin{align}
+\frac{\partial Q_i}{\partial |V_k|} &= |V_i| \left( G_{ik} \sin\delta_{ik} - B_{ik} \cos\delta_{ik} \right), \quad (i \neq k) \\
+\frac{\partial Q_i}{\partial |V_i|} &= \frac{Q_i}{|V_i|} - B_{ii} |V_i|
+\end{align}
+
+\subsection{State Vector Update and Convergence Criterion}
+The state vector is updated iteratively:
+\begin{equation}
+\mathbf{x}^{(m+1)} = \mathbf{x}^{(m)} + \mathbf{J}^{-1} \begin{bmatrix} \Delta \mathbf{P}^{(m)} \\ \Delta \mathbf{Q}^{(m)} \end{bmatrix}
+\end{equation}
+The algorithm terminates when the maximum absolute mismatch satisfies:
+\begin{equation}
+\|\Delta \mathbf{F}^{(m)}\|_{\infty} = \max \left( |\Delta P_i^{(m)}|, |\Delta Q_i^{(m)}| \right) < \epsilon
+\end{equation}
+where the convergence tolerance is set to $\epsilon = 10^{-10}\text{ pu}$.
+
+\subsection{Branch Power Flows and Loss Calculations}
+Following convergence, the complex power flow from bus $i$ to bus $k$ is computed:
+\begin{equation}
+S_{ik} = P_{ik} + j Q_{ik} = V_i I_{ik}^* = V_i \left[ (V_i - a_{ik} V_k) \frac{y_{ik}}{a_{ik}^2} + V_i \left( j \frac{b_{c,ik}}{2} \right) \right]^*
+\end{equation}
+The active power loss in branch $i-k$ is:
+\begin{equation}
+P_{\text{loss}, ik} = P_{ik} + P_{ki}
+\end{equation}
+System-wide active power conservation is enforced:
+\begin{equation}
+\sum_{i=1}^N P_{g,i} = \sum_{i=1}^N P_{d,i} + \sum_{ik} P_{\text{loss}, ik}
+\end{equation}
+
+\section{Software Implementation}
+The program is built in Python 3.12 with modular organization:
+\begin{itemize}
+    \item \texttt{src/ybus.py}: Forms $\mathbf{Y}_{\text{bus}}$ from branch and transformer CSV records.
+    \item \texttt{src/power\_calc.py}: Evaluates equations (\ref{eq:p_inj})--(\ref{eq:q_inj}) using NumPy vectorization.
+    \item \texttt{src/jacobian.py}: Computes analytical sub-blocks $\mathbf{J}_{11}, \mathbf{J}_{12}, \mathbf{J}_{21}, \mathbf{J}_{22}$ directly.
+    \item \texttt{src/solver.py}: Controls Newton--Raphson iterations, linear solve via \texttt{scipy.linalg}, and convergence checks.
+    \item \texttt{src/results.py}: Post-processes branch flows, transmission losses, and power balances.
+    \item \texttt{app.py}: Streamlit web application providing interactive analysis and visualization.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth]{../figures/algorithm.png}
+\caption{Flowchart of the implemented Newton--Raphson AC power flow algorithm.}
+\label{fig:algorithm}
+\end{figure}
+
+\section{Simulation Results and Verification}
+
+\subsection{3-Bus System Benchmark}
+The benchmark 3-bus network consists of Bus 1 (Slack, $|V|=1.05\text{ pu}$), Bus 2 (PV, $|V|=1.02\text{ pu}, P_g=50\text{ MW}$), and Bus 3 (PQ, $P_d=60\text{ MW}, Q_d=25\text{ MVAr}$).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/3bus_network.png}
+\caption{Single-line diagram of the benchmark 3-bus network.}
+\label{fig:3bus_net}
+\end{figure}
+
+The nominal operating state results ($S_{\text{base}}=100\text{ MVA}$) are reported in Table~\ref{tab:3bus_sol}.
+
+\begin{table}[htbp]
+\caption{3-Bus Power Flow Solution at 100\% Demand}
+\label{tab:3bus_sol}
+\centering
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Bus} & \textbf{Type} & \textbf{$|V|$ (pu)} & \textbf{$\delta$ (deg)} & \textbf{$P_{\text{net}}$ (MW)} & \textbf{$Q_{\text{net}}$ (MVAr)} \\
+\midrule
+1 & Slack & 1.050000 & 0.000000 & 12.204693 & 77.807132 \\
+2 & PV    & 1.020000 & 1.024098 & 50.000000 & -46.602742 \\
+3 & PQ    & 0.984385 & -2.486252 & -60.000000 & -25.000000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Branch power flows and transmission losses are summarized in Table~\ref{tab:3bus_flows}.
+
+\begin{table}[htbp]
+\caption{3-Bus Branch Power Flows and Losses}
+\label{tab:3bus_flows}
+\centering
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Branch} & \textbf{$P_{ik}$ (MW)} & \textbf{$P_{ki}$ (MW)} & \textbf{$P_{\text{loss}}$ (MW)} & \textbf{$Q_{\text{loss}}$ (MVAr)} \\
+\midrule
+1--2 & -24.296899 & 25.082026 & 0.785127 & 1.570254 \\
+1--3 & 36.501592 & -35.092495 & 1.409097 & 2.818195 \\
+2--3 & 24.917974 & -24.907505 & 0.010469 & 0.020938 \\
+\midrule
+\textbf{Total} & --- & --- & \textbf{2.204693} & \textbf{4.409387} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Active power balance:
+\begin{equation}
+\sum P_{\text{gen}} = 12.204693 + 50.0 = 62.204693\text{ MW}
+\end{equation}
+\begin{equation}
+\sum P_{\text{load}} + P_{\text{loss}} = 60.0 + 2.204693 = 62.204693\text{ MW}
+\end{equation}
+Mismatch between total generation and total demand plus loss is zero within numerical tolerance ($< 10^{-14}\text{ MW}$).
+
+\subsection{Synthetic 5-Bus Network Benchmark}
+The synthetic 5-bus network consists of Bus 1 (Slack, $|V|=1.05\text{ pu}$), Bus 2 (PV, $|V|=1.02\text{ pu}, P_g=80\text{ MW}$), and three PQ load buses.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\linewidth]{../figures/5bus_network.png}
+\caption{Single-line diagram of the synthetic 5-bus network.}
+\label{fig:5bus_net}
+\end{figure}
+
+The nominal state solution for the 5-bus network is presented in Table~\ref{tab:5bus_sol}.
+
+\begin{table}[htbp]
+\caption{5-Bus Power Flow Solution at 100\% Demand}
+\label{tab:5bus_sol}
+\centering
+\begin{tabular}{cccccc}
+\toprule
+\textbf{Bus} & \textbf{Type} & \textbf{$|V|$ (pu)} & \textbf{$\delta$ (deg)} & \textbf{$P_{\text{net}}$ (MW)} & \textbf{$Q_{\text{net}}$ (MVAr)} \\
+\midrule
+1 & Slack & 1.050000 & 0.000000 & 38.650487 & 70.364239 \\
+2 & PV    & 1.020000 & 0.962591 & 80.000000 & -16.480020 \\
+3 & PQ    & 0.979866 & -2.285817 & -40.000000 & -20.000000 \\
+4 & PQ    & 0.977943 & -3.072892 & -45.000000 & -15.000000 \\
+5 & PQ    & 0.968039 & -3.766347 & -30.000000 & -10.000000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Total generation is $P_g = 118.650487\text{ MW}$, total demand is $P_d = 115.0\text{ MW}$, and transmission loss is $P_{\text{loss}} = 3.650487\text{ MW}$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth]{../figures/3bus_convergence.png}
+\caption{Quadratic convergence of mismatch norm for the 3-bus network.}
+\label{fig:3bus_conv}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth]{../figures/5bus_convergence.png}
+\caption{Quadratic convergence of mismatch norm for the 5-bus network.}
+\label{fig:5bus_conv}
+\end{figure}
+
+\subsection{Load Scaling Sensitivity and Loss Characteristics}
+The system response under uniform load scaling factors (80\%, 100\%, 120\%) was evaluated. The results are summarized in Table~\ref{tab:scaling_comp}.
+
+\begin{table}[htbp]
+\caption{Multi-Scenario Load Variation Summary}
+\label{tab:scaling_comp}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Network} & \textbf{Scale} & \textbf{Iter} & \textbf{Min $|V|$ (pu)} & \textbf{Total Loss (MW)} \\
+\midrule
+3-Bus & 80\%  & 4 & 0.988124 & 1.739606 \\
+3-Bus & 100\% & 4 & 0.984385 & 2.204693 \\
+3-Bus & 120\% & 4 & 0.980397 & 2.834110 \\
+\midrule
+5-Bus & 80\%  & 4 & 0.975412 & 2.617421 \\
+5-Bus & 100\% & 4 & 0.968039 & 3.650487 \\
+5-Bus & 120\% & 5 & 0.959821 & 5.143704 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Fig.~\ref{fig:loss_comp} demonstrates the non-linear growth of active power losses as loading levels rise.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\linewidth]{../figures/loss_comparison.png}
+\caption{Active power losses under 80\%, 100\%, and 120\% load scaling.}
+\label{fig:loss_comp}
+\end{figure}
+
+\subsection{Numerical Verification and Benchmarking}
+Two independent validation tests confirmed the numerical rigor:
+\begin{enumerate}
+    \item \textbf{Analytical vs. Finite-Difference Jacobian}: Analytical entries were evaluated against central finite differences ($\Delta x = 10^{-6}$). The maximum discrepancy across all elements was $< 2.3 \times 10^{-8}$.
+    \item \textbf{PyPower Benchmark Validation}: Solutions were benchmarked against PyPower under identical cases. Discrepancies were $< 7.77 \times 10^{-16}\text{ pu}$ for voltage magnitudes, $< 1.29 \times 10^{-14}\text{ deg}$ for phase angles, and $< 3.02 \times 10^{-14}\text{ MW}$ for branch flows.
+\end{enumerate}
+These results establish numerical accuracy within double-precision IEEE-754 arithmetic limits.
+
+\section{Conclusion and Future Work}
+This paper presented a complete, transparent, and verified Python implementation of the polar Newton--Raphson AC power flow method. All governing equations for $\mathbf{Y}_{\text{bus}}$, mismatch vectors, and the analytical Jacobian were derived without approximations. Extensive testing on 3-bus and 5-bus systems verified quadratic convergence and full consistency with PyPower.
+
+Future work will implement generator reactive power capability limits ($Q_{\text{min}}/Q_{\text{max}}$ PV--PQ bus switching), automatic tap-changing transformers, and decoupled/continuation power flow methods for voltage stability studies.
+
+\begin{thebibliography}{00}
+\bibitem{grainger} J. J. Grainger and W. D. Stevenson, \textit{Power System Analysis}, New York: McGraw-Hill, 1994.
+\bibitem{saadat} H. Saadat, \textit{Power System Analysis}, 3rd ed., PSA Publishing, 2010.
+\bibitem{kundur} P. Kundur, \textit{Power System Stability and Control}, New York: McGraw-Hill, 1994.
+\bibitem{pypower} R. D. Zimmerman, C. E. Murillo-S\'{a}nchez, and R. J. Thomas, ``MATPOWER: Steady-State Operations, Planning, and Analysis Tools for Power Systems Research and Education,'' \textit{IEEE Trans. Power Syst.}, vol. 26, no. 1, pp. 12--19, Feb. 2011.
+\bibitem{wood} A. J. Wood, B. F. Wollenberg, and G. B. Shebl\'{e}, \textit{Power Generation, Operation, and Control}, 3rd ed., Hoboken, NJ: Wiley, 2013.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,82 @@
+\contentsline {chapter}{Declaration of Authorship}{i}{chapter*.1}%
+\contentsline {chapter}{Acknowledgements}{ii}{chapter*.2}%
+\contentsline {chapter}{Abstract}{iii}{chapter*.3}%
+\contentsline {chapter}{Nomenclature and Abbreviations}{iv}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Introduction and Literature Review}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}The Fundamental Role of Power Flow in Modern Grids}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Historical Evolution of Power Flow Solution Techniques}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Gauss--Seidel Method}{2}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Newton--Raphson Method}{2}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Fast Decoupled Power Flow (FDPF)}{3}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}Linearized DC Power Flow}{3}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5}Advanced Numerical Techniques: HELM and Continuation Power Flow}{4}{subsection.1.2.5}%
+\contentsline {section}{\numberline {1.3}Comprehensive Comparative Synthesis of Solvers}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Motivation for an Open-Source Vectorized Python Solver}{5}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Report Objectives and Structure}{5}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Mathematical Formulation of AC Power Flow}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Per-Unit System Formulation}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Network Topology and Graph Representation}{6}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Bus Classification and Boundary Conditions}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Transmission Line $\pi $-Equivalent Circuit Modeling}{8}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Modeling of Off-Nominal Tap-Changing Transformers}{9}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Systematic Formation of the Bus Admittance Matrix ($\mathbf {Y}_{\text {bus}}$)}{9}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Polar Formulation of Power Flow Equations}{10}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Branch Power Flows, Transmission Losses, and System Balance}{11}{section.2.8}%
+\contentsline {subsection}{\numberline {2.8.1}Global Conservation Balance}{12}{subsection.2.8.1}%
+\contentsline {chapter}{\numberline {3}Newton--Raphson Solution Technique and Analytical Jacobian}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Principles of Multi-Variable Newton--Raphson Root-Finding}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Power Mismatch Formulation in Polar Coordinates}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Rigorous Derivation of Analytical Jacobian Elements}{14}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Derivation of Sub-Matrix $\mathbf {J}_{11} = \frac {\partial \mathbf {P}}{\partial \boldsymbol {\delta }}$}{15}{subsection.3.3.1}%
+\contentsline {subsubsection}{Off-Diagonal Elements ($i \neq k$)}{15}{subsubsection*.5}%
+\contentsline {subsubsection}{Diagonal Elements ($i = k$)}{15}{subsubsection*.6}%
+\contentsline {subsection}{\numberline {3.3.2}Derivation of Sub-Matrix $\mathbf {J}_{12} = \frac {\partial \mathbf {P}}{\partial |\mathbf {V}|}$}{15}{subsection.3.3.2}%
+\contentsline {subsubsection}{Off-Diagonal Elements ($i \neq k$)}{15}{subsubsection*.7}%
+\contentsline {subsubsection}{Diagonal Elements ($i = k$)}{16}{subsubsection*.8}%
+\contentsline {subsection}{\numberline {3.3.3}Derivation of Sub-Matrix $\mathbf {J}_{21} = \frac {\partial \mathbf {Q}}{\partial \boldsymbol {\delta }}$}{16}{subsection.3.3.3}%
+\contentsline {subsubsection}{Off-Diagonal Elements ($i \neq k$)}{16}{subsubsection*.9}%
+\contentsline {subsubsection}{Diagonal Elements ($i = k$)}{16}{subsubsection*.10}%
+\contentsline {subsection}{\numberline {3.3.4}Derivation of Sub-Matrix $\mathbf {J}_{22} = \frac {\partial \mathbf {Q}}{\partial |\mathbf {V}|}$}{16}{subsection.3.3.4}%
+\contentsline {subsubsection}{Off-Diagonal Elements ($i \neq k$)}{16}{subsubsection*.11}%
+\contentsline {subsubsection}{Diagonal Elements ($i = k$)}{17}{subsubsection*.12}%
+\contentsline {section}{\numberline {3.4}Verification via Central Numerical Finite Differences}{17}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Iterative Flowchart and Stopping Criteria}{18}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Software Architecture and Vectorized Python Implementation}{20}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Software Architectural Design and Modularity}{20}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Data Models and Robust Input Validation}{21}{section.4.2}%
+\contentsline {section}{\numberline {4.3}High-Performance Vectorized Admittance Matrix Formation}{21}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Streamlit Web Application Architecture}{22}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Automated Testing Suite and Continuous Quality Assurance}{22}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Case Studies, Numerical Experiments, and Benchmark Verification}{24}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Case Study I: The 3-Bus Educational Benchmark}{24}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Iteration-by-Iteration Convergence Log}{24}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Final Bus and Branch Flow Solutions}{25}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}Case Study II: The 5-Bus Synthetic Educational System}{25}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Stress Testing Across Diverse Demand Scenarios (80\%, 100\%, 120\%)}{27}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Cross-Validation Against Industry Benchmark: PyPower / MATPOWER}{28}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Engineering Discussion, Sensitivity Analysis, and Advanced Topics}{29}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Sensitivity of Power Flow Decoupling to Branch $R/X$ Ratios}{29}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Flat Start versus Warm Start Convergence Dynamics}{29}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Reactive Power Limits and Generator PV-to-PQ Switching}{30}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Pedagogical Impact for HUST SEEE Engineering Education}{30}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Scalability to Large-Scale Interconnected Utility Networks}{31}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Conclusions and Future Work}{32}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Summary of Achievements}{32}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Recommendations for Future Research}{32}{section.7.2}%
+\contentsline {chapter}{References}{34}{chapter*.13}%
+\contentsline {chapter}{\numberline {A}Detailed Mathematical Proofs of Polar Jacobian Elements}{36}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Rigorous Expansion of Real Power Derivative $\partial P_i / \partial \delta _i$}{36}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Rigorous Expansion of Real Power Derivative $\partial P_i / \partial |V_i|$}{37}{section.A.2}%
+\contentsline {chapter}{\numberline {B}Tabular Benchmark Case Datasets}{38}{appendix.B}%
+\contentsline {section}{\numberline {B.1}The 3-Bus Educational Benchmark Dataset}{38}{section.B.1}%
+\contentsline {section}{\numberline {B.2}The 5-Bus Synthetic Educational Transmission System Dataset}{38}{section.B.2}%
+\contentsline {chapter}{\numberline {C}Python Core Solver Source Code Listings}{40}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Core Newton--Raphson Solver (`src/newton\_raphson.py`)}{40}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Analytical Jacobian Builder (`src/jacobian.py`)}{41}{section.C.2}%
+\contentsline {section}{\numberline {C.3}Power Injection and Mismatch Equations (`src/power\_equations.py`)}{41}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Nodal Admittance Matrix Builder (`src/ybus.py`)}{42}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Branch Power Flows and Line Losses (`src/branch\_flows.py`)}{42}{section.C.5}%
+\contentsline {section}{\numberline {C.6}Defensive Input Validation Engine (`src/validation.py`)}{43}{section.C.6}%
+\contentsline {section}{\numberline {C.7}Data Models and Schema Ingestion (`src/data\_models.py`)}{44}{section.C.7}%
+\contentsline {chapter}{\numberline {D}Streamlit Web Application Code Listing}{45}{appendix.D}%
+\contentsline {section}{\numberline {D.1}Interactive Web GUI Platform (`app.py`)}{45}{section.D.1}%

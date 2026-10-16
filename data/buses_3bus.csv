@@ -1,0 +1,4 @@
+bus,type,pg_pu,qg_pu,pd_pu,qd_pu,vm_pu,va_deg
+1,Slack,0,0,0,0,1.05,0
+2,PV,0.5,0,0,0,1.02,0
+3,PQ,0,0,0.6,0.25,1,0
