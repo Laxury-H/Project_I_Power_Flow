@@ -16,53 +16,46 @@ The current official submission report follows the standardized HUST graduation/
 
 ---
 
-## 📁 Directory Structure & Archives
+## 📁 Thư mục & Báo cáo chính thức (Clean & Organized)
 
 ```text
 report/
-├── Project_I_Report_HUST_v2.pdf      # [PRIMARY DELIVERABLE] 100% English HUST Report
-├── Project_I_Report_HUST_v2.docx     # Formatted Microsoft Word version
-├── Project_I_Report_HUST_v2.tex      # LaTeX source code
-├── generate_hust_report_v2.py        # Automated generator & clean build script
-├── README.md                         # This guide
+├── Project_I_Report_HUST_v2.pdf               # [NỘP NHANH] Báo cáo tiếng Anh chính thức (48 trang)
+├── Project_I_Report_HUST_Vietnamese_v2.pdf    # [NỘP NHANH] Báo cáo tiếng Việt chính thức (38 trang)
+├── README.md                                  # Hướng dẫn cấu trúc thư mục
 │
-├── v2/                               # Standalone mirror of V2 English release
-│   ├── Project_I_Report_HUST_v2.pdf
-│   ├── Project_I_Report_HUST_v2.docx
-│   ├── Project_I_Report_HUST_v2.tex
-│   └── generate_hust_report_v2.py
+├── 01_English_Report/                         # TRỌN BỘ TIẾNG ANH (HUST ENGLISH TRACK)
+│   ├── Project_I_Report_HUST_v2.pdf           # Bản PDF nộp chính thức
+│   ├── Project_I_Report_HUST_v2.docx          # Bản Word nộp / chỉnh sửa
+│   ├── Project_I_Report_HUST_v2.tex           # Mã nguồn LaTeX chuẩn Bách Khoa
+│   └── generate_hust_report_v2.py             # Script tự động biên dịch & dọn dẹp
 │
-├── v1/                               # Preliminary Version 1 reports
-│   ├── Project_I_Report.pdf
-│   ├── Project_I_Report.docx
-│   ├── Project_I_Report_HUST.tex
-│   ├── generate_latex.py
-│   └── generate_word.py
+├── 02_Vietnamese_Report/                      # TRỌN BỘ TIẾNG VIỆT (HƯỚNG ĐẠI TRÀ / TIẾNG VIỆT)
+│   ├── Project_I_Report_HUST_Vietnamese_v2.pdf# Bản PDF nộp chính thức
+│   ├── Project_I_Report_HUST_Vietnamese_v2.docx# Bản Word nộp / chỉnh sửa
+│   ├── Project_I_Report_HUST_Vietnamese_v2.tex # Mã nguồn LaTeX tiếng Việt
+│   └── generate_hust_report_vietnamese.py     # Script tự động biên dịch & dọn dẹp
 │
-├── v2_bilingual_draft/               # Archive of early bilingual / draft versions
-│   ├── Project_I_Report_HUST_v2_bilingual.pdf
-│   ├── Project_I_Report_HUST_v2_bilingual.tex
-│   └── generate_hust_report_v2_bilingual.py
+├── 03_IEEE_Format/                            # BÀI BÁO TÓM TẮT CHUẨN IEEE (2-COLUMN)
+│   ├── Project_I_Report_IEEE.pdf              # Bản PDF tóm tắt 2 cột IEEE Transactions
+│   └── Project_I_Report_IEEE.tex              # Mã nguồn LaTeX IEEE
 │
-├── vietnamese/                       # Dedicated Vietnamese-language reports
-│   ├── Project_I_Report_HUST_Vietnamese.pdf
-│   ├── Project_I_Report_HUST_Vietnamese.docx
-│   └── generate_hust_report.py
-│
-├── ieee_format/                      # IEEE Conference Paper 2-column format
-│   ├── Project_I_Report_IEEE.pdf
-│   └── Project_I_Report_IEEE.tex
-│
-└── templates/                        # University official templates
-    └── Mẫu ĐATN_2019_version 1_1.docx
+└── 04_Templates/                              # MẪU CHUẨN ĐHBK HÀ NỘI
+    └── Mẫu ĐATN_2019_version 1_1.docx         # Mẫu Word gốc của Trường ĐHBK Hà Nội
 ```
 
 ---
 
-## 🛠 Recompiling the LaTeX Report
+## 🛠 Cách biên dịch lại báo cáo (Recompiling)
 
-To recompile the report from LaTeX, simply execute:
-```bash
-python generate_hust_report_v2.py
-```
-This script runs `pdflatex` twice to resolve all internal page references, Table of Contents, List of Figures, and List of Tables, and automatically cleans up auxiliary log and cache files (`.aux`, `.log`, `.out`, `.toc`, `.lof`, `.lot`).
+Mỗi thư mục báo cáo đều có sẵn script Python biên dịch 1 click độc lập, tự động chạy `pdflatex` 2 pass và dọn dẹp toàn bộ file rác (`.aux`, `.log`, `.out`, `.toc`, `.lof`, `.lot`):
+
+- **Biên dịch bản tiếng Anh:**
+  ```bash
+  python report/01_English_Report/generate_hust_report_v2.py
+  ```
+- **Biên dịch bản tiếng Việt:**
+  ```bash
+  python report/02_Vietnamese_Report/generate_hust_report_vietnamese.py
+  ```
+

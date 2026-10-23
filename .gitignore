@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environments (rất nặng, bắt buộc phải bỏ qua)
+# Virtual environments
 .venv/
 venv/
 env/
@@ -25,3 +25,17 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .DS_Store
+
+# LaTeX build artifacts & temporary files
+*.aux
+*.log
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Extension artifacts
+.folio/

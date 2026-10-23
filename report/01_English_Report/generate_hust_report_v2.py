@@ -21,8 +21,10 @@ from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 
-WORKSPACE = r"c:\Users\Lax\Downloads\Project_I_Power_Flow"
-REPORT_DIR = os.path.join(WORKSPACE, "report")
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPORT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+WORKSPACE = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+REPORT_DIR = CURRENT_DIR
 FIGURES_DIR = os.path.join(WORKSPACE, "figures")
 TEX_FILE = os.path.join(REPORT_DIR, "Project_I_Report_HUST_v2.tex")
 PDF_FILE = os.path.join(REPORT_DIR, "Project_I_Report_HUST_v2.pdf")
@@ -1762,19 +1764,12 @@ def main():
     success = compile_pdf()
     if success:
         generate_docx()
-        # Copy to v2 folder
-        v2_dir = os.path.join(REPORT_DIR, "v2")
-        os.makedirs(v2_dir, exist_ok=True)
-        for fname in ["Project_I_Report_HUST_v2.pdf", "Project_I_Report_HUST_v2.tex", "Project_I_Report_HUST_v2.docx"]:
-            src = os.path.join(REPORT_DIR, fname)
-            if os.path.exists(src):
-                shutil.copy2(src, os.path.join(v2_dir, fname))
-                print(f"Copied {fname} -> report/v2/")
+        # Copy convenience PDF to report root
+        root_pdf = os.path.join(REPORT_ROOT, "Project_I_Report_HUST_v2.pdf")
+        shutil.copy2(PDF_FILE, root_pdf)
+        print(f"Updated root PDF: {root_pdf}")
         
-        # Also copy generate_hust_report_v2.py into v2 folder
-        shutil.copy2(__file__, os.path.join(v2_dir, "generate_hust_report_v2.py"))
-        
-        # Clean auxiliary files in both report/ and report/v2/
+        # Clean auxiliary files in CURRENT_DIR
         clean_auxiliary_files(REPORT_DIR)
         print("Done! Cleaned all temporary LaTeX log/aux files.")
 
