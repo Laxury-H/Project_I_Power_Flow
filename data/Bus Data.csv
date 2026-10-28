@@ -1,0 +1,4 @@
+Bus,Bus_Type,Ui_pu,delta_i_rad,PGi_pu,PLi_pu,QLi_pu
+1,Slack,1.05,0.0000,Unknown,0.00,0.00
+2,PV,1.04,Unknown,0.50,0.00,0.00
+3,PQ,Unknown,Unknown,0.00,1.20,0.50

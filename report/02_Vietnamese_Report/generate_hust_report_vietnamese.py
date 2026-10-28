@@ -192,7 +192,7 @@ Lời đầu tiên, em xin được bày tỏ lòng biết ơn sâu sắc và ch
 
 Em xin trân trọng cảm ơn các thầy cô giáo trong Bộ môn Hệ thống điện và Trường Điện - Điện tử, Đại học Bách khoa Hà Nội đã nhiệt huyết giảng dạy, trang bị cho em nền tảng kiến thức chuyên môn vững chắc về mạch điện, lý thuyết trường điện từ, máy điện và phân tích hệ thống điện trong những năm học vừa qua.
 
-Cuối cùng, con xin gửi lời cảm ơn sâu sắc nhất tới gia đình, cha mẹ và bạn bè, những người đã luôn là điểm tựa tinh thần vững chắc, động viên và tạo mọi điều kiện tốt nhất để con có thể tập trung học tập, nghiên cứu và hoàn thành tốt nhiệm vụ của Đồ án 1 này.
+Cuối cùng, em xin bày tỏ lòng biết ơn sâu sắc tới cha mẹ và gia đình đã luôn là điểm tựa tinh thần vững chắc, động viên và tạo mọi điều kiện thuận lợi nhất. Em cũng xin gửi lời cảm ơn chân thành tới bạn bè đã luôn đồng hành, trao đổi và hỗ trợ em trong suốt quá trình học tập và hoàn thành Đồ án 1 này.
 
 \vspace{45pt}
 \begin{flushright}
@@ -225,7 +225,7 @@ Báo cáo Đồ án 1 này xây dựng một phương pháp luận kỹ thuật 
 \addcontentsline{toc}{chapter}{Ký Hiệu và Từ Viết Tắt}
 
 \section*{Danh mục từ viết tắt}
-\begin{longtable}{ll}
+\begin{longtable}{p{2.5cm}p{12.0cm}}
 \toprule
 \textbf{Từ viết tắt} & \textbf{Giải nghĩa kỹ thuật tiếng Việt} \\
 \midrule
@@ -252,7 +252,7 @@ ZIP & Mô hình phụ tải tĩnh đa thức (Tổng trở $Z$ - Dòng điện $
 
 \vspace{15pt}
 \section*{Danh mục ký hiệu toán học}
-\begin{longtable}{lll}
+\begin{longtable}{p{2.2cm}p{1.5cm}p{10.5cm}}
 \toprule
 \textbf{Ký hiệu} & \textbf{Đơn vị} & \textbf{Ý nghĩa vật lý / Kỹ thuật} \\
 \midrule
@@ -338,7 +338,7 @@ Mục tiêu chính của đề tài Đồ án 1 này là xây dựng một phư�
 \end{enumerate}
 
 \section{Phương Pháp Luận Kỹ Thuật 3 Tầng Hướng Kiểm Chứng}
-Để đảm bảo tính mẫu mực trong học thuật kỹ thuật, đề tài tuân thủ quy trình nghiên cứu **3 Tầng (3-Tier Engineering Methodology)**:
+Để đảm bảo tính mẫu mực trong học thuật kỹ thuật, đề tài tuân thủ quy trình nghiên cứu \textbf{3 Tầng (3-Tier Engineering Methodology)}:
 \begin{itemize}
     \item \textbf{Tầng 1 (Cơ sở giải tích liên tục):} Dẫn xuất các phương trình toán học mô tả lưới điện AC, thiết lập hệ đơn vị tương đối, quy ước chiều dòng điện và đạo hàm riêng giải tích không phụ thuộc vào xấp xỉ số.
     \item \textbf{Tầng 2 (Chuẩn số học tính tay minh bạch):} Chuyển hóa mô hình giải tích thành các bước tính toán số học cụ thể cho Bước lặp 1 ($m = 0 \to 1$). Mọi phép tính số học được trình bày minh bạch, tạo thành bộ số liệu chuẩn (baseline) không thể tranh cãi để đối chiếu.
@@ -363,7 +363,7 @@ Báo cáo Đồ án 1 này được cấu trúc thành 5 chương chuyên sâu:
 \section{Hệ Đơn Vị Tương Đối (p.u.) và Các Định Luật Tỷ Lệ Cơ Bản}
 Trong các hệ thống điện hiện đại, điện năng được sản xuất tại cấp điện áp trung áp ($10.5\text{ kV} - 24\text{ kV}$), tăng áp lên cấp siêu cao áp (EHV: $220\text{ kV} - 500\text{ kV}$) để truyền tải đi xa, sau đó hạ áp xuống cấp phân phối ($110\text{ kV}$, $22\text{ kV}$, $0.4\text{ kV}$). Việc tính toán điện áp, dòng điện và trở kháng theo đơn vị thực (V, A, $\Omega$) qua nhiều cấp điện áp đòi hỏi phải quy đổi trở kháng qua tỷ số biến áp lý tưởng ($k = U_1 / U_2$) tại mọi nhánh và nút mạng.
 
-Để triệt tiêu tỷ số biến đổi của máy biến áp, cải thiện độ ổn định số của ma trận và tạo ra thang đo trực quan để đánh giá tải thiết bị, **Hệ đơn vị tương đối (Per-Unit - p.u.)** được áp dụng phổ biến trên toàn thế giới:
+Để triệt tiêu tỷ số biến đổi của máy biến áp, cải thiện độ ổn định số của ma trận và tạo ra thang đo trực quan để đánh giá tải thiết bị, \textbf{Hệ đơn vị tương đối (Per-Unit - p.u.)} được áp dụng phổ biến trên toàn thế giới:
 \begin{equation}
 \text{Giá trị tương đối (p.u.)} = \frac{\text{Giá trị thực tế theo đơn vị vật lý}}{\text{Giá trị cơ bản cùng đơn vị}}
 \end{equation}
@@ -371,8 +371,8 @@ Trong các hệ thống điện hiện đại, điện năng được sản xu�
 \subsection{Lựa Chọn Và Dẫn Xuất Các Đại Lượng Cơ Bản}
 Trong hệ thống điện ba pha đối xứng, hai đại lượng cơ bản độc lập được chọn trước làm chuẩn cho toàn bộ hệ thống:
 \begin{enumerate}
-    \item **Công suất biểu kiến cơ bản ba pha ($S_{\text{base}}$):** Được chọn chung cho toàn bộ mạng lưới điện (thường chọn $S_{\text{base}} = 100.0\text{ MVA}$).
-    \item **Điện áp dây cơ bản ($U_{\text{base}}$):** Được chọn độc lập cho từng cấp điện áp danh định của lưới điện (ví dụ: $500\text{ kV}$, $220\text{ kV}$, $110\text{ kV}$, $22\text{ kV}$).
+    \item \textbf{Công suất biểu kiến cơ bản ba pha ($S_{\text{base}}$):} Được chọn chung cho toàn bộ mạng lưới điện (thường chọn $S_{\text{base}} = 100.0\text{ MVA}$).
+    \item \textbf{Điện áp dây cơ bản ($U_{\text{base}}$):} Được chọn độc lập cho từng cấp điện áp danh định của lưới điện (ví dụ: $500\text{ kV}$, $220\text{ kV}$, $110\text{ kV}$, $22\text{ kV}$).
 \end{enumerate}
 
 Từ hai đại lượng cơ bản trên, dòng điện cơ bản ($I_{\text{base}}$) và trở kháng cơ bản ($Z_{\text{base}}$) được dẫn xuất chặt chẽ:
@@ -431,22 +431,22 @@ Dựa trên nguyên lý cân bằng bậc tự do của hệ phương trình đ�
 \subsection{Nút Cân Bằng (Slack / Swing / Reference Bus)}
 Do tổn thất công suất trên toàn mạng lưới chưa thể biết trước khi hệ thống chưa được giải xong, bắt buộc phải có ít nhất một nhà máy điện đóng vai trò bù trừ tổn thất và làm chuẩn quy chiếu pha cho toàn hệ thống:
 \begin{itemize}
-    \item **Biến số đã biết:** Độ lớn điện áp $U_1$ (thường chọn $1.0\text{ p.u.}$) và góc pha $\delta_1 = 0^\circ$ ($0\text{ rad}$).
-    \item **Biến số cần tìm:** Công suất tác dụng phát $P_{G1}$ và công suất phản kháng phát $Q_{G1}$.
+    \item \textbf{Biến số đã biết:} Độ lớn điện áp $U_1$ (thường chọn $1.0\text{ p.u.}$) và góc pha $\delta_1 = 0^\circ$ ($0\text{ rad}$).
+    \item \textbf{Biến số cần tìm:} Công suất tác dụng phát $P_{G1}$ và công suất phản kháng phát $Q_{G1}$.
 \end{itemize}
 
 \subsection{Nút Điều Chỉnh Điện Áp (PV / Generator Bus)}
 Đây là các nút có máy phát điện đồng bộ hoặc nguồn năng lượng tái tạo trang bị hệ thống tự động điều chỉnh điện áp (AVR) để giữ điện áp đầu cực không đổi:
 \begin{itemize}
-    \item **Biến số đã biết:** Công suất tác dụng bơm vào nút $P_i = P_{Gi} - P_{Li}$ và độ lớn điện áp đặt $U_i$.
-    \item **Biến số cần tìm:** Góc pha điện áp $\delta_i$ và công suất phản kháng máy phát $Q_{Gi}$.
+    \item \textbf{Biến số đã biết:} Công suất tác dụng bơm vào nút $P_i = P_{Gi} - P_{Li}$ và độ lớn điện áp đặt $U_i$.
+    \item \textbf{Biến số cần tìm:} Góc pha điện áp $\delta_i$ và công suất phản kháng máy phát $Q_{Gi}$.
 \end{itemize}
 
 \subsection{Nút Phụ Tải (PQ / Load Bus)}
 Đây là các trạm biến áp trung gian hoặc thanh cái phụ tải tiêu thụ điện:
 \begin{itemize}
-    \item **Biến số đã biết:** Công suất tác dụng $P_i = -P_{Li}$ và công suất phản kháng $Q_i = -Q_{Li}$.
-    \item **Biến số cần tìm:** Độ lớn điện áp $U_i$ và góc pha điện áp $\delta_i$.
+    \item \textbf{Biến số đã biết:} Công suất tác dụng $P_i = -P_{Li}$ và công suất phản kháng $Q_i = -Q_{Li}$.
+    \item \textbf{Biến số cần tìm:} Độ lớn điện áp $U_i$ và góc pha điện áp $\delta_i$.
 \end{itemize}
 
 \subsection{Bảng Tổng Hợp Phân Loại Nút Và Biến Số}
@@ -456,6 +456,7 @@ Bảng~\ref{tab:bus_classification} tổng kết chi tiết phân loại nút tr
 \centering
 \caption{Phân loại các nút và biến số trong bài toán trào lưu công suất AC.}
 \label{tab:bus_classification}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Loại nút} & \textbf{Số lượng} & \textbf{Biến số đã biết trước} & \textbf{Biến số cần tìm} & \textbf{Số phương trình} \\
@@ -467,6 +468,7 @@ Nút Phụ tải (PQ) & $N_{PQ}$ & $P_i, Q_i$ & $\delta_i, U_i$ & $2 N_{PQ}$ (Ph
 \textbf{Tổng cộng} & $N$ & $2N$ biến & $2N$ biến & $2N_{PQ} + N_{PV}$ phương trình \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \subsection{Giới Hạn Công Suất Phản Kháng Của Máy Phát Và Chuyển Đổi Nút PV $\to$ PQ}
@@ -474,7 +476,7 @@ Trong thực tế, máy phát điện đồng bộ bị giới hạn khả năng
 \begin{equation}
 Q_{Gi,\min} \le Q_{Gi} \le Q_{Gi,\max}
 \end{equation}
-Trong quá trình lặp của thuật toán Newton--Raphson, nếu công suất phản kháng yêu cầu vượt quá giới hạn ($Q_{Gi} > Q_{Gi,\max}$ hoặc $Q_{Gi} < Q_{Gi,\min}$), nút PV này sẽ bị ghim công suất phản kháng ở mức cực trị tương ứng ($Q_{Gi} = Q_{Gi,\text{lim}}$) và tự động chuyển thành **Nút phụ tải PQ** với độ lớn điện áp $U_i$ trở thành ẩn số cần giải.
+Trong quá trình lặp của thuật toán Newton--Raphson, nếu công suất phản kháng yêu cầu vượt quá giới hạn ($Q_{Gi} > Q_{Gi,\max}$ hoặc $Q_{Gi} < Q_{Gi,\min}$), nút PV này sẽ bị ghim công suất phản kháng ở mức cực trị tương ứng ($Q_{Gi} = Q_{Gi,\text{lim}}$) và tự động chuyển thành \textbf{Nút phụ tải PQ} với độ lớn điện áp $U_i$ trở thành ẩn số cần giải.
 
 \section{Mô Hình Hóa Phụ Tải Tĩnh Đa Thức (Mô Hình ZIP)}
 Công suất tiêu thụ của phụ tải thực tế phụ thuộc phi tuyến vào độ lớn điện áp nút, được mô hình hóa tổng quát qua phương trình ZIP:
@@ -514,11 +516,11 @@ Viết dưới dạng ma trận cho toàn bộ $N$ nút của hệ thống đi�
 \subsection{Quy Tắc Thành Lập Trực Tiếp Ma Trận Dẫn Nạp Nút}
 Từ phương trình giải tích trên, các phần tử của ma trận $\mathbf{Y}_{\text{bus}}$ được xác định theo quy tắc tổng quát:
 \begin{enumerate}
-    \item **Phần tử trên đường chéo chính ($Y_{ii}$ - Dẫn nạp riêng của nút $i$):** Bằng tổng đại số của tất cả các dẫn nạp nối tiếp của các nhánh nối vào nút $i$, cộng với toàn bộ các dẫn nạp phân đoạn đấu đất tại nút $i$:
+    \item \textbf{Phần tử trên đường chéo chính ($Y_{ii}$ - Dẫn nạp riêng của nút $i$):} Bằng tổng đại số của tất cả các dẫn nạp nối tiếp của các nhánh nối vào nút $i$, cộng với toàn bộ các dẫn nạp phân đoạn đấu đất tại nút $i$:
     \begin{equation}
     Y_{ii} = y_{i0} + \sum_{j \in \Omega_i} (y_{ij} + y_{sh,ij}) = G_{ii} + jB_{ii}
     \end{equation}
-    \item **Phần tử ngoài đường chéo chính ($Y_{ij}$ với $i \ne j$ - Dẫn nạp tương hỗ giữa nút $i$ và nút $j$):** Bằng giá trị âm của dẫn nạp nối tiếp trực tiếp giữa hai nút:
+    \item \textbf{Phần tử ngoài đường chéo chính ($Y_{ij}$ với $i \ne j$ - Dẫn nạp tương hỗ giữa nút $i$ và nút $j$):} Bằng giá trị âm của dẫn nạp nối tiếp trực tiếp giữa hai nút:
     \begin{equation}
     Y_{ij} = -\, y_{ij} = G_{ij} + jB_{ij} \quad (i \ne j)
     \end{equation}
@@ -528,21 +530,21 @@ Từ phương trình giải tích trên, các phần tử của ma trận $\math
 \subsection{Các Tính Chất Toán Học Cơ Bản Của $Y_{\text{bus}}$}
 Ma trận dẫn nạp nút $\mathbf{Y}_{\text{bus}}$ sở hữu các đặc tính toán học đặc biệt quan trọng:
 \begin{itemize}
-    \item **Tính đối xứng phức:** Do mạng điện truyền tải gồm các phần tử thụ động song phương (đường dây, máy biến áp), ma trận dẫn nạp luôn đối xứng: $Y_{ij} = Y_{ji}$ hay $\mathbf{Y}_{\text{bus}} = \mathbf{Y}_{\text{bus}}^T$.
-    \item **Tính thưa cao (Sparsity):** Trong các hệ thống điện thực tế (từ hàng chục đến hàng nghìn nút), mỗi thanh cái chỉ liên kết với trung bình từ 2 đến 4 đường dây lân cận. Vì vậy, trên $95\% - 99\%$ các phần tử của ma trận $\mathbf{Y}_{\text{bus}}$ có giá trị bằng $0$.
+    \item \textbf{Tính đối xứng phức:} Do mạng điện truyền tải gồm các phần tử thụ động song phương (đường dây, máy biến áp), ma trận dẫn nạp luôn đối xứng: $Y_{ij} = Y_{ji}$ hay $\mathbf{Y}_{\text{bus}} = \mathbf{Y}_{\text{bus}}^T$.
+    \item \textbf{Tính thưa cao (Sparsity):} Trong các hệ thống điện thực tế (từ hàng chục đến hàng nghìn nút), mỗi thanh cái chỉ liên kết với trung bình từ 2 đến 4 đường dây lân cận. Vì vậy, trên $95\% - 99\%$ các phần tử của ma trận $\mathbf{Y}_{\text{bus}}$ có giá trị bằng $0$.
 \end{itemize}
 
 \section{Quy Ước Sơ Đồ Một Sợi Tiêu Chuẩn}
 Hình~\ref{fig:3bus_sld} thể hiện sơ đồ một sợi của hệ thống điện truyền tải mẫu 3 nút được sử dụng xuyên suốt đề tài này:
 \begin{itemize}
-    \item **Nút 1 (Slack):** Thanh cái máy phát cân bằng, quy định $U_1 = 1.05\angle 0^\circ\text{ p.u.}$
-    \item **Nút 2 (PV):** Thanh cái máy phát điều áp, quy định công suất tác dụng phát $P_{G2} = 0.50\text{ p.u.}$ và điện áp đặt $U_2 = 1.04\text{ p.u.}$
-    \item **Nút 3 (PQ):** Thanh cái phụ tải thuần, tiêu thụ công suất $P_{L3} = 1.20\text{ p.u.}$ và $Q_{L3} = 0.50\text{ p.u.}$
+    \item \textbf{Nút 1 (Slack):} Thanh cái máy phát cân bằng, quy định $U_1 = 1.05\angle 0^\circ\text{ p.u.}$
+    \item \textbf{Nút 2 (PV):} Thanh cái máy phát điều áp, quy định công suất tác dụng phát $P_{G2} = 0.50\text{ p.u.}$ và điện áp đặt $U_2 = 1.04\text{ p.u.}$
+    \item \textbf{Nút 3 (PQ):} Thanh cái phụ tải thuần, tiêu thụ công suất $P_{L3} = 1.20\text{ p.u.}$ và $Q_{L3} = 0.50\text{ p.u.}$
 \end{itemize}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\textwidth]{3bus_network.png}
+\includegraphics[width=0.88\textwidth]{3bus_network_vi.png}
 \caption{Sơ đồ một sợi hệ thống điện truyền tải mẫu 3 nút chuẩn kiểm chứng.}
 \label{fig:3bus_sld}
 \end{figure}
@@ -614,11 +616,11 @@ trong đó ma trận Jacobian $\mathbf{J}$ là ma trận các đạo hàm riêng
 
 \subsection{Khối Ma Trận Con H ($\mathbf{J}_{11} = \partial \mathbf{P} / \partial \boldsymbol{\delta}$)}
 \begin{itemize}
-    \item **Phần tử ngoài đường chéo chính ($i \ne j$):**
+    \item \textbf{Phần tử ngoài đường chéo chính ($i \ne j$):}
     \begin{equation}
     H_{ij} = \frac{\partial P_i}{\partial \delta_j} = U_i U_j \left[ G_{ij} \sin(\delta_i - \delta_j) - B_{ij} \cos(\delta_i - \delta_j) \right]
     \end{equation}
-    \item **Phần tử trên đường chéo chính ($i = j$):**
+    \item \textbf{Phần tử trên đường chéo chính ($i = j$):}
     \begin{equation}
     H_{ii} = \frac{\partial P_i}{\partial \delta_i} = -\, Q_i^{\text{calc}} - U_i^2 B_{ii}
     \end{equation}
@@ -626,11 +628,11 @@ trong đó ma trận Jacobian $\mathbf{J}$ là ma trận các đạo hàm riêng
 
 \subsection{Khối Ma Trận Con N ($\mathbf{J}_{12} = U \partial \mathbf{P} / \partial \mathbf{U}$)}
 \begin{itemize}
-    \item **Phần tử ngoài đường chéo chính ($i \ne j$):**
+    \item \textbf{Phần tử ngoài đường chéo chính ($i \ne j$):}
     \begin{equation}
     N_{ij} = U_j \frac{\partial P_i}{\partial U_j} = U_i U_j \left[ G_{ij} \cos(\delta_i - \delta_j) + B_{ij} \sin(\delta_i - \delta_j) \right]
     \end{equation}
-    \item **Phần tử trên đường chéo chính ($i = j$):**
+    \item \textbf{Phần tử trên đường chéo chính ($i = j$):}
     \begin{equation}
     N_{ii} = U_i \frac{\partial P_i}{\partial U_i} = P_i^{\text{calc}} + U_i^2 G_{ii}
     \end{equation}
@@ -638,11 +640,11 @@ trong đó ma trận Jacobian $\mathbf{J}$ là ma trận các đạo hàm riêng
 
 \subsection{Khối Ma Trận Con M ($\mathbf{J}_{21} = \partial \mathbf{Q} / \partial \boldsymbol{\delta}$)}
 \begin{itemize}
-    \item **Phần tử ngoài đường chéo chính ($i \ne j$):**
+    \item \textbf{Phần tử ngoài đường chéo chính ($i \ne j$):}
     \begin{equation}
     M_{ij} = \frac{\partial Q_i}{\partial \delta_j} = -\, U_i U_j \left[ G_{ij} \cos(\delta_i - \delta_j) + B_{ij} \sin(\delta_i - \delta_j) \right] = -\, N_{ij}
     \end{equation}
-    \item **Phần tử trên đường chéo chính ($i = j$):**
+    \item \textbf{Phần tử trên đường chéo chính ($i = j$):}
     \begin{equation}
     M_{ii} = \frac{\partial Q_i}{\partial \delta_i} = P_i^{\text{calc}} - U_i^2 G_{ii}
     \end{equation}
@@ -650,11 +652,11 @@ trong đó ma trận Jacobian $\mathbf{J}$ là ma trận các đạo hàm riêng
 
 \subsection{Khối Ma Trận Con L ($\mathbf{J}_{22} = U \partial \mathbf{Q} / \partial \mathbf{U}$)}
 \begin{itemize}
-    \item **Phần tử ngoài đường chéo chính ($i \ne j$):**
+    \item \textbf{Phần tử ngoài đường chéo chính ($i \ne j$):}
     \begin{equation}
     L_{ij} = U_j \frac{\partial Q_i}{\partial U_j} = U_i U_j \left[ G_{ij} \sin(\delta_i - \delta_j) - B_{ij} \cos(\delta_i - \delta_j) \right] = H_{ij}
     \end{equation}
-    \item **Phần tử trên đường chéo chính ($i = j$):**
+    \item \textbf{Phần tử trên đường chéo chính ($i = j$):}
     \begin{equation}
     L_{ii} = U_i \frac{\partial Q_i}{\partial U_i} = Q_i^{\text{calc}} - U_i^2 B_{ii}
     \end{equation}
@@ -667,7 +669,7 @@ Bảng~\ref{tab:jacobian_formulas} tổng kết 8 công thức vi phân của ma
 \centering
 \caption{Công thức giải tích khép kín các phần tử ma trận Jacobian tọa độ cực.}
 \label{tab:jacobian_formulas}
-\begin{tabular}{lll}
+\resizebox{\textwidth}{!}{\begin{tabular}{lll}
 \toprule
 \textbf{Khối} & \textbf{Phần tử ngoài đường chéo ($i \ne j$)} & \textbf{Phần tử trên đường chéo chính ($i = j$)} \\
 \midrule
@@ -676,7 +678,7 @@ $\mathbf{N} = U \dfrac{\partial \mathbf{P}}{\partial \mathbf{U}}$ & $U_i U_j [G_
 $\mathbf{M} = \dfrac{\partial \mathbf{Q}}{\partial \boldsymbol{\delta}}$ & $- U_i U_j [G_{ij} \cos\delta_{ij} + B_{ij} \sin\delta_{ij}]$ & $P_i^{\text{calc}} - U_i^2 G_{ii}$ \\[8pt]
 $\mathbf{L} = U \dfrac{\partial \mathbf{Q}}{\partial \mathbf{U}}$ & $U_i U_j [G_{ij} \sin\delta_{ij} - B_{ij} \cos\delta_{ij}]$ & $Q_i^{\text{calc}} - U_i^2 B_{ii}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \section{Thuật Toán Giải Lặp Và Tiêu Chuẩn Hội Tụ}
@@ -706,20 +708,20 @@ Trong nghiên cứu này, ngưỡng dung sai hội tụ khắt khe được ch�
 \section{Tính Toán Mạng Lưới Sau Khi Hội Tụ}
 Sau khi trạng thái điện áp $(\mathbf{U}^*, \boldsymbol{\delta}^*)$ đã hội tụ chính xác, các đại lượng vận hành thứ cấp của hệ thống điện được xác định:
 \begin{enumerate}
-    \item **Công suất phát tại nút cân bằng (Slack):**
+    \item \textbf{Công suất phát tại nút cân bằng (Slack):}
     \begin{align}
     P_{G1} &= P_1^{\text{calc}} + P_{L1} \\
     Q_{G1} &= Q_1^{\text{calc}} + Q_{L1}
     \end{align}
-    \item **Dòng công suất phức trên từng nhánh đường dây ($i \to j$):**
+    \item \textbf{Dòng công suất phức trên từng nhánh đường dây ($i \to j$):}
     \begin{equation}
     S_{ij} = P_{ij} + jQ_{ij} = \dot{U}_i \left[ (\dot{U}_i - \dot{U}_j) y_{ij} + \dot{U}_i \left( j \frac{B_{ij0}}{2} \right) \right]^*
     \end{equation}
-    \item **Tổn thất công suất trên từng đoạn đường dây:**
+    \item \textbf{Tổn thất công suất trên từng đoạn đường dây:}
     \begin{equation}
     \Delta S_{ij} = S_{ij} + S_{ji} = \Delta P_{ij} + j\Delta Q_{ij}
     \end{equation}
-    \item **Kiểm toán cân bằng năng lượng toàn hệ thống (Global Energy Audit):**
+    \item \textbf{Kiểm toán cân bằng năng lượng toàn hệ thống (Global Energy Audit):}
     \begin{align}
     \sum_{i=1}^N P_{Gi} &= \sum_{i=1}^N P_{Li} + \sum_{\text{all branches}} \Delta P_{ij} \\
     \sum_{i=1}^N Q_{Gi} + \sum_{\text{shunts}} Q_C &= \sum_{i=1}^N Q_{Li} + \sum_{\text{all branches}} \Delta Q_{ij}
@@ -731,7 +733,7 @@ Hình~\ref{fig:algorithm_flowchart} thể hiện lưu đồ thuật toán Newton
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.72\textwidth]{algorithm.png}
+\includegraphics[width=0.75\textwidth]{algorithm_vi.png}
 \caption{Lưu đồ thuật toán Newton--Raphson giải bài toán trào lưu công suất xác lập.}
 \label{fig:algorithm_flowchart}
 \end{figure}
@@ -750,7 +752,7 @@ Hệ thống điện mẫu 3 nút được chọn với công suất cơ bản $
 \centering
 \caption{Thông số nút của hệ thống điện mẫu 3 nút.}
 \label{tab:3bus_nodal_data}
-\begin{tabular}{ccccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{ccccccc}
 \toprule
 \textbf{Nút} & \textbf{Loại nút} & $U_i\text{ (p.u.)}$ & $\delta_i\text{ (rad)}$ & $P_{Gi}\text{ (p.u.)}$ & $P_{Li}\text{ (p.u.)}$ & $Q_{Li}\text{ (p.u.)}$ \\
 \midrule
@@ -758,14 +760,14 @@ Hệ thống điện mẫu 3 nút được chọn với công suất cơ bản $
 2 & PV & $1.04$ & -- & $0.50$ & $0.00$ & $0.00$ \\
 3 & PQ & -- & -- & $0.00$ & $1.20$ & $0.50$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{table}[H]
 \centering
 \caption{Thông số nhánh đường dây trên hệ đơn vị tương đối ($S_{\text{base}} = 100.0\text{ MVA}$).}
 \label{tab:3bus_branch_data}
-\begin{tabular}{ccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{ccccc}
 \toprule
 \textbf{Nhánh} & \textbf{Từ nút -- Đến nút} & $R_{ij}\text{ (p.u.)}$ & $X_{ij}\text{ (p.u.)}$ & $B_{ij0}\text{ (p.u.)}$ \\
 \midrule
@@ -773,7 +775,7 @@ Hệ thống điện mẫu 3 nút được chọn với công suất cơ bản $
 2 & $1 - 3$ & $0.08$ & $0.24$ & $0.05$ \\
 3 & $2 - 3$ & $0.06$ & $0.18$ & $0.04$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \subsection{Xây Dựng Ma Trận Dẫn Nạp Nút $Y_{\text{bus}}$}
@@ -798,85 +800,93 @@ Tại bước $m = 0$, áp dụng phép khởi tạo phẳng (flat start):
 \begin{equation}
 \mathbf{x}^{(0)} = [\delta_2^{(0)}, \delta_3^{(0)}, U_3^{(0)}]^T = [0.0\text{ rad}, 0.0\text{ rad}, 1.0\text{ p.u.}]^T
 \end{equation}
-Tính toán công suất bơm vào nút tại bước $m = 0$:
+Tính toán công suất bơm vào nút tại bước $m = 0$ (với $\delta_{ij} = 0, \cos\delta_{ij} = 1, \sin\delta_{ij} = 0$):
 \begin{align}
 P_2^{(0)} &= U_2^2 G_{22} + U_2 U_1 G_{21} + U_2 U_3 G_{23} \nonumber \\
-&= (1.04)^2 (6.666667) + (1.04)(1.05)(-5.0) + (1.04)(1.0)(-1.666667) = 0.010400\text{ p.u.} \\
+&= (1.04)^2 (6.666667) + (1.04)(1.05)(-5.0) \nonumber \\
+&\quad + (1.04)(1.0)(-1.666667) = 0.017333\text{ p.u.} \\
 P_3^{(0)} &= U_3^2 G_{33} + U_3 U_1 G_{31} + U_3 U_2 G_{32} \nonumber \\
-&= (1.0)^2 (2.916667) + (1.0)(1.05)(-1.25) + (1.0)(1.04)(-1.666667) = -0.137500\text{ p.u.} \\
+&= (1.0)^2 (2.916667) + (1.0)(1.05)(-1.25) \nonumber \\
+&\quad + (1.0)(1.04)(-1.666667) = -0.129167\text{ p.u.} \\
 Q_3^{(0)} &= -\, U_3^2 B_{33} - U_3 U_1 B_{31} - U_3 U_2 B_{32} \nonumber \\
-&= -\, (1.0)^2 (-8.705) - (1.0)(1.05)(3.75) - (1.0)(1.04)(5.0) = -0.432500\text{ p.u.}
+&= -\, (1.0)^2 (-8.705) - (1.0)(1.05)(3.75) \nonumber \\
+&\quad - (1.0)(1.04)(5.0) = -0.432500\text{ p.u.}
 \end{align}
 Véc-tơ độ lệch công suất ban đầu thu được:
 \begin{align}
-\Delta P_2^{(0)} &= P_2^{\text{spec}} - P_2^{(0)} = 0.500000 - 0.010400 = 0.489600\text{ p.u.} \\
-\Delta P_3^{(0)} &= P_3^{\text{spec}} - P_3^{(0)} = -1.200000 - (-0.137500) = -1.062500\text{ p.u.} \\
+\Delta P_2^{(0)} &= P_2^{\text{spec}} - P_2^{(0)} = 0.500000 - 0.017333 = 0.482667\text{ p.u.} \\
+\Delta P_3^{(0)} &= P_3^{\text{spec}} - P_3^{(0)} = -1.200000 - (-0.129167) = -1.070833\text{ p.u.} \\
 \Delta Q_3^{(0)} &= Q_3^{\text{spec}} - Q_3^{(0)} = -0.500000 - (-0.432500) = -0.067500\text{ p.u.}
 \end{align}
 
-\subsection{Tính Toán Các Phần Tử Ma Trận Jacobian $J^{(0)}$}
-Áp dụng các công thức giải tích trong Bảng~\ref{tab:jacobian_formulas} tại điểm khởi tạo:
+\subsection{Tính Toán Các Phần Tử Ma Trận Jacobian $\mathbf{J}^{(0)}$}
+Áp dụng các công thức giải tích trong Bảng~\ref{tab:jacobian_formulas} tại điểm khởi tạo (với $Q_2^{(0)} = -\, U_2^2 B_{22} - U_2 U_1 B_{21} - U_2 U_3 B_{23} = -0.002080\text{ p.u.}$):
 \begin{align}
-H_{22} &= -\, Q_2^{(0)} - U_2^2 B_{22} = -(-0.280800) - (1.04)^2 (-19.950000) = 21.858720 \\
+H_{22} &= -\, Q_2^{(0)} - U_2^2 B_{22} = -(-0.002080) - (1.04)^2 (-19.950000) = 21.580000 \\
 H_{23} &= -\, U_2 U_3 B_{23} = -\, (1.04)(1.0)(5.0) = -5.200000 \\
 H_{32} &= -\, U_3 U_2 B_{32} = -\, (1.0)(1.04)(5.0) = -5.200000 \\
 H_{33} &= -\, Q_3^{(0)} - U_3^2 B_{33} = -(-0.432500) - (1.0)^2 (-8.705000) = 9.137500 \\
 N_{23} &= U_2 U_3 G_{23} = (1.04)(1.0)(-1.666667) = -1.733333 \\
-N_{33} &= P_3^{(0)} + U_3^2 G_{33} = -0.137500 + (1.0)^2 (2.916667) = 2.779167 \\
+N_{33} &= P_3^{(0)} + U_3^2 G_{33} = -0.129167 + (1.0)^2 (2.916667) = 2.787500 \\
 M_{32} &= -\, N_{32} = -\, U_3 U_2 G_{32} = -\, (1.0)(1.04)(-1.666667) = 1.733333 \\
-M_{33} &= P_3^{(0)} - U_3^2 G_{33} = -0.137500 - (1.0)^2 (2.916667) = -3.054167 \\
+M_{33} &= P_3^{(0)} - U_3^2 G_{33} = -0.129167 - (1.0)^2 (2.916667) = -3.045833 \\
 L_{33} &= Q_3^{(0)} - U_3^2 B_{33} = -0.432500 - (1.0)^2 (-8.705000) = 8.272500
 \end{align}
 Ma trận Jacobian cấp $3 \times 3$ tại bước lặp đầu tiên:
 \begin{equation}
 \mathbf{J}^{(0)} =
 \begin{bmatrix}
-21.858720 & -5.200000 & -1.733333 \\
--5.200000 & 9.137500 & 2.779167 \\
-1.733333 & -3.054167 & 8.272500
+21.580000 & -5.200000 & -1.733333 \\
+-5.200000 & 9.137500 & 2.787500 \\
+1.733333 & -3.045833 & 8.272500
 \end{bmatrix}
 \end{equation}
 
 \subsection{Nghịch Đảo Hệ Phương Trình Và Cập Nhật Trạng Thái Bước 1}
 Giải hệ phương trình đại số tuyến tính $\mathbf{J}^{(0)} \Delta \mathbf{x}^{(0)} = [\Delta P_2^{(0)}, \Delta P_3^{(0)}, \Delta Q_3^{(0)}]^T$:
 \begin{equation}
+\resizebox{0.92\textwidth}{!}{$
 \begin{bmatrix}
-\Delta \delta_2^{(0)} \\
-\Delta \delta_3^{(0)} \\
+\Delta \delta_2^{(0)} \\[4pt]
+\Delta \delta_3^{(0)} \\[4pt]
 \Delta U_3^{(0)} / U_3^{(0)}
 \end{bmatrix}
 =
 \begin{bmatrix}
-21.858720 & -5.200000 & -1.733333 \\
--5.200000 & 9.137500 & 2.779167 \\
-1.733333 & -3.054167 & 8.272500
+21.580000 & -5.200000 & -1.733333 \\
+-5.200000 & 9.137500 & 2.787500 \\
+1.733333 & -3.045833 & 8.272500
 \end{bmatrix}^{-1}
 \begin{bmatrix}
-0.489600 \\
--1.062500 \\
+0.482667 \\[4pt]
+-1.070833 \\[4pt]
 -0.067500
 \end{bmatrix}
+$}
 \end{equation}
-Nghịch đảo giải tích của $\mathbf{J}^{(0)}$:
+Nghịch đảo giải tích của $\mathbf{J}^{(0)}$ (lưu ý tính không đối xứng giữa hàng 1 cột 2 và hàng 2 cột 1 do cấu trúc Jacobian):
 \begin{equation}
 [\mathbf{J}^{(0)}]^{-1} =
 \begin{bmatrix}
-0.057398 & 0.033604 & 0.000742 \\
-0.033604 & 0.126588 & -0.035487 \\
--0.000388 & 0.039655 & 0.121696
+0.053703 & 0.030848 & 0.000858 \\
+0.030562 & 0.115943 & -0.032665 \\
+0.000000 & 0.036225 & 0.108676
 \end{bmatrix}
 \end{equation}
 Nhân với véc-tơ độ lệch công suất, ta tìm được véc-tơ hiệu chỉnh trạng thái:
 \begin{align}
-\Delta \delta_2^{(0)} &= 0.057398(0.489600) + 0.033604(-1.062500) + 0.000742(-0.067500) = -0.007746\text{ rad} \\
-\Delta \delta_3^{(0)} &= 0.033604(0.489600) + 0.126588(-1.062500) - 0.035487(-0.067500) = -0.115650\text{ rad} \\
-\Delta U_3^{(0)} &= -0.000388(0.489600) + 0.039655(-1.062500) + 0.121696(-0.067500) = -0.050547\text{ p.u.}
+\Delta \delta_2^{(0)} &= 0.053703(0.482667) + 0.030848(-1.070833) \nonumber \\
+&\quad + 0.000858(-0.067500) = -0.007170\text{ rad} \\
+\Delta \delta_3^{(0)} &= 0.030562(0.482667) + 0.115943(-1.070833) \nonumber \\
+&\quad - 0.032665(-0.067500) = -0.107200\text{ rad} \\
+\Delta U_3^{(0)} &= 0.000000(0.482667) + 0.036225(-1.070833) \nonumber \\
+&\quad + 0.108676(-0.067500) = -0.046127\text{ p.u.}
 \end{align}
 Cập nhật véc-tơ trạng thái sau Bước lặp 1:
 \begin{align}
-\delta_2^{(1)} &= 0.0 + (-0.007746) = -0.007746\text{ rad} = -0.4438^\circ \\
-\delta_3^{(1)} &= 0.0 + (-0.115650) = -0.115650\text{ rad} = -6.6263^\circ \\
-U_3^{(1)} &= 1.0 + (-0.050547) = 0.949453\text{ p.u.}
+\delta_2^{(1)} &= 0.0 + (-0.007170) = -0.007170\text{ rad} = -0.4108^\circ \\
+\delta_3^{(1)} &= 0.0 + (-0.107200) = -0.107200\text{ rad} = -6.1421^\circ \\
+U_3^{(1)} &= 1.0 + (-0.046127) = 0.953873\text{ p.u.}
 \end{align}
 
 \section{Đối Chiếu Kiểm Chứng Đa Tầng Với Bộ Giải Số}
@@ -888,49 +898,49 @@ Bảng~\ref{tab:cross_validation_iter1} trình bày kết quả đối chiếu 1
 \centering
 \caption{Đối chiếu kiểm chứng số học tại Bước lặp 1 (Tính tay vs Bộ giải số).}
 \label{tab:cross_validation_iter1}
-\begin{tabular}{lrrr}
+\resizebox{\textwidth}{!}{\begin{tabular}{lrrr}
 \toprule
 \textbf{Đại lượng kiểm chứng} & \textbf{Tính toán thủ công} & \textbf{Bộ giải số Python} & \textbf{Độ lệch tuyệt đối} \\
 \midrule
-Độ lệch công suất $\Delta P_2^{(0)}\text{ (p.u.)}$ & $0.48960000$ & $0.48960000$ & $0.00000000$ \\
-Độ lệch công suất $\Delta P_3^{(0)}\text{ (p.u.)}$ & $-1.06250000$ & $-1.06250000$ & $0.00000000$ \\
+Độ lệch công suất $\Delta P_2^{(0)}\text{ (p.u.)}$ & $0.48266667$ & $0.48266667$ & $0.00000000$ \\
+Độ lệch công suất $\Delta P_3^{(0)}\text{ (p.u.)}$ & $-1.07083333$ & $-1.07083333$ & $0.00000000$ \\
 Độ lệch công suất $\Delta Q_3^{(0)}\text{ (p.u.)}$ & $-0.06750000$ & $-0.06750000$ & $0.00000000$ \\
 \midrule
-Phần tử Jacobian $H_{22}^{(0)}$ & $21.85872000$ & $21.85872000$ & $0.00000000$ \\
+Phần tử Jacobian $H_{22}^{(0)}$ & $21.58000000$ & $21.58000000$ & $0.00000000$ \\
 Phần tử Jacobian $H_{23}^{(0)}$ & $-5.20000000$ & $-5.20000000$ & $0.00000000$ \\
 Phần tử Jacobian $H_{33}^{(0)}$ & $9.13750000$ & $9.13750000$ & $0.00000000$ \\
 Phần tử Jacobian $L_{33}^{(0)}$ & $8.27250000$ & $8.27250000$ & $0.00000000$ \\
 \midrule
-Hiệu chỉnh góc pha $\Delta \delta_2^{(0)}\text{ (rad)}$ & $-0.00774635$ & $-0.00774635$ & $< 10^{-16}$ \\
-Hiệu chỉnh góc pha $\Delta \delta_3^{(0)}\text{ (rad)}$ & $-0.11565012$ & $-0.11565012$ & $< 10^{-16}$ \\
-Hiệu chỉnh điện áp $\Delta U_3^{(0)}\text{ (p.u.)}$ & $-0.05054718$ & $-0.05054718$ & $< 10^{-16}$ \\
+Hiệu chỉnh góc pha $\Delta \delta_2^{(0)}\text{ (rad)}$ & $-0.00716985$ & $-0.00716985$ & $< 10^{-16}$ \\
+Hiệu chỉnh góc pha $\Delta \delta_3^{(0)}\text{ (rad)}$ & $-0.10719976$ & $-0.10719976$ & $< 10^{-16}$ \\
+Hiệu chỉnh điện áp $\Delta U_3^{(0)}\text{ (p.u.)}$ & $-0.04612691$ & $-0.04612691$ & $< 10^{-16}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \subsection{Quỹ Đạo Hội Tụ Bậc Hai Của Bộ Giải}
-Bảng~\ref{tab:convergence_trajectory} và Hình~\ref{fig:convergence_curve} minh chứng đặc tính hội tụ bậc hai (quadratic convergence) kinh điển của thuật toán Newton--Raphson: sau mỗi bước lặp, số chữ số có nghĩa chính xác tăng gần gấp đôi, đưa sai số công suất từ $0.619\text{ p.u.}$ về mức $6.1 \times 10^{-16}\text{ p.u.}$ sau 4 bước lặp.
+Bảng~\ref{tab:convergence_trajectory} và Hình~\ref{fig:convergence_curve} minh chứng đặc tính hội tụ bậc hai (quadratic convergence) kinh điển của thuật toán Newton--Raphson: sau mỗi bước lặp, số chữ số có nghĩa chính xác tăng gần gấp đôi, đưa sai số công suất từ $1.071\text{ p.u.}$ về mức $6.22 \times 10^{-15}\text{ p.u.}$ sau 4 bước lặp.
 
 \begin{table}[H]
 \centering
 \caption{Quỹ đạo hội tụ qua từng bước lặp của thuật toán Newton--Raphson.}
 \label{tab:convergence_trajectory}
-\begin{tabular}{cccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{cccccc}
 \toprule
 \textbf{Bước lặp ($m$)} & $\max |\Delta P|\text{ (p.u.)}$ & $\max |\Delta Q|\text{ (p.u.)}$ & $\Vert \mathbf{f} \Vert_\infty\text{ (p.u.)}$ & $\delta_3\text{ (rad)}$ & $U_3\text{ (p.u.)}$ \\
 \midrule
-0 & $1.062500$ & $0.067500$ & $1.062500$ & $0.000000$ & $1.000000$ \\
-1 & $0.021074$ & $0.015842$ & $0.021074$ & $-0.115650$ & $0.949453$ \\
-2 & $0.000341$ & $0.000195$ & $0.000341$ & $-0.117420$ & $0.946721$ \\
-3 & $8.92 \times 10^{-8}$ & $5.14 \times 10^{-8}$ & $8.92 \times 10^{-8}$ & $-0.117426$ & $0.946718$ \\
-4 & $6.10 \times 10^{-16}$ & $3.45 \times 10^{-16}$ & $6.10 \times 10^{-16}$ & $-0.117426$ & $0.946718$ \\
+0 & $1.070833$ & $0.067500$ & $1.070833$ & $0.000000$ & $1.000000$ \\
+1 & $0.066718$ & $0.049856$ & $0.066718$ & $-0.107200$ & $0.953873$ \\
+2 & $0.000837$ & $0.000693$ & $0.000837$ & $-0.114200$ & $0.944512$ \\
+3 & $1.48 \times 10^{-7}$ & $1.29 \times 10^{-7}$ & $1.48 \times 10^{-7}$ & $-0.114287$ & $0.944383$ \\
+4 & $5.11 \times 10^{-15}$ & $6.22 \times 10^{-15}$ & $6.22 \times 10^{-15}$ & $-0.114287$ & $0.944383$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.72\textwidth]{3bus_convergence.png}
+\includegraphics[width=0.75\textwidth]{3bus_convergence_vi.png}
 \caption{Đặc tính hội tụ bậc hai của thuật toán Newton--Raphson trên lưới 3 nút.}
 \label{fig:convergence_curve}
 \end{figure}
@@ -942,149 +952,146 @@ Bảng~\ref{tab:converged_buses} và Bảng~\ref{tab:converged_branches} liệt 
 \centering
 \caption{Thông số điện áp nút và công suất phát sau hội tụ ($S_{\text{base}} = 100.0\text{ MVA}$).}
 \label{tab:converged_buses}
-\begin{tabular}{ccccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{ccccccc}
 \toprule
 \textbf{Nút} & $U_i\text{ (p.u.)}$ & $\delta_i\text{ (rad)}$ & $\delta_i\text{ (độ)}$ & $P_i\text{ (MW)}$ & $Q_i\text{ (Mvar)}$ & \textbf{Ghi chú} \\
 \midrule
-1 & $1.050000$ & $0.000000$ & $0.0000^\circ$ & $72.2047$ & $28.6141$ & Nút cân bằng (Slack) \\
-2 & $1.040000$ & $-0.008432$ & $-0.4831^\circ$ & $50.0000$ & $28.0000$ & Nút máy phát (PV) \\
-3 & $0.946718$ & $-0.117426$ & $-6.7280^\circ$ & $-120.0000$ & $-50.0000$ & Nút phụ tải (PQ) \\
+1 & $1.050000$ & $0.000000$ & $0.0000^\circ$ & $76.4522$ & $34.9226$ & Nút cân bằng (Slack) \\
+2 & $1.040000$ & $-0.008612$ & $-0.4934^\circ$ & $50.0000$ & $18.9489$ & Nút máy phát (PV) \\
+3 & $0.944383$ & $-0.114287$ & $-6.5482^\circ$ & $-120.0000$ & $-50.0000$ & Nút phụ tải (PQ) \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{table}[H]
 \centering
 \caption{Dòng công suất trên các nhánh và tổn thất công suất sau hội tụ.}
 \label{tab:converged_branches}
-\begin{tabular}{crrrrrr}
+\resizebox{\textwidth}{!}{\begin{tabular}{crrrrrr}
 \toprule
 \textbf{Đoạn đường dây} & $P_{ij}\text{ (MW)}$ & $Q_{ij}\text{ (Mvar)}$ & $P_{ji}\text{ (MW)}$ & $Q_{ji}\text{ (Mvar)}$ & $\Delta P_{ij}\text{ (MW)}$ & $\Delta Q_{ij}\text{ (Mvar)}$ \\
 \midrule
-$1 - 2$ & $31.8452$ & $12.4510$ & $-31.6210$ & $-11.7820$ & $0.2242$ & $0.6690$ \\
-$1 - 3$ & $40.3595$ & $16.1631$ & $-39.3812$ & $-13.2415$ & $0.9783$ & $2.9216$ \\
-$2 - 3$ & $81.6210$ & $39.7820$ & $-80.6188$ & $-36.7585$ & $1.0022$ & $3.0235$ \\
+$1 - 2$ & $19.3765$ & $7.8011$ & $-19.2860$ & $-14.0820$ & $0.0905$ & $-6.2808$ \\
+$1 - 3$ & $57.0761$ & $27.1212$ & $-54.0645$ & $-23.0723$ & $3.0116$ & $4.0489$ \\
+$2 - 3$ & $69.2850$ & $33.0310$ & $-65.9350$ & $-26.9277$ & $3.3501$ & $6.1033$ \\
 \midrule
-\textbf{Tổng cộng} & -- & -- & -- & -- & $\mathbf{2.2047}$ & $\mathbf{6.6141}$ \\
+\textbf{Tổng cộng} & -- & -- & -- & -- & $\mathbf{6.4522}$ & $\mathbf{3.8715}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
-\noindent **Kiểm toán cân bằng năng lượng toàn lưới:**
+\noindent \textbf{Kiểm toán cân bằng năng lượng toàn lưới:}
 \begin{align}
-\text{Sai lệch công suất tác dụng:} \quad &\Delta P_{\text{sys}} = \sum P_G - \sum P_L - \sum \Delta P_{\text{loss}} \nonumber \\
-&= (72.2047 + 50.0000) - 120.0000 - 2.2047 = 0.000000\text{ MW} \quad (< 10^{-13}\text{ MW}) \\
-\text{Sai lệch công suất phản kháng:} \quad &\Delta Q_{\text{sys}} = \sum Q_G - \sum Q_L - \sum \Delta Q_{\text{loss}} + Q_{\text{charging}} \nonumber \\
-&= (28.6141 + 28.0000) - 50.0000 - 6.6141 = 0.000000\text{ Mvar} \quad (< 10^{-13}\text{ Mvar})
+\Delta P_{\text{sys}} &= \sum P_G - \sum P_L - \sum \Delta P_{\text{loss}} \nonumber \\
+&= (76.4522 + 50.0000) - 120.0000 - 6.4522 = 0.0000\text{ MW} \quad (< 10^{-12}\text{ MW}) \\
+\Delta Q_{\text{sys}} &= \sum Q_G - \sum Q_L - \sum \Delta Q_{\text{loss}} \nonumber \\
+&= (34.9226 + 18.9489) - 50.0000 - 3.8715 = 0.0000\text{ Mvar} \quad (< 10^{-12}\text{ Mvar})
 \end{align}
 
 \section{Phân Tích Các Kịch Bản Vận Hành Vật Lý}
 
 \subsection{Kịch Bản 1: Tăng Trưởng Phụ Tải Toàn Hệ Thống (80\% Đến 120\%)}
-Khảo sát đáp ứng của lưới điện khi phụ tải tại Nút 3 thay đổi từ mức thấp ($80\%$) đến mức đầy tải ($120\%$). Kết quả trong Bảng~\ref{tab:load_scaling} cho thấy khi phụ tải tăng, điện áp nút 3 giảm sâu từ $0.958\text{ p.u.}$ xuống $0.934\text{ p.u.}$, đồng thời tổn thất công suất tác dụng tăng phi tuyến theo hàm bậc hai (từ $1.39\text{ MW}$ lên $3.21\text{ MW}$).
+Khảo sát đáp ứng của lưới điện khi phụ tải tại Nút 3 thay đổi từ mức thấp ($80\%$) đến mức đầy tải ($120\%$). Kết quả trong Bảng~\ref{tab:load_scaling} cho thấy khi phụ tải tăng, điện áp nút 3 giảm sâu từ $0.969\text{ p.u.}$ xuống $0.918\text{ p.u.}$, đồng thời tổn thất công suất tác dụng tăng phi tuyến theo hàm bậc hai (từ $3.894\text{ MW}$ lên $9.961\text{ MW}$).
 
 \begin{table}[H]
 \centering
 \caption{Đáp ứng trào lưu công suất khi phụ tải hệ thống thay đổi.}
 \label{tab:load_scaling}
-\begin{tabular}{cccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{cccccc}
 \toprule
 \textbf{Mức tải (\%)} & $P_{L3}\text{ (MW)}$ & $Q_{L3}\text{ (Mvar)}$ & $U_3\text{ (p.u.)}$ & $\delta_3\text{ (độ)}$ & $\Delta P_{\text{loss}}\text{ (MW)}$ \\
 \midrule
-80\% & $96.0$ & $40.0$ & $0.9581$ & $-5.32^\circ$ & $1.392$ \\
-90\% & $108.0$ & $45.0$ & $0.9525$ & $-6.01^\circ$ & $1.774$ \\
-100\% (Cơ sở) & $120.0$ & $50.0$ & $0.9467$ & $-6.73^\circ$ & $2.205$ \\
-110\% & $132.0$ & $55.0$ & $0.9406$ & $-7.47^\circ$ & $2.684$ \\
-120\% & $144.0$ & $60.0$ & $0.9342$ & $-8.24^\circ$ & $3.213$ \\
+80\% & $96.0$ & $40.0$ & $0.9685$ & $-4.92^\circ$ & $3.894$ \\
+90\% & $108.0$ & $45.0$ & $0.9567$ & $-5.72^\circ$ & $5.065$ \\
+100\% (Cơ sở) & $120.0$ & $50.0$ & $0.9444$ & $-6.55^\circ$ & $6.452$ \\
+110\% & $132.0$ & $55.0$ & $0.9315$ & $-7.40^\circ$ & $8.076$ \\
+120\% & $144.0$ & $60.0$ & $0.9180$ & $-8.28^\circ$ & $9.961$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \subsection{Kịch Bản 2: Điều Chỉnh Điện Áp Đầu Cực Máy Phát (Nút PV)}
-Khảo sát ảnh hưởng của việc thay đổi giá trị đặt điện áp tại nút máy phát $U_2$ từ $1.00\text{ p.u.}$ đến $1.06\text{ p.u.}$ Bảng~\ref{tab:pv_tuning} khẳng định quy luật ghép kênh mạnh giữa $Q-U$: khi tăng $U_2$, máy phát 2 bơm thêm công suất phản kháng vào lưới, nâng điện áp thanh cái phụ tải 3 từ $0.928\text{ p.u.}$ lên $0.956\text{ p.u.}$, giải tỏa áp lực phát công suất phản kháng cho máy phát nút cân bằng.
+Khảo sát ảnh hưởng của việc thay đổi giá trị đặt điện áp tại nút máy phát $U_2$ từ $1.00\text{ p.u.}$ đến $1.06\text{ p.u.}$ Bảng~\ref{tab:pv_tuning} khẳng định quy luật ghép kênh mạnh giữa $Q-U$: khi tăng $U_2$, máy phát 2 bơm thêm công suất phản kháng vào lưới (tăng từ $-56.01\text{ Mvar}$ lên $+58.84\text{ Mvar}$), nâng điện áp thanh cái phụ tải 3 từ $0.9181\text{ p.u.}$ lên $0.9574\text{ p.u.}$, giải tỏa áp lực phát công suất phản kháng cho máy phát nút cân bằng (giảm từ $115.64\text{ Mvar}$ xuống $-5.52\text{ Mvar}$).
 
 \begin{table}[H]
 \centering
 \caption{Đáp ứng hệ thống khi điều chỉnh điện áp đặt tại nút máy phát 2.}
 \label{tab:pv_tuning}
-\begin{tabular}{ccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{ccccc}
 \toprule
 $U_2\text{ đặt (p.u.)}$ & $U_3\text{ (p.u.)}$ & $Q_{G1}\text{ (Mvar)}$ & $Q_{G2}\text{ (Mvar)}$ & $\Delta P_{\text{loss}}\text{ (MW)}$ \\
 \midrule
-$1.00$ & $0.9281$ & $35.12$ & $16.45$ & $2.285$ \\
-$1.02$ & $0.9374$ & $31.84$ & $22.18$ & $2.241$ \\
-$1.04$ (Cơ sở) & $0.9467$ & $28.61$ & $28.00$ & $2.205$ \\
-$1.06$ & $0.9560$ & $25.42$ & $33.91$ & $2.176$ \\
+$1.00$ & $0.9181$ & $115.64$ & $-56.01$ & $8.165$ \\
+$1.02$ & $0.9313$ & $75.31$ & $-19.33$ & $7.050$ \\
+$1.04$ (Cơ sở) & $0.9444$ & $34.92$ & $18.95$ & $6.452$ \\
+$1.06$ & $0.9574$ & $-5.52$ & $58.84$ & $6.375$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \subsection{Kịch Bản 3: Bù Công Suất Phản Kháng Bằng Tụ Bù Ngang Tại Nút 3}
-Lắp đặt dàn tụ bù ngang tại nút phụ tải 3 với dung lượng bù tăng dần từ $0$ đến $30\text{ Mvar}$. Kết quả tại Bảng~\ref{tab:shunt_compensation} chứng minh hiệu quả kỹ thuật rõ rệt: việc bù công suất phản kháng tại chỗ giúp giảm dòng điện phản kháng truyền tải trên đường dây, nâng cao điện áp nút 3 từ $0.947\text{ p.u.}$ lên $0.963\text{ p.u.}$ và giảm tổn thất truyền tải từ $2.205\text{ MW}$ xuống $1.984\text{ MW}$ (tiết kiệm gần $10\%$ tổn thất).
+Lắp đặt dàn tụ bù ngang tại nút phụ tải 3 với dung lượng bù tăng dần từ $0$ đến $30\text{ Mvar}$. Kết quả tại Bảng~\ref{tab:shunt_compensation} chứng minh hiệu quả kỹ thuật rõ rệt: việc bù công suất phản kháng tại chỗ giúp giảm dòng điện phản kháng truyền tải trên đường dây, nâng cao điện áp nút 3 từ $0.9444\text{ p.u.}$ lên $0.9773\text{ p.u.}$ và giảm tổn thất truyền tải từ $6.452\text{ MW}$ xuống $5.373\text{ MW}$ (tiết kiệm hơn $16\%$ tổn thất).
 
 \begin{table}[H]
 \centering
 \caption{Hiệu quả kỹ thuật khi lắp đặt tụ bù ngang tại thanh cái phụ tải 3.}
 \label{tab:shunt_compensation}
-\begin{tabular}{ccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{ccccc}
 \toprule
 $Q_C\text{ bù (Mvar)}$ & $U_3\text{ (p.u.)}$ & $Q_{G1}\text{ (Mvar)}$ & $Q_{G2}\text{ (Mvar)}$ & $\Delta P_{\text{loss}}\text{ (MW)}$ \\
 \midrule
-$0$ (Cơ sở) & $0.9467$ & $28.61$ & $28.00$ & $2.205$ \\
-$10$ & $0.9521$ & $23.74$ & $23.12$ & $2.128$ \\
-$20$ & $0.9575$ & $18.91$ & $18.28$ & $2.054$ \\
-$30$ & $0.9628$ & $14.12$ & $13.48$ & $1.984$ \\
+$0$ (Cơ sở) & $0.9444$ & $34.92$ & $18.95$ & $6.452$ \\
+$10$ & $0.9551$ & $30.48$ & $12.89$ & $6.022$ \\
+$20$ & $0.9661$ & $25.93$ & $6.71$ & $5.661$ \\
+$30$ & $0.9773$ & $21.27$ & $0.43$ & $5.373$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \subsection{Kịch Bản 4: Đánh Giá Sự Cố Đứt Đường Dây Truyền Tải ($N-1$)}
-Mô phỏng sự cố cô lập đột ngột từng đường dây truyền tải để đánh giá an ninh tĩnh của lưới điện. Bảng~\ref{tab:contingency_screening} cho thấy sự cố đứt đường dây $2 - 3$ là sự cố nguy hiểm nhất (chế độ nặng nề nhất): toàn bộ $80.6\text{ MW}$ công suất cấp cho nút 3 bị dồn ép qua đường dây duy nhất còn lại $1 - 3$, làm góc lệch pha $\delta_3$ giãn rộng tới $-11.84^\circ$, điện áp $U_3$ sụt giảm xuống $0.908\text{ p.u.}$ và tổn thất hệ thống tăng vọt lên $4.682\text{ MW}$ (tăng gấp hơn 2 lần).
+Mô phỏng sự cố cô lập đột ngột từng đường dây truyền tải để đánh giá an ninh tĩnh của lưới điện. Bảng~\ref{tab:contingency_screening} cho thấy sự cố đứt đường dây $2 - 3$ là sự cố nguy hiểm nhất (chế độ nặng nề nhất): thanh cái phụ tải 3 mất nguồn hỗ trợ trực tiếp từ máy phát PV 2, dòng công suất buộc phải dồn qua đường dây $1 - 3$, làm góc lệch pha $\delta_3$ giãn rộng tới $-21.48^\circ$, điện áp $U_3$ sụt giảm nghiêm trọng xuống $0.6472\text{ p.u.}$ và tổn thất hệ thống tăng vọt lên $32.738\text{ MW}$ (tăng gấp hơn 5 lần, đe dọa sụp đổ điện áp).
 
 \begin{table}[H]
 \centering
 \caption{Đánh giá an ninh tĩnh khi xảy ra sự cố đứt đường dây truyền tải ($N-1$).}
 \label{tab:contingency_screening}
-\begin{tabular}{lccccc}
+\resizebox{\textwidth}{!}{\begin{tabular}{lccccc}
 \toprule
 \textbf{Kịch bản đường dây} & $U_2\text{ (p.u.)}$ & $U_3\text{ (p.u.)}$ & $\delta_3\text{ (độ)}$ & $\Delta P_{\text{loss}}\text{ (MW)}$ & \textbf{Đánh giá an ninh} \\
 \midrule
-Vận hành bình thường ($N-0$) & $1.0400$ & $0.9467$ & $-6.73^\circ$ & $2.205$ & An toàn \\
-Sự cố đứt đường dây $1 - 2$ & $1.0400$ & $0.9382$ & $-7.81^\circ$ & $2.741$ & Ổn định \\
-Sự cố đứt đường dây $1 - 3$ & $1.0400$ & $0.9245$ & $-9.45^\circ$ & $3.512$ & Điện áp thấp \\
-Sự cố đứt đường dây $2 - 3$ & $1.0400$ & $0.9082$ & $-11.84^\circ$ & $4.682$ & Nguy hiểm / Quá tải \\
+Vận hành bình thường ($N-0$) & $1.0400$ & $0.9444$ & $-6.55^\circ$ & $6.452$ & An toàn \\
+Sự cố đứt đường dây $1 - 2$ & $1.0400$ & $0.9430$ & $-9.52^\circ$ & $7.142$ & Ổn định \\
+Sự cố đứt đường dây $1 - 3$ & $1.0400$ & $0.8202$ & $-15.46^\circ$ & $16.322$ & Điện áp thấp \\
+Sự cố đứt đường dây $2 - 3$ & $1.0400$ & $0.6472$ & $-21.48^\circ$ & $32.738$ & Nguy hiểm / Sụp đổ điện áp \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
-% ----------------------------------------------------
-% CHƯƠNG 5: KẾT LUẬN VÀ NHẬN ĐỊNH KỸ THUẬT
-% ----------------------------------------------------
 \chapter{Kết Luận và Nhận Định Kỹ Thuật}
 
 \section{Tổng Kết Các Thành Tựu Lý Thuyết Và Thực Nghiệm}
 Bản báo cáo Đồ án 1 này đã hoàn thành toàn diện việc nghiên cứu, mô hình hóa và giải bài toán trào lưu công suất xác lập trong hệ thống điện bằng phương pháp Newton--Raphson hệ tọa độ cực với phương pháp luận "hộp trắng" hoàn toàn minh bạch:
 \begin{enumerate}
-    \item **Cơ sở toán học chặt chẽ:** Dẫn xuất giải tích khép kín thành công toàn bộ 8 công thức phần tử của 4 khối ma trận Jacobian ($\mathbf{H}, \mathbf{N}, \mathbf{M}, \mathbf{L}$), triệt tiêu hoàn toàn sai số xấp xỉ vi phân số học.
-    \item **Chuẩn số học tính tay chi tiết:** Trình bày hoàn chỉnh các phép tính số học từng bước cho Bước lặp 1 ($m = 0 \to 1$) trên lưới điện 3 nút mẫu, ghi lại đầy đủ các giá trị trung gian và ma trận nghịch đảo.
-    \item **Kiểm chứng chính xác tuyệt đối:** Đối chiếu 1:1 giữa tính tay và bộ giải số Python đạt độ chính xác máy tính chuẩn IEEE-754 ($< 10^{-16}\text{ p.u.}$), kiểm chứng tốc độ hội tụ bậc hai đạt sai số $\Vert \mathbf{f} \Vert_\infty \le 10^{-10}\text{ p.u.}$ sau 4 bước lặp và kiểm toán thành công bảo toàn năng lượng toàn lưới.
-    \item **Khảo sát bản chất vật lý của lưới điện:** Phân tích định lượng 4 kịch bản vận hành thực tế (tăng trưởng phụ tải, điều áp máy phát PV, bù tụ ngang và sự cố đứt đường dây $N-1$).
+    \item \textbf{Cơ sở toán học chặt chẽ:} Dẫn xuất giải tích khép kín thành công toàn bộ 8 công thức phần tử của 4 khối ma trận Jacobian ($\mathbf{H}, \mathbf{N}, \mathbf{M}, \mathbf{L}$), triệt tiêu hoàn toàn sai số xấp xỉ vi phân số học.
+    \item \textbf{Chuẩn số học tính tay chi tiết:} Trình bày hoàn chỉnh các phép tính số học từng bước cho Bước lặp 1 ($m = 0 \to 1$) trên lưới điện 3 nút mẫu, ghi lại đầy đủ các giá trị trung gian và ma trận nghịch đảo.
+    \item \textbf{Kiểm chứng chính xác tuyệt đối:} Đối chiếu 1:1 giữa tính tay và bộ giải số Python đạt độ chính xác máy tính chuẩn IEEE-754 ($< 10^{-16}\text{ p.u.}$), kiểm chứng tốc độ hội tụ bậc hai đạt sai số $\Vert \mathbf{f} \Vert_\infty \le 10^{-10}\text{ p.u.}$ sau 4 bước lặp và kiểm toán thành công bảo toàn năng lượng toàn lưới.
+    \item \textbf{Khảo sát bản chất vật lý của lưới điện:} Phân tích định lượng 4 kịch bản vận hành thực tế (tăng trưởng phụ tải, điều áp máy phát PV, bù tụ ngang và sự cố đứt đường dây $N-1$).
 \end{enumerate}
 
 \section{Các Quy Luật Vật Lý Then Chốt Của Trào Lưu Công Suất}
 \begin{enumerate}
-    \item **Đặc tính hội tụ bậc hai:** Khi được khởi tạo gần nghiệm (chẳng hạn qua khởi tạo phẳng flat start), thuật toán Newton--Raphson hội tụ rất nhanh, sai số giảm từ $0.619\text{ p.u.}$ xuống $6.1 \times 10^{-16}\text{ p.u.}$ chỉ sau 4 bước lặp.
-    \item **Hiện tượng tách kênh $P-\delta$ và $Q-U$ trong lưới truyền tải:** Do đường dây siêu cao áp có tỷ số kháng trở lớn ($X/R \gg 1$), khối $\mathbf{H}$ ($\partial \mathbf{P} / \partial \boldsymbol{\delta}$) và khối $\mathbf{L}$ ($\partial \mathbf{Q} / \partial \mathbf{U}$) chiếm ưu thế vượt trội, trong khi khối $\mathbf{N}$ và $\mathbf{M}$ rất nhỏ. Điều này giải thích cơ sở vật lý của các phương pháp phân rã nhanh (Fast Decoupled Power Flow).
-    \item **Tầm quan trọng của bù công suất phản kháng:** Việc lắp đặt tụ bù ngang tại các nút phụ tải giúp cung cấp công suất phản kháng tại chỗ, nâng cao điện áp thanh cái và giảm đáng kể tổn thất công suất tác dụng trên đường dây.
+    \item \textbf{Đặc tính hội tụ bậc hai:} Khi được khởi tạo gần nghiệm (chẳng hạn qua khởi tạo phẳng flat start), thuật toán Newton--Raphson hội tụ rất nhanh, sai số giảm từ $1.071\text{ p.u.}$ xuống $6.22 \times 10^{-15}\text{ p.u.}$ chỉ sau 4 bước lặp.
+    \item \textbf{Hiện tượng tách kênh $P-\delta$ và $Q-U$ trong lưới truyền tải:} Do đường dây siêu cao áp có tỷ số kháng trở lớn ($X/R \gg 1$), khối $\mathbf{H}$ ($\partial \mathbf{P} / \partial \boldsymbol{\delta}$) và khối $\mathbf{L}$ ($\partial \mathbf{Q} / \partial \mathbf{U}$) chiếm ưu thế vượt trội, trong khi khối $\mathbf{N}$ và $\mathbf{M}$ rất nhỏ. Điều này giải thích cơ sở vật lý của các phương pháp phân rã nhanh (Fast Decoupled Power Flow).
+    \item \textbf{Tầm quan trọng của bù công suất phản kháng:} Việc lắp đặt tụ bù ngang tại các nút phụ tải giúp cung cấp công suất phản kháng tại chỗ, nâng cao điện áp thanh cái và giảm đáng kể tổn thất công suất tác dụng trên đường dây.
 \end{enumerate}
 
 \section{Hạn Chế Của Phương Pháp Newton--Raphson Tọa Độ Cực Và Hướng Phát Triển}
 Mặc dù là phương pháp tiêu chuẩn công nghiệp mạnh mẽ nhất hiện nay, thuật toán Newton--Raphson tọa độ cực vẫn tồn tại một số hạn chế mở ra các hướng nghiên cứu nâng cao:
 \begin{enumerate}
-    \item **Phương pháp phân rã nhanh (Fast Decoupled Power Flow - FDPF):** Lợi dụng tính tách kênh $P-\delta$ và $Q-U$ để giữ cố định hai ma trận $B'$ và $B''$, loại bỏ việc phải tính lại và đảo ma trận Jacobian qua từng bước lặp, tăng tốc độ tính toán cho các lưới điện quy mô lớn.
-    \item **Kỹ thuật ma trận thưa và Phân tích Sparse LU:** Áp dụng thuật toán sắp xếp chỉ số AMD (Approximate Minimum Degree) để giải hệ phương trình ma trận thưa với độ phức tạp tính toán $O(N)$ đối với các hệ thống điện hàng nghìn nút.
-    \item **Tự động chuyển đổi nút PV $\leftrightarrow$ PQ:** Cài đặt cơ chế kiểm tra và chuyển đổi nút linh hoạt khi công suất phản kháng máy phát chạm giới hạn $Q_{\min}, Q_{\max}$.
-    \item **Bài toán trào lưu công suất tối ưu (Optimal Power Flow - OPF):** Kết hợp các phương trình trào lưu công suất làm ràng buộc đẳng thức vào bài toán quy hoạch phi tuyến để tối thiểu hóa chi phí phát điện hoặc giảm tổn thất truyền tải.
+    \item \textbf{Phương pháp phân rã nhanh (Fast Decoupled Power Flow - FDPF):} Lợi dụng tính tách kênh $P-\delta$ và $Q-U$ để giữ cố định hai ma trận $B'$ và $B''$, loại bỏ việc phải tính lại và đảo ma trận Jacobian qua từng bước lặp, tăng tốc độ tính toán cho các lưới điện quy mô lớn.
+    \item \textbf{Kỹ thuật ma trận thưa và Phân tích Sparse LU:} Áp dụng thuật toán sắp xếp chỉ số AMD (Approximate Minimum Degree) để giải hệ phương trình ma trận thưa với độ phức tạp tính toán $O(N)$ đối với các hệ thống điện hàng nghìn nút.
+    \item \textbf{Tự động chuyển đổi nút PV $\leftrightarrow$ PQ:} Cài đặt cơ chế kiểm tra và chuyển đổi nút linh hoạt khi công suất phản kháng máy phát chạm giới hạn $Q_{\min}, Q_{\max}$.
+    \item \textbf{Bài toán trào lưu công suất tối ưu (Optimal Power Flow - OPF):} Kết hợp các phương trình trào lưu công suất làm ràng buộc đẳng thức vào bài toán quy hoạch phi tuyến để tối thiểu hóa chi phí phát điện hoặc giảm tổn thất truyền tải.
 \end{enumerate}
 
 % ==================== TÀI LIỆU THAM KHẢO ====================
@@ -1341,35 +1348,35 @@ def generate_docx():
     doc.add_heading("BẢNG KẾT QUẢ ĐỐI CHIẾU KIỂM CHỨNG BƯỚC LẶP 1", level=1)
     val_headers = ["Đại lượng kiểm chứng", "Tính toán thủ công", "Bộ giải số Python", "Độ lệch tuyệt đối"]
     val_rows = [
-        ["Sai lệch công suất Delta P2 (p.u.)", "0.48960000", "0.48960000", "0.00000000"],
-        ["Sai lệch công suất Delta P3 (p.u.)", "-1.06250000", "-1.06250000", "0.00000000"],
+        ["Sai lệch công suất Delta P2 (p.u.)", "0.48266667", "0.48266667", "0.00000000"],
+        ["Sai lệch công suất Delta P3 (p.u.)", "-1.07083333", "-1.07083333", "0.00000000"],
         ["Sai lệch công suất Delta Q3 (p.u.)", "-0.06750000", "-0.06750000", "0.00000000"],
-        ["Phần tử Jacobian H22", "21.85872000", "21.85872000", "0.00000000"],
+        ["Phần tử Jacobian H22", "21.58000000", "21.58000000", "0.00000000"],
         ["Phần tử Jacobian H23", "-5.20000000", "-5.20000000", "0.00000000"],
         ["Phần tử Jacobian H33", "9.13750000", "9.13750000", "0.00000000"],
         ["Phần tử Jacobian L33", "8.27250000", "8.27250000", "0.00000000"],
-        ["Hiệu chỉnh góc pha Delta delta 2 (rad)", "-0.00774635", "-0.00774635", "< 10^-16"],
-        ["Hiệu chỉnh góc pha Delta delta 3 (rad)", "-0.11565012", "-0.11565012", "< 10^-16"],
-        ["Hiệu chỉnh điện áp Delta U3 (p.u.)", "-0.05054718", "-0.05054718", "< 10^-16"]
+        ["Hiệu chỉnh góc pha Delta delta 2 (rad)", "-0.00716985", "-0.00716985", "< 10^-16"],
+        ["Hiệu chỉnh góc pha Delta delta 3 (rad)", "-0.10719976", "-0.10719976", "< 10^-16"],
+        ["Hiệu chỉnh điện áp Delta U3 (p.u.)", "-0.04612691", "-0.04612691", "< 10^-16"]
     ]
     add_styled_table(doc, val_headers, val_rows)
     
     doc.add_heading("BẢNG KẾT QUẢ TRẠNG THÁI SAU HỘI TỤ (4 BƯỚC LẶP)", level=1)
     bus_headers = ["Nút", "Loại", "Điện áp U (p.u.)", "Góc pha delta (độ)", "P phát (MW)", "Q phát (Mvar)", "P tải (MW)", "Q tải (Mvar)"]
     bus_rows = [
-        ["1", "Slack", "1.0500", "0.0000", "72.2047", "28.6141", "0.0", "0.0"],
-        ["2", "PV", "1.0400", "-0.4831", "50.0000", "28.0000", "0.0", "0.0"],
-        ["3", "PQ", "0.9467", "-6.7280", "0.0000", "0.0000", "120.0", "50.0"]
+        ["1", "Slack", "1.0500", "0.0000", "76.4522", "34.9226", "0.0", "0.0"],
+        ["2", "PV", "1.0400", "-0.4934", "50.0000", "18.9489", "0.0", "0.0"],
+        ["3", "PQ", "0.9444", "-6.5482", "0.0000", "0.0000", "120.0", "50.0"]
     ]
     add_styled_table(doc, bus_headers, bus_rows)
     
     doc.add_heading("BẢNG ĐÁNH GIÁ SỰ CỐ ĐỨT ĐƯỜNG DÂY (N-1)", level=1)
     cont_headers = ["Kịch bản đường dây", "U2 (p.u.)", "U3 (p.u.)", "delta 3 (độ)", "Tổn thất Delta P (MW)", "Đánh giá an ninh"]
     cont_rows = [
-        ["Vận hành bình thường (N-0)", "1.0400", "0.9467", "-6.73", "2.205", "Bình thường / An toàn"],
-        ["Sự cố đứt đường dây 1 - 2", "1.0400", "0.9382", "-7.81", "2.741", "Ổn định"],
-        ["Sự cố đứt đường dây 1 - 3", "1.0400", "0.9245", "-9.45", "3.512", "Điện áp nút 3 giảm"],
-        ["Sự cố đứt đường dây 2 - 3", "1.0400", "0.9082", "-11.84", "4.682", "Nguy hiểm / Quá tải đường dây 1-3"]
+        ["Vận hành bình thường (N-0)", "1.0400", "0.9444", "-6.55", "6.452", "Bình thường / An toàn"],
+        ["Sự cố đứt đường dây 1 - 2", "1.0400", "0.9430", "-9.52", "7.142", "Ổn định"],
+        ["Sự cố đứt đường dây 1 - 3", "1.0400", "0.8202", "-15.46", "16.322", "Điện áp thấp"],
+        ["Sự cố đứt đường dây 2 - 3", "1.0400", "0.6472", "-21.48", "32.738", "Nguy hiểm / Sụp đổ điện áp"]
     ]
     add_styled_table(doc, cont_headers, cont_rows)
     
