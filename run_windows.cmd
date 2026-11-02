@@ -1,11 +1,8 @@
 @echo off
-setlocal
+chcp 65001 >nul
+title PowerFlow - Do an 1
 cd /d "%~dp0"
-if not exist ".venv\Scripts\python.exe" (
-  echo Run setup_windows.cmd first, or follow START_HERE_VI.md.
-  pause
-  exit /b 1
-)
-".venv\Scripts\python.exe" app.py
+set "PY=python"
+if exist ".venv\Scripts\python.exe" set "PY=.venv\Scripts\python.exe"
+"%PY%" app.py
 if errorlevel 1 pause
-

@@ -1,61 +1,59 @@
-# Project I Power Flow Report Directory
+# Thư mục Báo cáo & Tài liệu Đồ án 1 (HUST SEEE)
 
-This directory contains the engineering reports for **Project I (Course Code: EE3810E)** at the **School of Electrical and Electronic Engineering (SEEE), Hanoi University of Science and Technology (HUST)**.
-
----
-
-## 🏆 Current Official Deliverable (Version 2 - 100% English)
-
-The current official submission report follows the standardized HUST graduation/project report layout (Outer Cover, Inner Sub-cover, Assignment Sheet, Declaration, Acknowledgements, Abstract, TOC, Chapters 1–6, and References) and is written **100% in formal academic English**.
-
-- **PDF Document**: [`Project_I_Report_HUST_v2.pdf`](Project_I_Report_HUST_v2.pdf) (50 pages, publication-grade layout)
-- **LaTeX Source**: [`Project_I_Report_HUST_v2.tex`](Project_I_Report_HUST_v2.tex)
-- **Word Document**: [`Project_I_Report_HUST_v2.docx`](Project_I_Report_HUST_v2.docx)
-- **Build / Generator Script**: [`generate_hust_report_v2.py`](generate_hust_report_v2.py)
-  - Run `python generate_hust_report_v2.py` to regenerate both PDF and Word documents and automatically clean up all temporary `.aux`, `.log`, `.toc`, etc. files.
+Thư mục này chứa toàn bộ tài liệu báo cáo và hướng dẫn tính tay cho **Đồ án 1 (Mã học phần: EE3810E)** - **Bộ môn Hệ thống điện, Trường Điện - Điện tử, Đại học Bách khoa Hà Nội**.
 
 ---
 
-## 📁 Thư mục & Báo cáo chính thức (Clean & Organized)
+## 🏆 Tài liệu nộp chính thức hiện tại (Đồ án 1 - Hộp trắng & App PowerFlow)
+
+1. **Báo cáo Đồ án 1 chính thức (Bản chuẩn quy định ĐHBK Hà Nội)**:
+   - **File PDF**: [`Bao_Cao_Do_An_1_PowerFlow_29-10-2026.pdf`](Bao_Cao_Do_An_1_PowerFlow_29-10-2026.pdf) *(33+ trang, sơ đồ chuẩn IEEE nét cao, đầy đủ ma trận giải tích và kết quả đối chiếu)*.
+   - **File Word (.docx)**: [`Bao_Cao_Do_An_1_PowerFlow_29-10-2026.docx`](Bao_Cao_Do_An_1_PowerFlow_29-10-2026.docx) *(Bản Word định dạng chuẩn để in ấn hoặc chỉnh sửa)*.
+   - **Mã nguồn LaTeX**: [`02_Vietnamese_Report/Bao_Cao_Do_An_1_PowerFlow.tex`](02_Vietnamese_Report/Bao_Cao_Do_An_1_PowerFlow.tex)
+   - **Script biên dịch tự động**: [`02_Vietnamese_Report/generate_report_do_an_1.py`](02_Vietnamese_Report/generate_report_do_an_1.py)
+
+2. **Tài liệu Đề bài & Hướng dẫn tự tính tay Casio (White-Box Self-Study)**:
+   - **File PDF**: [`De_Bai_Tinh_Tay_Newton_Raphson_28-10-2026.pdf`](De_Bai_Tinh_Tay_Newton_Raphson_28-10-2026.pdf) *(4 trang, hướng dẫn từng bước bấm máy Casio fx-580/fx-880 và bảng checkpoints đối chiếu)*.
+   - **Mã nguồn LaTeX**: [`De_Bai_Tinh_Tay_Newton_Raphson.tex`](De_Bai_Tinh_Tay_Newton_Raphson.tex)
+   - **Script biên dịch**: [`compile_exercise_pdf.py`](compile_exercise_pdf.py)
+
+---
+
+## 📁 Cấu trúc thư mục (Clean & Organized)
 
 ```text
 report/
-├── Project_I_Report_HUST_v2.pdf               # [NỘP NHANH] Báo cáo tiếng Anh chính thức (48 trang)
-├── Project_I_Report_HUST_Vietnamese_v2.pdf    # [NỘP NHANH] Báo cáo tiếng Việt chính thức (38 trang)
-├── README.md                                  # Hướng dẫn cấu trúc thư mục
+├── Bao_Cao_Do_An_1_PowerFlow_29-10-2026.pdf    # [NỘP CHÍNH THỨC] Báo cáo Đồ án 1 (33 trang)
+├── Bao_Cao_Do_An_1_PowerFlow_29-10-2026.docx   # [NỘP CHÍNH THỨC] File Word nộp / in ấn
+├── De_Bai_Tinh_Tay_Newton_Raphson_28-10-2026.pdf# [HỌC TẬP / VẤN ĐÁP] Đề bài & hướng dẫn tính tay
+├── README.md                                  # Hướng dẫn danh mục tài liệu
 │
-├── 01_English_Report/                         # TRỌN BỘ TIẾNG ANH (HUST ENGLISH TRACK)
-│   ├── Project_I_Report_HUST_v2.pdf           # Bản PDF nộp chính thức
-│   ├── Project_I_Report_HUST_v2.docx          # Bản Word nộp / chỉnh sửa
-│   ├── Project_I_Report_HUST_v2.tex           # Mã nguồn LaTeX chuẩn Bách Khoa
-│   └── generate_hust_report_v2.py             # Script tự động biên dịch & dọn dẹp
+├── 01_English_Report/                         # Bản báo cáo tiếng Anh (HUST English Track)
+│   ├── Project_I_Report_HUST_v2.pdf
+│   └── generate_hust_report_v2.py
 │
-├── 02_Vietnamese_Report/                      # TRỌN BỘ TIẾNG VIỆT (HƯỚNG ĐẠI TRÀ / TIẾNG VIỆT)
-│   ├── Project_I_Report_HUST_Vietnamese_v2.pdf# Bản PDF nộp chính thức
-│   ├── Project_I_Report_HUST_Vietnamese_v2.docx# Bản Word nộp / chỉnh sửa
-│   ├── Project_I_Report_HUST_Vietnamese_v2.tex # Mã nguồn LaTeX tiếng Việt
-│   └── generate_hust_report_vietnamese.py     # Script tự động biên dịch & dọn dẹp
+├── 02_Vietnamese_Report/                      # Bộ mã nguồn LaTeX & Generator tiếng Việt
+│   ├── Bao_Cao_Do_An_1_PowerFlow.tex
+│   ├── generate_report_do_an_1.py
+│   └── 27-10-2026 Báo cáo.tex
 │
-├── 03_IEEE_Format/                            # BÀI BÁO TÓM TẮT CHUẨN IEEE (2-COLUMN)
-│   ├── Project_I_Report_IEEE.pdf              # Bản PDF tóm tắt 2 cột IEEE Transactions
-│   └── Project_I_Report_IEEE.tex              # Mã nguồn LaTeX IEEE
+├── 03_IEEE_Format/                            # Bài báo tóm tắt 2 cột định dạng IEEE
+│   ├── Project_I_Report_IEEE.pdf
+│   └── Project_I_Report_IEEE.tex
 │
-└── 04_Templates/                              # MẪU CHUẨN ĐHBK HÀ NỘI
-    └── Mẫu ĐATN_2019_version 1_1.docx         # Mẫu Word gốc của Trường ĐHBK Hà Nội
+└── 04_Templates/                              # Mẫu chuẩn Bộ môn & ĐHBK Hà Nội
+    └── Mẫu ĐATN_2019_version 1_1.docx
 ```
 
 ---
 
-## 🛠 Cách biên dịch lại báo cáo (Recompiling)
+## 🛠 Cách biên dịch lại (Recompiling)
 
-Mỗi thư mục báo cáo đều có sẵn script Python biên dịch 1 click độc lập, tự động chạy `pdflatex` 2 pass và dọn dẹp toàn bộ file rác (`.aux`, `.log`, `.out`, `.toc`, `.lof`, `.lot`):
-
-- **Biên dịch bản tiếng Anh:**
+- Để biên dịch lại Báo cáo Đồ án 1 mới:
   ```bash
-  python report/01_English_Report/generate_hust_report_v2.py
+  python report/02_Vietnamese_Report/generate_report_do_an_1.py
   ```
-- **Biên dịch bản tiếng Việt:**
+- Để biên dịch lại Đề bài tính tay:
   ```bash
-  python report/02_Vietnamese_Report/generate_hust_report_vietnamese.py
+  python report/compile_exercise_pdf.py
   ```
-

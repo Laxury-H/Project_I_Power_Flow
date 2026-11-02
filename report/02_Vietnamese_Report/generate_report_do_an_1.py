@@ -1222,11 +1222,21 @@ def main():
         root_pdf = os.path.join(REPORT_ROOT, f"{BASE_NAME}.pdf")
         shutil.copy2(PDF_FILE, root_pdf)
         print(f"Copied root PDF: {root_pdf}")
+
+        # Also copy with creation date appended
+        date_pdf_name = f"{BASE_NAME}_29-10-2026.pdf"
+        shutil.copy2(PDF_FILE, os.path.join(CURRENT_DIR, date_pdf_name))
+        shutil.copy2(PDF_FILE, os.path.join(REPORT_ROOT, date_pdf_name))
+        print(f"Copied dated PDF: {date_pdf_name}")
         
         root_docx = os.path.join(REPORT_ROOT, f"{BASE_NAME}.docx")
         if os.path.exists(DOCX_FILE):
             shutil.copy2(DOCX_FILE, root_docx)
             print(f"Copied root Word: {root_docx}")
+            date_docx_name = f"{BASE_NAME}_29-10-2026.docx"
+            shutil.copy2(DOCX_FILE, os.path.join(CURRENT_DIR, date_docx_name))
+            shutil.copy2(DOCX_FILE, os.path.join(REPORT_ROOT, date_docx_name))
+            print(f"Copied dated Word: {date_docx_name}")
             
         clean_auxiliary_files(CURRENT_DIR)
         print("Done! Cleaned auxiliary files.")
