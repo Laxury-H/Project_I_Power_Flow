@@ -11,39 +11,40 @@ def generate_ieee_flowchart_en(output_png, output_svg=None):
     ax.set_ylim(0, 150)
     ax.axis('off')
 
-    c_start_fill = '#E8F5E9'
-    c_start_edge = '#2E7D32'
-    c_start_txt  = '#1B5E20'
+    # Bảng màu chuẩn xuất bản IEEE Monochrome / Black & White
+    c_start_fill = '#F8FAFC'
+    c_start_edge = '#000000'
+    c_start_txt  = '#000000'
 
-    c_step1_fill = '#E0F2F1'
-    c_step1_edge = '#00695C'
-    c_step1_txt  = '#004D40'
+    c_step1_fill = '#FFFFFF'
+    c_step1_edge = '#000000'
+    c_step1_txt  = '#000000'
 
-    c_step2_fill = '#E1F5FE'
-    c_step2_edge = '#0277BD'
-    c_step2_txt  = '#01579B'
+    c_step2_fill = '#FFFFFF'
+    c_step2_edge = '#000000'
+    c_step2_txt  = '#000000'
 
-    c_step3_fill = '#EDE7F6'
-    c_step3_edge = '#5E35B1'
-    c_step3_txt  = '#311B92'
+    c_step3_fill = '#FFFFFF'
+    c_step3_edge = '#000000'
+    c_step3_txt  = '#000000'
 
-    c_cond_fill  = '#FFF9C4'
-    c_cond_edge  = '#EF6C00'
-    c_cond_txt   = '#B7410E'
+    c_cond_fill  = '#F8FAFC'
+    c_cond_edge  = '#000000'
+    c_cond_txt   = '#000000'
 
-    c_step4_fill = '#FFEBEE'
-    c_step4_edge = '#C62828'
-    c_step4_txt  = '#880E4F'
+    c_step4_fill = '#FFFFFF'
+    c_step4_edge = '#000000'
+    c_step4_txt  = '#000000'
 
-    c_step5_fill = '#F3E5F5'
-    c_step5_edge = '#7B1FA2'
-    c_step5_txt  = '#4A148C'
+    c_step5_fill = '#FFFFFF'
+    c_step5_edge = '#000000'
+    c_step5_txt  = '#000000'
 
-    c_step6_fill = '#E8EAF6'
-    c_step6_edge = '#303F9F'
-    c_step6_txt  = '#1A237E'
+    c_step6_fill = '#FFFFFF'
+    c_step6_edge = '#000000'
+    c_step6_txt  = '#000000'
 
-    arrow_col = '#1E293B'
+    arrow_col = '#000000'
     font_main = 'Segoe UI'
 
     def draw_rounded_box(cx, cy, w, h, fill_col, edge_col, radius=1.2, lw=2.2):
@@ -146,8 +147,8 @@ def generate_ieee_flowchart_en(output_png, output_svg=None):
 
     draw_direct_arrow(MAIN_X, y_cond - h_cond/2, MAIN_X, y_b4 + h_b4/2)
     ax.text(MAIN_X + 2.5, (y_cond - h_cond/2 + y_b4 + h_b4/2) / 2, "No (False)\nNot Converged",
-            color='#C62828', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='left', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#C62828', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='left', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # LOOP BACK LEFT
@@ -163,8 +164,8 @@ def generate_ieee_flowchart_en(output_png, output_svg=None):
         ), zorder=3
     )
     ax.text(X_LOOP, (y_b4 + y_b3)/2, "Iteration Loop\n" + r"($m \leftarrow m+1$)",
-            color='#C62828', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#C62828', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # 5. POST-CONVERGENCE QUANTITIES (YES)
@@ -191,8 +192,8 @@ def generate_ieee_flowchart_en(output_png, output_svg=None):
         ), zorder=3
     )
     ax.text(X_BYPASS, (y_cond + y_b5)/2, "Yes (True)\nConverged!",
-            color='#2E7D32', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#2E7D32', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # 6. EXPORT RESULTS

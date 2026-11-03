@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-03T02:30:24.926668</dc:date>
+    <dc:date>2026-11-03T13:15:54.033945</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 281.338318 33.84 281.338318 56.16
 L 281.338318 59.04 
 Q 281.338318 81.36 303.241121 81.36 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #e8f5e9; stroke: #2e7d32; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #f8fafc; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 162.639252 199.44 
@@ -53,7 +53,7 @@ Q 154.160748 117.36 154.160748 126
 L 154.160748 190.8 
 Q 154.160748 199.44 162.639252 199.44 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #e0f2f1; stroke: #00695c; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 162.639252 318.24 
@@ -66,7 +66,7 @@ Q 154.160748 236.16 154.160748 244.8
 L 154.160748 309.6 
 Q 154.160748 318.24 162.639252 318.24 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #e1f5fe; stroke: #0277bd; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 162.639252 437.04 
@@ -79,7 +79,7 @@ Q 154.160748 354.96 154.160748 363.6
 L 154.160748 428.4 
 Q 154.160748 437.04 162.639252 437.04 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #ede7f6; stroke: #5e35b1; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 374.601869 475.2 
@@ -87,7 +87,7 @@ L 537.106542 522
 L 374.601869 568.8 
 L 212.097196 522 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #fff9c4; stroke: #ef6c00; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #f8fafc; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_7">
     <path d="M 162.639252 721.44 
@@ -100,7 +100,7 @@ Q 154.160748 610.56 154.160748 619.2
 L 154.160748 712.8 
 Q 154.160748 721.44 162.639252 721.44 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #ffebee; stroke: #c62828; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_8">
     <path d="M 162.639252 869.04 
@@ -113,7 +113,7 @@ Q 154.160748 772.56 154.160748 781.2
 L 154.160748 860.4 
 Q 154.160748 869.04 162.639252 869.04 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #f3e5f5; stroke: #7b1fa2; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_9">
     <path d="M 162.639252 980.64 
@@ -126,7 +126,7 @@ Q 154.160748 905.76 154.160748 914.4
 L 154.160748 972 
 Q 154.160748 980.64 162.639252 980.64 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #e8eaf6; stroke: #303f9f; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #ffffff; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_10">
     <path d="M 303.241121 1064.16 
@@ -139,121 +139,121 @@ Q 281.338318 1016.64 281.338318 1038.96
 L 281.338318 1041.84 
 Q 281.338318 1064.16 303.241121 1064.16 
 z
-" clip-path="url(#p129dcb9b6d)" style="fill: #e8f5e9; stroke: #2e7d32; stroke-width: 2.2; stroke-linejoin: miter"/>
+" clip-path="url(#p8cc23abd34)" style="fill: #f8fafc; stroke: #000000; stroke-width: 2.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_11">
     <path d="M 374.601869 79.92 
 Q 374.601869 99.36 374.601869 116.563932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 110.163932 
 L 374.601869 116.563932 
 L 371.401869 110.163932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_12">
     <path d="M 374.601869 198 
 Q 374.601869 217.8 374.601869 235.363932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 228.963932 
 L 374.601869 235.363932 
 L 371.401869 228.963932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_13">
     <path d="M 374.601869 316.8 
 Q 374.601869 336.6 374.601869 354.163932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 347.763932 
 L 374.601869 354.163932 
 L 371.401869 347.763932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_14">
     <path d="M 374.601869 435.6 
 Q 374.601869 455.4 374.601869 472.963932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 466.563932 
 L 374.601869 472.963932 
 L 371.401869 466.563932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_15">
     <path d="M 374.601869 568.8 
 Q 374.601869 590.4 374.601869 609.763932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 603.363932 
 L 374.601869 609.763932 
 L 371.401869 603.363932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_1">
     <path d="M 155.573832 666 
 L 74.321495 666 
-" clip-path="url(#p129dcb9b6d)" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: square"/>
+" clip-path="url(#p8cc23abd34)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="line2d_2">
     <path d="M 74.321495 666 
 L 74.321495 396 
-" clip-path="url(#p129dcb9b6d)" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: square"/>
+" clip-path="url(#p8cc23abd34)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="patch_16">
     <path d="M 74.321495 396 
 Q 114.947664 396 153.337764 396 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 146.937764 392.8 
 L 153.337764 396 
 L 146.937764 399.2 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="line2d_3">
     <path d="M 537.106542 522 
 L 674.882243 522 
-" clip-path="url(#p129dcb9b6d)" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: square"/>
+" clip-path="url(#p8cc23abd34)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="line2d_4">
     <path d="M 674.882243 522 
 L 674.882243 820.8 
-" clip-path="url(#p129dcb9b6d)" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: square"/>
+" clip-path="url(#p8cc23abd34)" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: square"/>
    </g>
    <g id="patch_17">
     <path d="M 674.882243 820.8 
 Q 634.256075 820.8 595.865975 820.8 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 602.265975 824 
 L 595.865975 820.8 
 L 602.265975 817.6 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_18">
     <path d="M 374.601869 867.6 
 Q 374.601869 887.4 374.601869 904.963932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 898.563932 
 L 374.601869 904.963932 
 L 371.401869 898.563932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_19">
     <path d="M 374.601869 979.2 
 Q 374.601869 998.64 374.601869 1015.843932 
-" style="fill: none; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="fill: none; stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 377.801869 1009.443932 
 L 374.601869 1015.843932 
 L 371.401869 1009.443932 
 z
-" style="fill: #1e293b; stroke: #1e293b; stroke-width: 2; stroke-linecap: round"/>
+" style="stroke: #000000; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="text_1">
     <!-- BẮT ĐẦU -->
-    <g style="fill: #1b5e20" transform="translate(347.291322 62.519067) scale(0.125 -0.125)">
+    <g transform="translate(347.291322 62.519067) scale(0.125 -0.125)">
      <defs>
       <path id="SegoeUI-Bold-25" d="M 513 0 
 L 513 4481 
@@ -419,7 +419,7 @@ z
    </g>
    <g id="text_2">
     <!-- 1. Đọc dữ liệu lưới (Nút, Nhánh) -->
-    <g style="fill: #004d40" transform="translate(283.826557 145.73918) scale(0.12 -0.12)">
+    <g transform="translate(283.826557 145.73918) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-14" d="M 2600 4581 
 L 2600 0 
@@ -879,7 +879,7 @@ z
    </g>
    <g id="text_3">
     <!-- Thành lập ma trận dẫn nạp nút $\mathbf{Y}_{\mathrm{bus}} = \mathbf{G} + j\mathbf{B}$ (theo KCL) -->
-    <g style="fill: #004d40" transform="translate(230.621869 180.08) scale(0.115 -0.115)">
+    <g transform="translate(230.621869 180.08) scale(0.115 -0.115)">
      <defs>
       <path id="SegoeUI-37" d="M 3238 4006 
 L 1944 4006 
@@ -1625,7 +1625,7 @@ z
    </g>
    <g id="text_4">
     <!-- 2. Khởi tạo phẳng (Flat Start): đặt bước lặp $m = 0$ -->
-    <g style="fill: #01579b" transform="translate(234.861869 265.2) scale(0.12 -0.12)">
+    <g transform="translate(234.861869 265.2) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-15" d="M 1341 819 
 L 3241 819 
@@ -2216,7 +2216,7 @@ z
    </g>
    <g id="text_5">
     <!-- $U_i^{(0)} = 1.0\text{ p.u.}$ (Nút PQ),   $\delta_i^{(0)} = 0.0\text{ rad}$ (Mọi nút $i \neq 1$) -->
-    <g style="fill: #01579b" transform="translate(229.241869 299.34) scale(0.115 -0.115)">
+    <g transform="translate(229.241869 299.34) scale(0.115 -0.115)">
      <defs>
       <path id="DejaVuSans-Oblique-38" d="M 991 4666 
 L 1625 4666 
@@ -2657,7 +2657,7 @@ z
    </g>
    <g id="text_6">
     <!-- 3. Tính công suất nút $P_i^{(m)},\; Q_i^{(m)}$ -->
-    <g style="fill: #311b92" transform="translate(284.541869 384.48) scale(0.12 -0.12)">
+    <g transform="translate(284.541869 384.48) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-16" d="M 366 147 
 L 366 1006 
@@ -2909,7 +2909,7 @@ z
    </g>
    <g id="text_7">
     <!-- Xác định sai lệch: $\Delta P_i^{(m)} = P_i^{\mathrm{spec}} - P_i^{(m)},\; \Delta Q_i^{(m)} = Q_i^{\mathrm{spec}} - Q_i^{(m)}$ -->
-    <g style="fill: #311b92" transform="translate(221.756869 417.96) scale(0.11 -0.11)">
+    <g transform="translate(221.756869 417.96) scale(0.11 -0.11)">
      <defs>
       <path id="SegoeUI-3b" d="M 3681 0 
 L 3041 0 
@@ -3273,7 +3273,7 @@ z
    </g>
    <g id="text_8">
     <!-- $\|\mathbf{f}^{(m)}\|_\infty \leq \epsilon$ ? -->
-    <g style="fill: #b7410e" transform="translate(338.289369 512.0375) scale(0.125 -0.125)">
+    <g transform="translate(338.289369 512.0375) scale(0.125 -0.125)">
      <defs>
       <path id="DejaVuSans-af8" d="M 1344 4891 
 L 1344 -1509 
@@ -3457,7 +3457,7 @@ z
    </g>
    <g id="text_9">
     <!-- $(\epsilon = 10^{-10}\text{ p.u.})$ -->
-    <g style="fill: #b7410e" transform="translate(333.021869 544.012529) scale(0.11 -0.11)">
+    <g transform="translate(333.021869 544.012529) scale(0.11 -0.11)">
      <use xlink:href="#DejaVuSans-b" transform="translate(0 0.746875)"/>
      <use xlink:href="#DejaVuSans-Oblique-349" transform="translate(39.013672 0.746875)"/>
      <use xlink:href="#DejaVuSans-20" transform="translate(112.548828 0.746875)"/>
@@ -3476,7 +3476,7 @@ z
    </g>
    <g id="text_10">
     <!-- 4. Tính 4 khối ma trận Jacobian $\mathbf{J}^{(m)} = [\mathbf{H}\; \mathbf{N};\; \mathbf{M}\; \mathbf{L}]$ -->
-    <g style="fill: #880e4f" transform="translate(234.981869 638.037305) scale(0.12 -0.12)">
+    <g transform="translate(234.981869 638.037305) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-17" d="M 2975 4481 
 L 2975 1656 
@@ -3788,7 +3788,7 @@ z
    </g>
    <g id="text_11">
     <!-- Giải hệ phương trình đại số tuyến tính: $\mathbf{J}^{(m)} \Delta\mathbf{x}^{(m)} = \Delta\mathbf{f}^{(m)}$ -->
-    <g style="fill: #880e4f" transform="translate(222.974369 662.8825) scale(0.115 -0.115)">
+    <g transform="translate(222.974369 662.8825) scale(0.115 -0.115)">
      <defs>
       <path id="SegoeUI-Bold-2a" d="M 4191 300 
 Q 3534 -78 2559 -78 
@@ -4016,7 +4016,7 @@ z
    </g>
    <g id="text_12">
     <!-- Cập nhật biến trạng thái: $\mathbf{x}^{(m+1)} = \mathbf{x}^{(m)} + \Delta\mathbf{x}^{(m)}$ -->
-    <g style="fill: #880e4f" transform="translate(251.609369 688.0825) scale(0.115 -0.115)">
+    <g transform="translate(251.609369 688.0825) scale(0.115 -0.115)">
      <defs>
       <path id="SegoeUI-45" d="M 1044 463 
 L 1031 463 
@@ -4162,7 +4162,7 @@ z
    </g>
    <g id="text_13">
     <!-- Tăng bước lặp: $m \leftarrow m + 1$ -->
-    <g style="fill: #880e4f" transform="translate(310.086869 708.46) scale(0.11 -0.11)">
+    <g transform="translate(310.086869 708.46) scale(0.11 -0.11)">
      <defs>
       <path id="SegoeUI-104" d="M 2809 0 
 L 2297 0 
@@ -4345,7 +4345,7 @@ z
    </g>
    <g id="text_14">
     <!-- 5. Tính toán các đại lượng vận hành thứ cấp sau hội tụ: -->
-    <g style="fill: #4a148c" transform="translate(219.857182 801.085312) scale(0.12 -0.12)">
+    <g transform="translate(219.857182 801.085312) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-18" d="M 444 116 
 L 444 959 
@@ -4600,7 +4600,7 @@ z
    </g>
    <g id="text_15">
     <!-- Dòng công suất nhánh $\dot{S}_{ij}$, Tổn thất công suất $\Delta\dot{S}_{ij}$ -->
-    <g style="fill: #4a148c" transform="translate(246.836869 826.6675) scale(0.115 -0.115)">
+    <g transform="translate(246.836869 826.6675) scale(0.115 -0.115)">
      <defs>
       <path id="SegoeUI-27" d="M 588 0 
 L 588 4481 
@@ -4876,7 +4876,7 @@ z
    </g>
    <g id="text_16">
     <!-- Công suất phát nút SLACK ($P_{G1}, Q_{G1}$) &amp; Kiểm toán cân bằng công suất -->
-    <g style="fill: #4a148c" transform="translate(203.111869 849.355) scale(0.11 -0.11)">
+    <g transform="translate(203.111869 849.355) scale(0.11 -0.11)">
      <defs>
       <path id="SegoeUI-36" d="M 378 181 
 L 378 800 
@@ -5253,7 +5253,7 @@ z
    </g>
    <g id="text_17">
     <!-- 6. Xuất bảng dữ liệu kết quả &amp; Báo cáo kỹ thuật -->
-    <g style="fill: #1a237e" transform="translate(239.028119 933.565312) scale(0.12 -0.12)">
+    <g transform="translate(239.028119 933.565312) scale(0.12 -0.12)">
      <defs>
       <path id="SegoeUI-Bold-19" d="M 3469 1491 
 Q 3469 1159 3353 871 
@@ -5519,7 +5519,7 @@ z
    </g>
    <g id="text_18">
     <!-- Bảng điện áp nút, trào lưu nhánh và cảnh báo giới hạn vận hành -->
-    <g style="fill: #1a237e" transform="translate(218.972494 961.975625) scale(0.11 -0.11)">
+    <g transform="translate(218.972494 961.975625) scale(0.11 -0.11)">
      <defs>
       <path id="SegoeUI-25" d="M 588 0 
 L 588 4481 
@@ -5673,7 +5673,7 @@ z
    </g>
    <g id="text_19">
     <!-- KẾT THÚC -->
-    <g style="fill: #1b5e20" transform="translate(344.963197 1045.074927) scale(0.125 -0.125)">
+    <g transform="translate(344.963197 1045.074927) scale(0.125 -0.125)">
      <defs>
       <path id="SegoeUI-Bold-275" d="M 3200 0 
 L 513 0 
@@ -5779,10 +5779,10 @@ Q 389.640421 576.412852 389.640421 579.037852
 L 389.640421 601.762148 
 Q 389.640421 604.387148 392.265421 604.387148 
 z
-" style="fill: #ffffff; opacity: 0.95; stroke: #c62828; stroke-width: 1.2; stroke-linejoin: miter"/>
+" style="fill: #ffffff; opacity: 0.95; stroke: #000000; stroke-width: 1.2; stroke-linejoin: miter"/>
     </g>
     <!-- Chưa (Sai) -->
-    <g style="fill: #c62828" transform="translate(392.265421 587.500708) scale(0.105 -0.105)">
+    <g transform="translate(392.265421 587.500708) scale(0.105 -0.105)">
      <use xlink:href="#SegoeUI-Bold-26"/>
      <use xlink:href="#SegoeUI-Bold-4b" transform="translate(62.40625 0)"/>
      <use xlink:href="#SegoeUI-Bold-243" transform="translate(122.609375 0)"/>
@@ -5795,7 +5795,7 @@ z
      <use xlink:href="#SegoeUI-Bold-c" transform="translate(446.03125 0)"/>
     </g>
     <!-- Chưa hội tụ -->
-    <g style="fill: #c62828" transform="translate(392.265421 598.862856) scale(0.105 -0.105)">
+    <g transform="translate(392.265421 598.862856) scale(0.105 -0.105)">
      <use xlink:href="#SegoeUI-Bold-26"/>
      <use xlink:href="#SegoeUI-Bold-4b" transform="translate(62.40625 0)"/>
      <use xlink:href="#SegoeUI-Bold-243" transform="translate(122.609375 0)"/>
@@ -5821,10 +5821,10 @@ Q 41.351495 516.938921 41.351495 519.563921
 L 41.351495 542.436079 
 Q 41.351495 545.061079 43.976495 545.061079 
 z
-" style="fill: #ffffff; opacity: 0.95; stroke: #c62828; stroke-width: 1.2; stroke-linejoin: miter"/>
+" style="fill: #ffffff; opacity: 0.95; stroke: #000000; stroke-width: 1.2; stroke-linejoin: miter"/>
     </g>
     <!-- Vòng lặp -->
-    <g style="fill: #c62828" transform="translate(52.505284 528.026777) scale(0.105 -0.105)">
+    <g transform="translate(52.505284 528.026777) scale(0.105 -0.105)">
      <defs>
       <path id="SegoeUI-Bold-39" d="M 4244 4481 
 L 2700 0 
@@ -5874,7 +5874,7 @@ z
      <use xlink:href="#SegoeUI-Bold-53" transform="translate(353.53125 0)"/>
     </g>
     <!-- ($m \leftarrow m+1$) -->
-    <g style="fill: #c62828" transform="translate(43.976495 539.536787) scale(0.105 -0.105)">
+    <g transform="translate(43.976495 539.536787) scale(0.105 -0.105)">
      <use xlink:href="#SegoeUI-Bold-b" transform="translate(0 0.09375)"/>
      <use xlink:href="#DejaVuSans-Oblique-50" transform="translate(36.914062 0.09375)"/>
      <use xlink:href="#DejaVuSans-c1a" transform="translate(153.808594 0.09375)"/>
@@ -5896,10 +5896,10 @@ Q 644.717712 657.302827 644.717712 659.927827
 L 644.717712 682.872173 
 Q 644.717712 685.497173 647.342712 685.497173 
 z
-" style="fill: #ffffff; opacity: 0.95; stroke: #2e7d32; stroke-width: 1.2; stroke-linejoin: miter"/>
+" style="fill: #ffffff; opacity: 0.95; stroke: #000000; stroke-width: 1.2; stroke-linejoin: miter"/>
     </g>
     <!-- Đúng (Đạt) -->
-    <g style="fill: #2e7d32" transform="translate(647.342712 668.35459) scale(0.105 -0.105)">
+    <g transform="translate(647.342712 668.35459) scale(0.105 -0.105)">
      <use xlink:href="#SegoeUI-Bold-109"/>
      <use xlink:href="#SegoeUI-Bold-7e" transform="translate(73.734375 0)"/>
      <use xlink:href="#SegoeUI-Bold-51" transform="translate(134.234375 0)"/>
@@ -5912,7 +5912,7 @@ z
      <use xlink:href="#SegoeUI-Bold-c" transform="translate(487.640625 0)"/>
     </g>
     <!-- Đã hội tụ -->
-    <g style="fill: #2e7d32" transform="translate(652.206345 679.972881) scale(0.105 -0.105)">
+    <g transform="translate(652.206345 679.972881) scale(0.105 -0.105)">
      <defs>
       <path id="SegoeUI-Bold-6d" d="M 3078 0 
 L 2144 0 
@@ -5970,7 +5970,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p129dcb9b6d">
+  <clipPath id="p8cc23abd34">
    <rect x="7.2" y="7.2" width="756" height="1080"/>
   </clipPath>
  </defs>

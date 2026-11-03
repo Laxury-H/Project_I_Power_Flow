@@ -18,48 +18,48 @@ def generate_ieee_flowchart(output_png, output_svg=None):
     ax.set_ylim(0, 150)
     ax.axis('off')
 
-    # Bảng màu chuẩn công nghiệp (Chuyên nghiệp, tương phản cao, dễ đọc)
-    # 0. Start / End: Xanh lục tươi
-    c_start_fill = '#E8F5E9'
-    c_start_edge = '#2E7D32'
-    c_start_txt  = '#1B5E20'
+    # Bảng màu chuẩn xuất bản IEEE Monochrome / Black & White
+    # 0. Start / End: Đen trắng kỹ thuật
+    c_start_fill = '#F8FAFC'
+    c_start_edge = '#000000'
+    c_start_txt  = '#000000'
 
-    # 1. Đọc dữ liệu: Xanh ngọc
-    c_step1_fill = '#E0F2F1'
-    c_step1_edge = '#00695C'
-    c_step1_txt  = '#004D40'
+    # 1. Đọc dữ liệu: Trắng viền đen
+    c_step1_fill = '#FFFFFF'
+    c_step1_edge = '#000000'
+    c_step1_txt  = '#000000'
 
-    # 2. Khởi tạo phẳng: Xanh dương nhạt
-    c_step2_fill = '#E1F5FE'
-    c_step2_edge = '#0277BD'
-    c_step2_txt  = '#01579B'
+    # 2. Khởi tạo phẳng: Trắng viền đen
+    c_step2_fill = '#FFFFFF'
+    c_step2_edge = '#000000'
+    c_step2_txt  = '#000000'
 
-    # 3. Tính công suất & sai lệch: Tím hoa cà
-    c_step3_fill = '#EDE7F6'
-    c_step3_edge = '#5E35B1'
-    c_step3_txt  = '#311B92'
+    # 3. Tính công suất & sai lệch: Trắng viền đen
+    c_step3_fill = '#FFFFFF'
+    c_step3_edge = '#000000'
+    c_step3_txt  = '#000000'
 
-    # Khối điều kiện (Hình thoi): Vàng hổ phách
-    c_cond_fill  = '#FFF9C4'
-    c_cond_edge  = '#EF6C00'
-    c_cond_txt   = '#B7410E'
+    # Khối điều kiện (Hình thoi): Xám nhạt viền đen
+    c_cond_fill  = '#F8FAFC'
+    c_cond_edge  = '#000000'
+    c_cond_txt   = '#000000'
 
-    # 4. Jacobian & Cập nhật: Đỏ cam nhạt
-    c_step4_fill = '#FFEBEE'
-    c_step4_edge = '#C62828'
-    c_step4_txt  = '#880E4F'
+    # 4. Jacobian & Cập nhật: Trắng viền đen
+    c_step4_fill = '#FFFFFF'
+    c_step4_edge = '#000000'
+    c_step4_txt  = '#000000'
 
-    # 5. Đại lượng thứ cấp: Tím huế nhạt
-    c_step5_fill = '#F3E5F5'
-    c_step5_edge = '#7B1FA2'
-    c_step5_txt  = '#4A148C'
+    # 5. Đại lượng thứ cấp: Trắng viền đen
+    c_step5_fill = '#FFFFFF'
+    c_step5_edge = '#000000'
+    c_step5_txt  = '#000000'
 
-    # 6. Báo cáo & Kết quả: Xanh chàm
-    c_step6_fill = '#E8EAF6'
-    c_step6_edge = '#303F9F'
-    c_step6_txt  = '#1A237E'
+    # 6. Báo cáo & Kết quả: Trắng viền đen
+    c_step6_fill = '#FFFFFF'
+    c_step6_edge = '#000000'
+    c_step6_txt  = '#000000'
 
-    arrow_col = '#1E293B' # Slate-800
+    arrow_col = '#000000'
     font_main = 'Segoe UI'
 
     # Hàm vẽ hộp chữ nhật bo góc
@@ -173,8 +173,8 @@ def generate_ieee_flowchart(output_png, output_svg=None):
     draw_direct_arrow(MAIN_X, y_cond - h_cond/2, MAIN_X, y_b4 + h_b4/2)
     # Nhãn "Chưa (Sai)" nằm thoáng sang phải của mũi tên
     ax.text(MAIN_X + 2.5, (y_cond - h_cond/2 + y_b4 + h_b4/2) / 2, "Chưa (Sai)\nChưa hội tụ",
-            color='#C62828', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='left', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#C62828', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='left', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # ĐƯỜNG VÒNG LẶP (LOOP BACK) TỪ KHỐI 4 LÊN KHỐI 3 (BÊN TRÁI):
@@ -192,8 +192,8 @@ def generate_ieee_flowchart(output_png, output_svg=None):
     )
     # Nhãn trên đường vòng lặp
     ax.text(X_LOOP, (y_b4 + y_b3)/2, "Vòng lặp\n" + r"($m \leftarrow m+1$)",
-            color='#C62828', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#C62828', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # ------------------ 5. KHỐI 5: TÍNH TOÁN THỨ CẤP SAU HỘI TỤ ------------------
@@ -223,8 +223,8 @@ def generate_ieee_flowchart(output_png, output_svg=None):
     )
     # Nhãn trên đường rẽ hội tụ
     ax.text(X_BYPASS, (y_cond + y_b5)/2, "Đúng (Đạt)\nĐã hội tụ",
-            color='#2E7D32', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
-            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#2E7D32', lw=1.2, alpha=0.95),
+            color='#000000', fontsize=10.5, fontweight='bold', fontfamily=font_main, ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#000000', lw=1.2, alpha=0.95),
             zorder=6)
 
     # Mũi tên 5 -> 6
